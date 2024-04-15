@@ -6,6 +6,7 @@ import "./globals.css";
 // import { cn } from '@/utils/cn'
 import { Gluten } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Web3Modal } from "@/connection";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,9 +29,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn('dark', GeistSans.variable, gluten.variable, GeistMono.variable)}
-    >
-      <body>{children}</body>
+      className={cn(
+        "dark",
+        GeistSans.variable,
+        gluten.variable,
+        GeistMono.variable
+      )}
+    > <Web3Modal>
+      <body>
+       {children}
+      </body>
+      </Web3Modal>
     </html>
   );
 }

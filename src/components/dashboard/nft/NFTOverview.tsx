@@ -1,8 +1,9 @@
 import { NftTable } from './NftTable';
 import { tableData } from '@/constants/dummyTableData';
+import { CreateNFT } from './CreateNFT';
 
 export function NFTOverview(){
-  console.log(tableData)
+  // console.log(tableData)
 
   return (
     <div className="mt-20">
@@ -17,7 +18,7 @@ export function NFTOverview(){
           </small>
         </div>
 
-        {/* <CreateToken /> */}
+        <CreateNFT />
       </div>
       <NftTable tableData={tableData} isLoading={false} />
     </div>

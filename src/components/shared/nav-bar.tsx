@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { Gluten } from 'next/font/google'
-import Link from 'next/link'
+import { Gluten } from "next/font/google";
+import Link from "next/link";
 
 // import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
+import ConnectButton from "@/hooks/useConnectButton";
 
-
-export const gluten = Gluten({ subsets: ['latin'] })
+export const gluten = Gluten({ subsets: ["latin"] });
 
 export const NavBar = (props: { isDashboard?: boolean }) => {
-  const { isDashboard } = props
+  const { isDashboard } = props;
   return (
     <>
       <nav className="fixed top-0 z-50 w-full   bg-opacity-30 backdrop-blur-lg backdrop-filter">
@@ -23,31 +23,10 @@ export const NavBar = (props: { isDashboard?: boolean }) => {
               Badger
             </Link>
             <div className="hidden space-x-6 text-gray-100 lg:flex"></div>
-            {/* <ConnectButton /> */}
-            {isDashboard ? (
-              <Button
-              variant={'default'}
-              // className="h-12 min-w-[4rem] gap-2 rounded-xl border border-white/10 bg-primary px-4 py-3 font-bold text-foreground lg:min-w-[8rem] lg:rounded-2xl"
-              className="h-12 min-w-[4rem] gap-2 rounded-xl border border-white/10  px-4 py-3 font-bold text-foreground lg:min-w-[8rem] lg:rounded-2xl"
-              translate="no"
-            >
-              Connect
-            </Button>
-            ) : (
-              <Link href="/dashboard">
-                <Button
-                  variant={'default'}
-                  // className="h-12 min-w-[4rem] gap-2 rounded-xl border border-white/10 bg-primary px-4 py-3 font-bold text-foreground lg:min-w-[8rem] lg:rounded-2xl"
-                  className="h-12 min-w-[4rem] gap-2 rounded-xl border border-white/10  px-4 py-3 font-bold text-foreground lg:min-w-[8rem] lg:rounded-2xl"
-                  translate="no"
-                >
-                  Get Started
-                </Button>
-              </Link>
-            )}
+            <ConnectButton />
           </div>
         </div>
       </nav>
     </>
-  )
-}
+  );
+};

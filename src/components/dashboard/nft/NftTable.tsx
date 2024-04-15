@@ -22,7 +22,7 @@ export function NftTable({
         </div>
       ) : (
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-900 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Name
@@ -43,11 +43,11 @@ export function NftTable({
             {tableData?.map((data, index) => (
               <tr
                 key={index}
-                className="border-b bg-white dark:border-gray-700 dark:bg-gray-800"
+                className="border-b dark:border-gray-70"
               >
                 <th
                   scope="row"
-                  className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-blue-600 "
+                  className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-400 "
                   onClick={() => {
                     router.push(`/dashboard/contracts/${data?.address}`);
                   }}

@@ -1,9 +1,9 @@
-// import { CreateToken } from './CreateToken'
+import { CreateERC20 } from './CreateErc20';
 import { TokenTable } from './TokenTable';
 import { tableData } from '@/constants/dummyTableData';
 
 export function TokenOverview(){
-  console.log(tableData)
+  // console.log(tableData)
 
   return (
     <div className="mt-20">
@@ -18,7 +18,7 @@ export function TokenOverview(){
           </small>
         </div>
 
-        {/* <CreateToken /> */}
+        <CreateERC20 />
       </div>
       <TokenTable tableData={tableData} isLoading={false} />
     </div>

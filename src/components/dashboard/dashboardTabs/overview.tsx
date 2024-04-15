@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InfoCard from "../shared/InfoCard";
-import { TokenOverview } from "../token/TokenOverview";
+import { TokenOverview } from "../erc20/TokenOverview";
 import { NFTOverview } from "../nft/NFTOverview";
 
 

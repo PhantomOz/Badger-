@@ -8,7 +8,8 @@ import { Fade } from "react-awesome-reveal";
 
 import { Button } from "@/components/ui/button";
 
-import heroImg from '../../../public/images/caeser.svg'
+import heroImg from "../../../public/images/caeser.svg";
+import Link from "next/link";
 
 export const gluten = Gluten({ subsets: ["latin"] });
 
@@ -34,7 +35,16 @@ export const HomeAcurastSection: FC = () => {
 
             <div className="mb-4 space-y-4 sm:flex sm:space-x-4 sm:space-y-0">
               <Fade direction="left">
-                <Button />
+                <Link href="/dashboard">
+                  <Button
+                    variant={"default"}
+                    // className="h-12 min-w-[4rem] gap-2 rounded-xl border border-white/10 bg-primary px-4 py-3 font-bold text-foreground lg:min-w-[8rem] lg:rounded-2xl"
+                    className="h-12 min-w-[4rem] gap-2 rounded-xl border border-white/10  px-4 py-3 font-bold text-foreground lg:min-w-[8rem] lg:rounded-2xl"
+                    translate="no"
+                  >
+                    Get Started
+                  </Button>
+                </Link>
               </Fade>
             </div>
           </div>

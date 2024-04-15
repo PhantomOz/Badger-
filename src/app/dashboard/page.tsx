@@ -8,7 +8,7 @@ import { useState } from "react";
 import { NavBar } from "@/components/shared/nav-bar";
 import DashboardTabNavigation from "@/components/dashboard/DashboardNav";
 import { OverviewComponent } from "@/components/dashboard/dashboardTabs/overview";
-import { TokenOverview } from "@/components/dashboard/token/TokenOverview";
+import { TokenOverview } from "@/components/dashboard/erc20/TokenOverview";
 import { NFTOverview } from "@/components/dashboard/nft/NFTOverview";
 
 const Dashboard = () => {
