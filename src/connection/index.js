@@ -4,24 +4,17 @@ import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
 import { Inter, Montserrat } from "next/font/google";
 
 export const BASE_SEPOLIA_ID = 84532;
+export const SEPOLIA_ID = 11155111;
 export const OPTIMISM_SEPOLIA_ID = 11155420;
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 
-const baseSepolia = {
-  chainId: BASE_SEPOLIA_ID,
-  name: "Base-Sepolia",
+const Sepolia = {
+  chainId: SEPOLIA_ID,
+  name: "Sepolia",
   currency: "ETH",
-  explorerUrl: "https://sepolia-explorer.base.org",
-  rpcUrl: process.env.NEXT_PUBLIC_BASE_RPC_URL,
-};
-
-const optimismSepolia = {
-  chainId: OPTIMISM_SEPOLIA_ID,
-  name: "Optimism-Sepolia",
-  currency: "ETH",
-  explorerUrl: "https://sepolia-optimistic.etherscan.io",
-  rpcUrl: process.env.NEXT_PUBLIC_OPT_RPC_URL,
+  explorerUrl: "https://sepolia.etherscan.io/",
+  rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
 };
 
 const metadata = {
@@ -38,7 +31,7 @@ const metadata = {
 // 5. Create a Web3Modal instance
 createWeb3Modal({
   ethersConfig: defaultConfig({ metadata }),
-  chains: [baseSepolia, optimismSepolia],
+  chains: [Sepolia],
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   enableAnalytics: false, // Optional - defaults
   themeVariables: {
