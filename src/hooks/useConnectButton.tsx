@@ -7,8 +7,8 @@ export default function ConnectButton() {
 
   return (
     <>
-      {address ? (
-        <w3m-account-button />
+      {isConnected ? (
+        <w3m-button/>
       ) : (
         <Button
           onClick={() => open()}

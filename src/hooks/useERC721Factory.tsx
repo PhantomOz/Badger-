@@ -12,7 +12,7 @@ import { readOnlyProvider } from "../constants/providers";
 // import { useToast } from "../components/ui/use-toast";
 
 //Create ERC20 tokens
-export const useCreateERC20 = (
+export const useCreateERC721 = (
   name: string,
   symbol: string,
   initialSupply: Number,
@@ -46,7 +46,7 @@ export const useCreateERC20 = (
 
 
 //Get all ERC20 Tokens
-export const useGetAllERC20 = () => {
+export const useGetAllERC721 = () => {
   const { address } = useWeb3ModalAccount();
   const contract = getFactoryContract(readOnlyProvider);
 
@@ -57,7 +57,7 @@ export const useGetAllERC20 = () => {
 
   const getTokens = () => {
     contract
-      .getCreatedFungibleTokenByAddress(address)
+      .getCreatedNFTByAddress(address)
       .then((res) => {
         const converted = res.map((token: any) => ({
           name: token.name,

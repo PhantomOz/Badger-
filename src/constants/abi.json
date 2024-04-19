@@ -41,7 +41,12 @@
     "inputs": [
       { "internalType": "string", "name": "_name", "type": "string" },
       { "internalType": "string", "name": "_symbol", "type": "string" },
-      { "internalType": "uint256", "name": "_initialSupply", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_initialSupply",
+        "type": "uint256"
+      },
+      { "internalType": "string", "name": "_description", "type": "string" }
     ],
     "name": "createFungibleToken",
     "outputs": [],
@@ -52,7 +57,8 @@
     "inputs": [
       { "internalType": "string", "name": "_name", "type": "string" },
       { "internalType": "string", "name": "_symbol", "type": "string" },
-      { "internalType": "string", "name": "_uri", "type": "string" }
+      { "internalType": "string", "name": "_uri", "type": "string" },
+      { "internalType": "string", "name": "_description", "type": "string" }
     ],
     "name": "createNFT",
     "outputs": [],
@@ -63,7 +69,26 @@
     "inputs": [],
     "name": "getAllFungibleToken",
     "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          { "internalType": "string", "name": "symbol", "type": "string" },
+          {
+            "internalType": "address",
+            "name": "contractAdd",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSupply",
+            "type": "uint256"
+          },
+          { "internalType": "string", "name": "description", "type": "string" }
+        ],
+        "internalType": "struct TokenFactory.FungibleTokenDetails[]",
+        "name": "",
+        "type": "tuple[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -72,13 +97,29 @@
     "inputs": [],
     "name": "getAllNftContract",
     "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          { "internalType": "string", "name": "symbol", "type": "string" },
+          {
+            "internalType": "address",
+            "name": "contractAdd",
+            "type": "address"
+          },
+          { "internalType": "string", "name": "description", "type": "string" }
+        ],
+        "internalType": "struct TokenFactory.NFTDetails[]",
+        "name": "",
+        "type": "tuple[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      { "internalType": "address", "name": "addr", "type": "address" }
+    ],
     "name": "getCreatedFungibleTokenByAddress",
     "outputs": [
       {
@@ -94,7 +135,8 @@
             "internalType": "uint256",
             "name": "totalSupply",
             "type": "uint256"
-          }
+          },
+          { "internalType": "string", "name": "description", "type": "string" }
         ],
         "internalType": "struct TokenFactory.FungibleTokenDetails[]",
         "name": "",
@@ -105,7 +147,9 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      { "internalType": "address", "name": "addr", "type": "address" }
+    ],
     "name": "getCreatedNFTByAddress",
     "outputs": [
       {
@@ -116,7 +160,8 @@
             "internalType": "address",
             "name": "contractAdd",
             "type": "address"
-          }
+          },
+          { "internalType": "string", "name": "description", "type": "string" }
         ],
         "internalType": "struct TokenFactory.NFTDetails[]",
         "name": "",

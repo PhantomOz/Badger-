@@ -1,9 +1,11 @@
 import { NftTable } from './NftTable';
 import { tableData } from '@/constants/dummyTableData';
 import { CreateNFT } from './CreateNFT';
+import { useGetAllERC721 } from '@/hooks/useERC721Factory';
 
-export function NFTOverview(){
+export function NFTOverview({fullPage}:{fullPage:boolean}){
   // console.log(tableData)
+  const { loading, data } = useGetAllERC721();
 
   return (
     <div className="mt-20">
@@ -20,7 +22,7 @@ export function NFTOverview(){
 
         <CreateNFT />
       </div>
-      <NftTable tableData={tableData} isLoading={false} />
+      <NftTable tableData={data} isLoading={false} fullPage={fullPage}/>
     </div>
   )
 }

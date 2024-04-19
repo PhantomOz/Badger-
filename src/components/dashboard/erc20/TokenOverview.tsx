@@ -1,9 +1,11 @@
+import { useGetAllERC20 } from '@/hooks/useERC20Factory';
 import { CreateERC20 } from './CreateErc20';
 import { TokenTable } from './TokenTable';
 import { tableData } from '@/constants/dummyTableData';
 
-export function TokenOverview(){
+export function TokenOverview({fullPage}:{fullPage:boolean}){
   // console.log(tableData)
+  const { loading, data } = useGetAllERC20();
 
   return (
     <div className="mt-20">
@@ -20,7 +22,8 @@ export function TokenOverview(){
 
         <CreateERC20 />
       </div>
-      <TokenTable tableData={tableData} isLoading={false} />
+      <TokenTable tableData={data} isLoading={loading} fullPage={fullPage}/>
+      
     </div>
   )
 }

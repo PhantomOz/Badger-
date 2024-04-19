@@ -1,23 +1,23 @@
 "use client";
 
 import { useState } from "react";
-
-// import { NFTsComponent } from '../components/dashboard/NFTsComponent'
-// import { TokensComponent } from '../components/dashboard/TokensCOmponent'
-// import { OverviewComponent } from '../components/dashboard/overview'
 import { NavBar } from "@/components/shared/nav-bar";
 import DashboardTabNavigation from "@/components/dashboard/DashboardNav";
 import { OverviewComponent } from "@/components/dashboard/dashboardTabs/overview";
 import { TokenOverview } from "@/components/dashboard/erc20/TokenOverview";
 import { NFTOverview } from "@/components/dashboard/nft/NFTOverview";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const Dashboard = () => {
   const [tab, setTab] = useState(0);
+  const { address } = useWeb3ModalAccount();
 
   return (
     <>
       <NavBar isDashboard={true} />
-      <div className="relative mt-24">
+      { address ? 
+        // Your code here
+        <div className="relative mt-24">
         <DashboardTabNavigation
           tabs={[
             { id: 0, label: "Overview" },
@@ -31,11 +31,17 @@ const Dashboard = () => {
         <div className="p-4 sm:container sm:mx-auto">
           <div>
             {tab == 0 ? <OverviewComponent/> : ''}
-            {tab == 1 ? <TokenOverview /> : ''}
-            {tab == 2 ? <NFTOverview /> : ''}
+            {tab == 1 ? <TokenOverview fullPage={true} /> : ''}
+            {tab == 2 ? <NFTOverview fullPage={true} /> : ''}
           </div>
         </div>
       </div>
+      :
+
+      <div>
+        Please connect wallet
+      </div>
+      }
     </>
   );
 };

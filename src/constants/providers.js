@@ -8,6 +8,9 @@ export const readOnlyProvider = new ethers.JsonRpcProvider(
 // export const optimismReadOnlyProvider = new ethers.JsonRpcProvider(
 //     process.env.NEXT_PUBLIC_OPT_RPC_URL
 // );
+export const wssProvider = new ethers.WebSocketProvider(
+    process.env.NEXT_PUBLIC_WSS_RPC_URL
+);
 
 // read/write provider, that allows you to read data and also sign transaction on whatever chain it's pointing to
 export const getProvider = (provider) => new ethers.BrowserProvider(provider);
