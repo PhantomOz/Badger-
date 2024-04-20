@@ -16,7 +16,8 @@ export const useCreateERC20 = (
   name: string,
   symbol: string,
   initialSupply: Number,
-  description: string
+  description: string,
+  decimals:Number
 ) => {
   const { chainId, address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
@@ -31,7 +32,9 @@ export const useCreateERC20 = (
     const contract = getFactoryContract(signer);
 
     try {
-     const transaction = await contract.createFungibleToken(name, symbol, initialSupply, description);
+      console.log(name);
+      
+     const transaction = await contract.createFungibleToken(name, symbol, initialSupply, description, decimals);
 
      console.log("transaction: ", transaction);
      const receipt = await transaction.wait();
@@ -65,6 +68,7 @@ export const useGetAllERC20 = () => {
           supply: token.totalSupply,
           description: token.description,
           address: token.contractAdd,
+          decimals: token.decimals
         }));
         setTokens({
           loading: false,

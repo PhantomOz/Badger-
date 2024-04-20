@@ -22,6 +22,7 @@ const CreateErc20Form = (onSubmit: any) => {
     symbol: "",
     supply: 0,
     description: "",
+    decimal:18,
   });
 
   const handleInputChange = (event: any) => {
@@ -34,7 +35,8 @@ const CreateErc20Form = (onSubmit: any) => {
     inputValues.name,
     inputValues.symbol,
     inputValues.supply,
-    inputValues.description
+    inputValues.description,
+    inputValues.decimal
   )
   // console.log(response);
 
@@ -110,7 +112,7 @@ const CreateErc20Form = (onSubmit: any) => {
 
       <DialogFooter>
         <Button type="submit" onClick={
-          createToken
+          ()=>{createToken()}
         }>{loading ? "Loading..." : "Deploy"}</Button>
       </DialogFooter>
     </DialogContent>

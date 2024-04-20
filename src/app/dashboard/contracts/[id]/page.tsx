@@ -2,38 +2,45 @@
 
 import { useEffect, useState } from "react";
 
-// import ContractDetails from '@/app/components/dashboard/contracts/ContractInfo'
+import ContractDetails from '@/components/contracts/ContractInfo'
 
 import { NavBar } from "@/components/shared/nav-bar";
 import ContractOverviewNav from "@/components/contracts/ContractOverviewNav";
 import { ContractOverview } from "@/components/contracts/ContractOverview";
 import { Explorer } from "@/components/contracts/Explorer";
+import { GetBalanceOf, useGetSingleERC20 } from "@/hooks/useGetSingleTokens";
 
 const SingleContract = ({ params }: { params: { id: string } }) => {
   const [tab, setTab] = useState(0);
   const [tokenMedata, setTokenMetadata] = useState<any>({});
+  const selectedToken = useGetSingleERC20(params.id);
+  console.log(selectedToken);
+  const tokenName = GetBalanceOf(params.id);
+  // console.log(tokenName);
+  
+  
 
   return (
     <>
       <NavBar isDashboard={true} />
       <div className="relative mt-24">
         <ContractOverviewNav tab={tab} setTab={setTab} />
-        {/* <ContractDetails
-          name={tokenMedata?.name}
-          description={tokenMedata?.description}
-          address={tokenMedata?.address}
-        /> */}
+        <ContractDetails
+          name={selectedToken?.name}
+          description={selectedToken?.description}
+          address={selectedToken?.address}
+        />
 
         <div className="p-4 sm:container sm:mx-auto">
           <div>
             {tab == 0 ? (
               <ContractOverview
-                supply={tokenMedata?.supply?.toString()}
-                symbol={tokenMedata?.symbol}
-                decimal={Number(tokenMedata?.decimal)}
-                userBalance={Number(tokenMedata?.userBalance)}
-                name={tokenMedata?.name}
-                address={tokenMedata?.address}
+                supply={selectedToken?.supply?.toString()}
+                symbol={selectedToken?.symbol}
+                decimal={Number(selectedToken?.decimals)}
+                userBalance={Number(selectedToken?.userBalance)}
+                name={selectedToken?.name}
+                address={selectedToken?.address}
               />
             ) : (
               ""
@@ -125,7 +132,7 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
             ) : (
               ""
             )}
-            {tab == 3 ? <Explorer metadata={tokenMedata} /> : ""}
+            {tab == 3 ? <Explorer metadata={selectedToken} /> : ""}
           </div>
         </div>
       </div>

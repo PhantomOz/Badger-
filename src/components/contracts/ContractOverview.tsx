@@ -17,7 +17,7 @@ export function ContractOverview({
 }) {
   return (
     <div className="mt-4">
-      <div className="mb-10 border-b border-gray-700 pb-6">
+      {/* <div className="mb-10 border-b border-gray-700 pb-6">
         <div className="mb-3 flex items-center">
           <h1 className="mr-2 text-2xl font-bold">JeffToken</h1>
           <button className="mr-2 rounded border px-2 py-1 font-sans text-sm font-semibold  text-white no-underline focus:outline-none">
@@ -30,7 +30,7 @@ export function ContractOverview({
             <Copy /> 1FRMM...hV24fg
           </span>
         </div>
-      </div>
+      </div> */}
 
       <h2 className="text-2xl font-bold">Token Details</h2>
 
@@ -47,12 +47,12 @@ export function ContractOverview({
         <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow">
           <h5 className="mb-2 text-xl font-normal tracking-tight text-white">Owned by you</h5>
           <p className="text-xl font-normal text-gray-100">
-            {userBalance} {symbol}
+            {supply} {symbol}
           </p>
         </div>
         <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow">
           <h5 className="mb-2 text-xl font-normal tracking-tight text-white">Decimals</h5>
-          <p className="text-xl font-normal text-gray-100">{decimal}</p>
+          <p className="text-xl font-normal text-gray-100">{decimal || 0}</p>
         </div>
       </div>
       {/* Events */}
@@ -61,9 +61,6 @@ export function ContractOverview({
           <h2 className="mb-4 text-2xl font-bold">Events</h2>
           <p
             className="cursor-pointer text-sm font-bold text-blue-500 underline"
-            // onClick={() => {
-            //   handleViewEvents
-            // }}
           >
             View all
           </p>

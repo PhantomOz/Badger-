@@ -1,9 +1,11 @@
+"use client";
+
 import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { Button } from "@/components/ui/button";
 
 export default function ConnectButton() {
   const { open } = useWeb3Modal();
-  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  const { isConnected } = useWeb3ModalAccount();
 
   return (
     <>

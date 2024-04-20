@@ -4,7 +4,7 @@ import CreateErc20Form from "./erc20/CreateErc20Form";
 
 const NoToken = () => {
   return (
-    <div>
+    <div className=" mt-8">
       <h2 className="text-center text-2xl font-bold lg:text-3xl">
         You have not created any projects
       </h2>
@@ -14,7 +14,7 @@ const NoToken = () => {
       </p>
 
       <div>
-        <div className="mt-8 flex justify-center">
+        <div className="mt-16 flex justify-center">
           <Dialog>
             <DialogTrigger asChild>
               <div className="mr-8 block w-full max-w-xs cursor-pointer rounded-lg border p-5 shadow">

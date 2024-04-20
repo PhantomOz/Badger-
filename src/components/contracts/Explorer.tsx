@@ -2,38 +2,56 @@
 
 import { useState } from "react";
 
-// import { ContractIds } from '@/deployments/deployments'
-// import TokenContract from '@inkathon/contracts/typed-contracts/contracts/my_psp'
-// import { AccountId } from '@inkathon/contracts/typed-contracts/types-arguments/factory_contract'
-// import { useContract, useInkathon, useRegisteredTypedContract } from '@scio-labs/use-inkathon'
 import toast from "react-hot-toast";
 
 // import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
 
 import { ExplorerFunctions } from "./ExplorerFunctions";
+import {
+  useWeb3ModalAccount,
+  useWeb3ModalProvider,
+} from "@web3modal/ethers/react";
+import { getProvider } from "@/constants/providers";
+import { getFungibleContract } from "@/constants/contracts";
 
 export const Explorer = ({ metadata }: { metadata: any }) => {
   const [tab, setTab] = useState(0);
   const [currentFunction, setCurrentFunction] = useState("");
   const handleSetCurrentFunction = (id: string) => {
-    setCurrentFunction(id)
-  }
-
-  const handleBalanceOf = async (address: string): Promise<number> => {
-    return 1;
+    setCurrentFunction(id);
   };
+  const { walletProvider } = useWeb3ModalProvider();
+  const readWriteProvider = getProvider(walletProvider);
+  // const { address } = useWeb3ModalAccount();
 
+  const handleBalance = async (address: string) => {
+    try {
+      const signer = await readWriteProvider.getSigner();
+      const contract = getFungibleContract(signer, metadata?.address);
+      const balance = await contract.balanceOf(address);
+      return Number(balance);
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      // Optionally handle the error or throw it further
+      throw error;
+    }
+  };
   const handleAllowance = async (
     who: string,
     spender: string
   ): Promise<number> => {
-    // if (!metadata?.address) return 0
-    // const result = await tokenAddress.typedContract
-    //   ?.withAddress(`${metadata?.address}`)
-    //   .query.allowance(who as AccountId, spender as AccountId)
-    // console.log(result)
-    // return Number(result?.value.ok)
-    return 1;
+    try {
+      const signer = await readWriteProvider.getSigner();
+      const contract = getFungibleContract(signer, metadata.address);
+      const allowance = await contract.allowance(who, spender);
+      return Number(allowance);
+    } catch (error) {
+      console.error("Error fetching allowance:", error);
+      // Optionally handle the error or throw it further
+      throw error;
+    }
+
+    // return 1;
   };
 
   const handleTransfer = async (
@@ -41,7 +59,17 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     value: string,
     data: []
   ): Promise<boolean> => {
-    return true;
+    try {
+      const signer = await readWriteProvider.getSigner();
+      const contract = getFungibleContract(signer, metadata.address);
+      const transfer = await contract.transfer(to, value);
+      console.log(transfer);
+      return transfer;
+    } catch (error) {
+      console.error("Error handling transfer:", error);
+      // Optionally handle the error or throw it further
+      throw error;
+    }
   };
 
   const handleTransferFrom = async (
@@ -50,14 +78,34 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     value: string,
     data: []
   ): Promise<boolean> => {
-    return true;
+    try {
+      const signer = await readWriteProvider.getSigner();
+      const contract = getFungibleContract(signer, metadata.address);
+      const transfer = await contract.transferFrom(from, to, value);
+      console.log(transfer);
+      return transfer.wait();
+    } catch (error) {
+      console.error("Error  handling transfer-from:", error);
+      // Optionally handle the error or throw it further
+      throw error;
+    }
   };
 
   const handleApproval = async (
     spender: string,
     value: string
   ): Promise<boolean> => {
-    return true;
+    try {
+      const signer = await readWriteProvider.getSigner();
+      const contract = getFungibleContract(signer, metadata.address);
+      const approval = await contract.approve(spender, value);
+      // console.log(transfer);
+      return approval;
+    } catch (error) {
+      console.error("Error  handling approval:", error);
+      // Optionally handle the error or throw it further
+      throw error;
+    }
   };
 
   return (
@@ -234,7 +282,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
                 handleAllowance={handleAllowance}
               />
             ) : currentFunction === "balanceOf" ? (
-              <ExplorerFunctions who handleBalanceOf={handleBalanceOf} />
+              <ExplorerFunctions who handleBalanceOf={handleBalance} />
             ) : currentFunction === "totalSupply" ? (
               <ExplorerFunctions
                 view={"totalSupply"}
@@ -243,7 +291,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             ) : currentFunction === "decimals" ? (
               <ExplorerFunctions
                 view={"decimals"}
-                viewValue={Number(metadata?.decimal).toString()}
+                viewValue={Number(metadata?.decimals).toString()}
               />
             ) : currentFunction === "name" ? (
               <ExplorerFunctions view={"name"} viewValue={metadata?.name} />
