@@ -52,6 +52,8 @@ export const useCreateERC20 = (
 export const useGetAllERC20 = () => {
   const { address } = useWeb3ModalAccount();
   const contract = getFactoryContract(readOnlyProvider);
+  const { walletProvider } = useWeb3ModalProvider();
+  const readWriteProvider = getProvider(walletProvider);
 
   const [tokens, setTokens] = useState({
     loading: true,
@@ -89,7 +91,7 @@ export const useGetAllERC20 = () => {
       };
 
       try {
-        const events = await wssProvider
+        const events = await readOnlyProvider
           .getLogs({
             ...filter,
             fromBlock: 5726200,
@@ -112,3 +114,4 @@ export const useGetAllERC20 = () => {
 
   return tokens;
 };
+

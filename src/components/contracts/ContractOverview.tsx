@@ -94,7 +94,7 @@ export function ContractOverview({
         </div>
       </div>
       {/* Permissions */}
-      <div className="mt-12">
+      {/* <div className="mt-12">
         <h2 className="mb-4 text-2xl font-bold">Permissions</h2>
         <div className="relative overflow-x-auto rounded">
           <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
@@ -130,7 +130,7 @@ export function ContractOverview({
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

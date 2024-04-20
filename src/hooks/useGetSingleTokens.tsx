@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useGetAllERC20 } from "./useERC20Factory";
 import { getFungibleContract } from "../constants/contracts";
-import { getProvider } from "@/constants/providers";
+import { getProvider, readOnlyProvider } from "@/constants/providers";
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/react";
+import { ethers } from "ethers";
 
 // Get single ERC20 Token
 export const useGetSingleERC20 = (tokenAddress: string) => {
@@ -55,28 +56,45 @@ export const GetBalanceOf = (tokenAddress: string) => {
   return balance;
 };
 
-// export const GetBalanceOf = (tokenAddress: string) => {
-//   const [balance, setBalance] = useState<number | undefined>(undefined);
-//   const { address } = useWeb3ModalAccount();
-//   const { walletProvider } = useWeb3ModalProvider();
-//   const readWriteProvider = getProvider(walletProvider);
-  
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const signer = await readWriteProvider.getSigner();
-//         const contract = getFungibleContract(signer, tokenAddress);
-//         const balance = await contract.balanceOf(address);
-//         setBalance(balance);
-//       } catch (error) {
-//         console.error('Error fetching balance:', error);
-//         // Optionally handle the error or set a default balance
-//       }
-//     };
+//get all events
+// const events = await contract.queryFilter("*", fromBlock, toBlock)
+export const useGetTokenEvents = (tokenAddress:string) => {
+  const contract = getFungibleContract(readOnlyProvider);
+  // const { walletProvider } = useWeb3ModalProvider();
+  // // const readWriteProvider = getProvider(walletProvider);
 
-//     fetchData();
-//   }, [readWriteProvider, tokenAddress, address]);
+  // // const [tokens, setTokens] = useState();
 
-//   return balance;
-// };
+    const fetchTokens = async () => {
+      const filter = {
+        address: tokenAddress,
+        topics: [ethers.id("Transfer(address,address,uint256)"), ethers.id("Approval(address,address,uint256)")],
+      };
+
+      try {
+        const events = await readOnlyProvider
+          .getLogs({
+            ...filter,
+            fromBlock: 5726200,
+          })
+          .then((events) => {
+            // getTokens();
+            console.log(events);
+            // setTokens(events || "")
+            
+          });
+      } catch (error) {
+        console.error("Error fetching logs: ", error);
+      }
+
+      // contract.on("FungibleTokenCreated", getTokens);
+
+      // // Cleanup function
+      // return () => contract.off("FungibleTokenCreated", getTokens);
+    };
+
+
+
+  // return tokens;
+};
 

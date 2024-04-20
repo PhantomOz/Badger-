@@ -32,7 +32,6 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
       return Number(balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
-      // Optionally handle the error or throw it further
       throw error;
     }
   };
@@ -44,10 +43,11 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
       const signer = await readWriteProvider.getSigner();
       const contract = getFungibleContract(signer, metadata.address);
       const allowance = await contract.allowance(who, spender);
+      console.log(allowance);
+      
       return Number(allowance);
     } catch (error) {
       console.error("Error fetching allowance:", error);
-      // Optionally handle the error or throw it further
       throw error;
     }
 
@@ -63,11 +63,15 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
       const signer = await readWriteProvider.getSigner();
       const contract = getFungibleContract(signer, metadata.address);
       const transfer = await contract.transfer(to, value);
-      console.log(transfer);
-      return transfer;
+      const receipt = await transfer.wait();
+      console.log(receipt);
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       console.error("Error handling transfer:", error);
-      // Optionally handle the error or throw it further
       throw error;
     }
   };
@@ -81,12 +85,17 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     try {
       const signer = await readWriteProvider.getSigner();
       const contract = getFungibleContract(signer, metadata.address);
-      const transfer = await contract.transferFrom(from, to, value);
-      console.log(transfer);
-      return transfer.wait();
+      const transferFrom = await contract.transferFrom(from, to, value);
+      const receipt = await transferFrom.wait();
+
+      console.log(receipt);
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       console.error("Error  handling transfer-from:", error);
-      // Optionally handle the error or throw it further
       throw error;
     }
   };
@@ -99,11 +108,16 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
       const signer = await readWriteProvider.getSigner();
       const contract = getFungibleContract(signer, metadata.address);
       const approval = await contract.approve(spender, value);
-      // console.log(transfer);
-      return approval;
+      const receipt = await approval.wait();
+
+      console.log(receipt);
+      if (receipt.status === 1) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       console.error("Error  handling approval:", error);
-      // Optionally handle the error or throw it further
       throw error;
     }
   };

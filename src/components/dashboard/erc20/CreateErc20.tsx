@@ -7,6 +7,10 @@ import { useState } from "react";
 
 export function CreateERC20() {
   const [open, setOpen] = useState(false);
+
+  function closeModal(){
+    setOpen(false)
+  }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -16,7 +20,7 @@ export function CreateERC20() {
           Create
         </button>
       </DialogTrigger>
-      <CreateErc20Form/>
+      <CreateErc20Form onSubmit={closeModal}/>
     </Dialog>
   );
 }

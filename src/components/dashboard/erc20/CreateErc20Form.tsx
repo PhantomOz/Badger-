@@ -13,8 +13,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { useCreateERC20 } from "@/hooks/useERC20Factory";
+import {
+  useWeb3ModalAccount,
+  useWeb3ModalProvider,
+} from "@web3modal/ethers/react";
+import { getProvider } from "@/constants/providers";
+import { getFactoryContract } from "@/constants/contracts";
 
-const CreateErc20Form = (onSubmit: any) => {
+const CreateErc20Form = ({onSubmit}: {onSubmit?: () => void}) => {
+  const { chainId, address } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
+
+  const readWriteProvider = getProvider(walletProvider);
+
   const [loading, setLoading] = useState(false);
 
   const [inputValues, setInputValues] = useState({
@@ -22,7 +33,7 @@ const CreateErc20Form = (onSubmit: any) => {
     symbol: "",
     supply: 0,
     description: "",
-    decimal:18,
+    decimal: 18,
   });
 
   const handleInputChange = (event: any) => {
@@ -30,14 +41,30 @@ const CreateErc20Form = (onSubmit: any) => {
     setInputValues({ ...inputValues, [name]: value });
   };
 
-  // function createToken() {
-  const createToken = useCreateERC20(
-    inputValues.name,
-    inputValues.symbol,
-    inputValues.supply,
-    inputValues.description,
-    inputValues.decimal
-  )
+  async function createToken() {
+    const signer = await readWriteProvider.getSigner();
+
+    const contract = getFactoryContract(signer);
+    try {
+      const transaction = await contract.createFungibleToken(
+        inputValues.name,
+        inputValues.symbol,
+        inputValues.supply,
+        inputValues.description,
+        inputValues.decimal
+      );
+
+      console.log("transaction: ", transaction);
+      const receipt = await transaction.wait();
+
+      console.log("receipt: ", receipt);
+      if(receipt.status === 1 && onSubmit){
+        onSubmit();
+      }
+    } catch (error) {
+      console.error("error: ", error);
+    }
+  }
   // console.log(response);
 
   return (
@@ -111,9 +138,14 @@ const CreateErc20Form = (onSubmit: any) => {
       </div>
 
       <DialogFooter>
-        <Button type="submit" onClick={
-          ()=>{createToken()}
-        }>{loading ? "Loading..." : "Deploy"}</Button>
+        <Button
+          type="submit"
+          onClick={() => {
+            createToken();
+          }}
+        >
+          {loading ? "Loading..." : "Deploy"}
+        </Button>
       </DialogFooter>
     </DialogContent>
   );

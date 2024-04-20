@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ContractDetails from '@/components/contracts/ContractInfo'
 
@@ -8,17 +8,13 @@ import { NavBar } from "@/components/shared/nav-bar";
 import ContractOverviewNav from "@/components/contracts/ContractOverviewNav";
 import { ContractOverview } from "@/components/contracts/ContractOverview";
 import { Explorer } from "@/components/contracts/Explorer";
-import { GetBalanceOf, useGetSingleERC20 } from "@/hooks/useGetSingleTokens";
+import { useGetSingleERC20, useGetTokenEvents } from "@/hooks/useGetSingleTokens";
 
 const SingleContract = ({ params }: { params: { id: string } }) => {
   const [tab, setTab] = useState(0);
-  const [tokenMedata, setTokenMetadata] = useState<any>({});
+
   const selectedToken = useGetSingleERC20(params.id);
-  console.log(selectedToken);
-  const tokenName = GetBalanceOf(params.id);
-  // console.log(tokenName);
-  
-  
+  // const data = useGetTokenEvents(params.id)
 
   return (
     <>
@@ -88,7 +84,7 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
             ) : (
               ""
             )}
-            {tab == 2 ? (
+            {/* {tab == 2 ? (
               <div className="mt-2">
                 <h2 className="mb-4 text-2xl font-bold">Permissions</h2>
                 <div className="relative overflow-x-auto rounded">
@@ -131,7 +127,7 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
               </div>
             ) : (
               ""
-            )}
+            )} */}
             {tab == 3 ? <Explorer metadata={selectedToken} /> : ""}
           </div>
         </div>
