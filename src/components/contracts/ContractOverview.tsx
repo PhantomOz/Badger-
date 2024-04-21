@@ -19,7 +19,7 @@ export function ContractOverview({
   logs: any[];
 }) {
   const balance = GetBalanceOf(address);
-  console.log(balance);
+  // console.log(balance);
 
   return (
     <div className="mt-4">

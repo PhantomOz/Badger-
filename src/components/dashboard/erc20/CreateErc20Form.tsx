@@ -40,6 +40,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   };
 
   async function createToken() {
+    setLoading(true)
     const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
     // const signer = await readWriteProvider.getSigner();
@@ -61,6 +62,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       if (receipt.status === 1 && onSubmit) {
         onSubmit();
       }
+    setLoading(false)
+
     } catch (error) {
       console.error("error: ", error);
     }
@@ -125,7 +128,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
 
         <div className="mb-5 items-center gap-4">
           <Label htmlFor="symbol" className="text-right">
-            decimal
+            Decimal
           </Label>
           <Input
             id="decimal"
@@ -143,6 +146,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           onClick={() => {
             createToken();
           }}
+          disabled={loading}
         >
           {loading ? "Loading..." : "Deploy"}
         </Button>

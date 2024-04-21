@@ -22,6 +22,8 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
   const [uploading, setUploading] = useState(false);
   const inputFile = useRef<HTMLInputElement>(null);
   const { walletProvider } = useWeb3ModalProvider();
+  const [loading, setLoading] = useState(false);
+  const [imageBlobUrl, setImageBlobUrl] = useState('');
 
   const readWriteProvider = getProvider(walletProvider);
 
@@ -55,6 +57,8 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
   const handleChange = (e: any) => {
     setFile(e.target.files[0]);
     uploadFile(e.target.files[0]);
+    const blobUrl = URL.createObjectURL(e.target.files[0]);
+    setImageBlobUrl(blobUrl);
   };
 
   const handleInputChange = (event: any) => {
@@ -63,6 +67,7 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
   };
 
   async function createNFT() {
+    setLoading(true)
     const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
     // const signer = await readWriteProvider.getSigner();
@@ -80,9 +85,11 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
       const receipt = await transaction.wait();
 
       console.log("receipt: ", receipt);
-        if(receipt.status === 1 && onSubmit){
-          onSubmit();
-        }
+      if (receipt.status === 1 && onSubmit) {
+        onSubmit();
+      }
+      setLoading(false);
+
     } catch (error) {
       console.error("error: ", error);
     }
@@ -114,7 +121,7 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
           </Label>
           <Input id="symbol" name="symbol" onChange={handleInputChange} className="mt-2" />
         </div>
-        <div className="mb-5 items-center gap-4">
+        <div className="mb-5 mt-5 items-center gap-4">
           <Label htmlFor="description" className="text-right">
             Description
           </Label>
@@ -124,9 +131,8 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
         <div className="flex w-full items-center justify-center">
           <label
             className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border"
-            onClick={() => inputFile.current?.click()}
           >
-            <div className="flex flex-col items-center justify-center pb-6 pt-5">
+            {imageBlobUrl ? <div className="h-64 rounded-lg"><img src={imageBlobUrl} alt="Selected" className="h-full rounded-lg w-full" />{uploading && <p className="text-white">Image is uploading...</p>}</div> : <div className="flex flex-col items-center justify-center pb-6 pt-5">
               <svg
                 className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
                 aria-hidden="true"
@@ -149,7 +155,8 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 SVG, PNG, JPG or GIF (MAX. 800x400px)
               </p>
-            </div>
+            </div>}
+
             <input
               className="hidden"
               type="file"
@@ -161,9 +168,10 @@ export function CreateNftForm({ onSubmit }: { onSubmit?: () => void }) {
         </div>
       </div>
       <DialogFooter>
-        <Button type="submit" onClick={()=>{
-            createNFT()
-        }}>Deploy</Button>
+        <Button type="submit" disabled={loading || uploading} onClick={() => {
+          createNFT()
+        }}>{loading ? "Loading..." : "Deploy"}
+        </Button>
       </DialogFooter>
     </DialogContent>
     // </Dialog>
