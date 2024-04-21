@@ -4,14 +4,14 @@
 
 ## Overview
 
-BADGER is an innovative no-code application built for the Encode Scaling Web3 24Q1 Hackathon. It leverages the power of Shardeum to enable users to create smart contracts with ease.
+Welcome to **Badger**, the no-code platform designed to simplify the deployment and interaction with smart contracts on the Shardeum blockchain. Our intuitive interface and powerful backend ensure that you can focus on what truly matters - bringing your blockchain ideas to life.
 
 ## Features
 
 - **Token Creation**: Users can create FTs and NFTs by interacting with a user-friendly interface.
 - **EVM Compatibility**: Fully compatible with any EVM-based blockchain.
 - **EIP Standard**: Tokens follows the Ethereum Standard.
-- **Contract Interaction**: Nice Iterface for users to interact With.
+- **Interactivity**: Interact with deployed contracts with ease, thanks to our built-in tools.
 
 ## Tools
 
