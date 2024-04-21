@@ -6,6 +6,8 @@ import { useGetAllERC721 } from '@/hooks/useERC721Factory';
 export function NFTOverview({fullPage}:{fullPage:boolean}){
   // console.log(tableData)
   const { loading, nfts } = useGetAllERC721();
+  // console.log(nfts);
+  
 
   return (
     <div className="mt-20">

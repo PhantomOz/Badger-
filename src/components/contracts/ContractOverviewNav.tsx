@@ -12,7 +12,7 @@ const ContractOverviewNav: React.FC<NavBarProps> = ({ tab, setTab }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start rtl:justify-end">
             <div className="flex">
-              {['Overview', 'Events', 'Permissions', 'Explorer'].map((label, index) => (
+              {['Overview', 'Events', 'Explorer'].map((label, index) => (
                 <button
                   key={index}
                   className={`mr-2 rounded border px-4 py-2 font-sans text-sm font-semibold no-underline focus:outline-none ${

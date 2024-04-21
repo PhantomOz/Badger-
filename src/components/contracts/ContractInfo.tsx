@@ -1,4 +1,4 @@
-import { Copy } from "lucide-react";
+import { Copy, ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 // import { HiOutlineDuplicate } from 'react-icons/hi'
@@ -45,19 +45,29 @@ export default function ContractDetails({
             </button>
           </div>
           <p className="mb-3 text-gray-300">{description}</p>
-          <div className="mr-2 w-fit cursor-pointer rounded border px-2 py-1 font-sans text-xs  font-semibold text-white no-underline focus:outline-none">
-            <span
-              className="flex items-center gap-1 text-xs"
-              onClick={copyToClipboard}
-            >
-              {/* <HiOutlineDuplicat />  */}
-              <Copy />
-              {String(address).substring(0, 8)}...
-              {String(address).substring(
-                String(address).length - 9,
-                String(address).length - 1
-              )}
-            </span>
+          <div className="flex">
+            <div className="mr-2 w-fit cursor-pointer rounded border px-2 py-1 font-sans text-xs  font-semibold text-white no-underline focus:outline-none">
+              <span
+                className="flex items-center gap-1 text-xs"
+                onClick={copyToClipboard}
+              >
+                {/* <HiOutlineDuplicat />  */}
+                <Copy className="w-4 h-6 mr-1" />
+                {String(address).substring(0, 8)}...
+                {String(address).substring(
+                  String(address).length - 9,
+                  String(address).length
+                )}
+              </span>
+            </div>
+            <div className="mr-2 w-fit cursor-pointer rounded border px-2 py-1 font-sans text-xs  font-semibold text-white no-underline focus:outline-none">
+              <span>
+                <a href={`https://explorer-sphinx.shardeum.org/address/${address}`} target="_blank" className="flex items-center">
+                  <ExternalLinkIcon className="w-4 h-6" />
+                  <span className="ml-2">{String(`https://explorer-sphinx.shardeum.org/address/${address}`).substring(8, 18)}...</span>
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>

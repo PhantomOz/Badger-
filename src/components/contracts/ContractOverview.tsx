@@ -1,4 +1,5 @@
-import { Copy } from "lucide-react"
+import { GetBalanceOf } from "@/hooks/useGetSingleTokens";
+import EventTable from "./ERC20Event";
 
 export function ContractOverview({
   symbol,
@@ -7,14 +8,19 @@ export function ContractOverview({
   userBalance,
   name,
   address,
+  logs,
 }: {
-  symbol: string
-  supply: string
-  decimal: number
-  userBalance: number
-  name: string
-  address: string
+  symbol: string;
+  supply: string;
+  decimal: number;
+  userBalance: number;
+  name: string;
+  address: string;
+  logs: any[];
 }) {
+  const balance = GetBalanceOf(address);
+  console.log(balance);
+
   return (
     <div className="mt-4">
       {/* <div className="mb-10 border-b border-gray-700 pb-6">
@@ -35,63 +41,33 @@ export function ContractOverview({
       <h2 className="text-2xl font-bold">Token Details</h2>
 
       <div className="mt-6 flex w-[70%]">
-        <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow">
+        <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow overflow-h ">
           <h5 className="mb-2 text-xl font-normal tracking-tight text-gray-900 dark:text-white">
             Total Supply
           </h5>
 
-          <p className="text-xl font-normal text-gray-100">
-            {supply} {symbol}
+          <p className="text-xl font-normal text-gray-100 overflow-hidden">
+            {Number(supply)} {symbol}
           </p>
         </div>
         <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow">
-          <h5 className="mb-2 text-xl font-normal tracking-tight text-white">Owned by you</h5>
+          <h5 className="mb-2 text-xl font-normal tracking-tight text-white">
+            Owned by you
+          </h5>
           <p className="text-xl font-normal text-gray-100">
-            {supply} {symbol}
+            {Number(balance) / Math.pow(10, decimal)} {symbol}
           </p>
         </div>
         <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow">
-          <h5 className="mb-2 text-xl font-normal tracking-tight text-white">Decimals</h5>
+          <h5 className="mb-2 text-xl font-normal tracking-tight text-white">
+            Decimals
+          </h5>
           <p className="text-xl font-normal text-gray-100">{decimal || 0}</p>
         </div>
       </div>
       {/* Events */}
-      <div className="mt-12">
-        <div className="flex justify-between">
-          <h2 className="mb-4 text-2xl font-bold">Events</h2>
-          <p
-            className="cursor-pointer text-sm font-bold text-blue-500 underline"
-          >
-            View all
-          </p>
-        </div>
-        <div className="relative overflow-x-auto rounded">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Transaction Hash
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Events
-                </th>
-                {/* // <th scope="col" className="px-6 py-3">
-                //   Block Number
-                // </th> */}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-                <td scope="" className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium">
-                  1FRMM...hV24fg
-                </td>
-                <td scope="" className="px-6 py-4">
-                  Mint
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div className="mt-10">
+        <EventTable logs={logs} address={address} />
       </div>
       {/* Permissions */}
       {/* <div className="mt-12">
@@ -132,5 +108,5 @@ export function ContractOverview({
         </div>
       </div> */}
     </div>
-  )
+  );
 }

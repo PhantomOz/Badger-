@@ -11,6 +11,8 @@ import { Explorer } from "@/components/contracts/Explorer";
 import { useGetSingleERC20 } from "@/hooks/useGetSingleTokens";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
+import { getLogs } from "@/hooks/useGetERC20Events";
+import EventTable from "@/components/contracts/ERC20Event";
 
 const SingleContract = ({ params }: { params: { id: string } }) => {
   const { isConnected } = useWeb3ModalAccount();
@@ -18,6 +20,9 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
   const [tab, setTab] = useState(0);
 
   const selectedToken = useGetSingleERC20(params.id);
+
+  const logs = getLogs(params.id);
+  // console.log(logs);
 
   return (
     <>
@@ -41,98 +46,18 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
                   userBalance={Number(selectedToken?.userBalance)}
                   name={selectedToken?.name}
                   address={selectedToken?.address}
+                  logs={logs}
+
                 />
               ) : (
                 ""
               )}
               {tab == 1 ? (
-                <div className="mt-2">
-                  <div className="flex justify-between">
-                    <h2 className="mb-4 text-2xl font-bold">Events</h2>
-                    <p>View all</p>
-                  </div>
-                  <div className="relative overflow-x-auto rounded">
-                    <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                      <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                          <th scope="col" className="px-6 py-3">
-                            Transaction Hash
-                          </th>
-                          <th scope="col" className="px-6 py-3">
-                            Events
-                          </th>
-                          <th scope="col" className="px-6 py-3">
-                            Block Number
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-                          <th
-                            scope="row"
-                            className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium"
-                          >
-                            JeffToken
-                          </th>
-                          <td scope="row" className="px-6 py-4">
-                            Mint
-                          </td>
-                          <td scope="row" className="px-6 py-4">
-                            1FRMM...hV24fg
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+              <EventTable logs={logs} address={params.id}/>
               ) : (
                 ""
               )}
-              {/* {tab == 2 ? (
-              <div className="mt-2">
-                <h2 className="mb-4 text-2xl font-bold">Permissions</h2>
-                <div className="relative overflow-x-auto rounded">
-                  <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-                    <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th scope="col" className="px-6 py-3">
-                          Member
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Roles
-                        </th>
-                        <th scope="col" className="px-6 py-3"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <td
-                          scope="col"
-                          className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium"
-                        >
-                          0xe2ac869...02254E
-                        </td>
-                        <td scope="col" className="px-6 py-4">
-                          <div className="flex">
-                            <div className="mr-2 w-fit rounded border border-gray-500 px-2 py-1 font-sans text-xs font-semibold  text-gray-400 no-underline focus:outline-none">
-                              Member
-                            </div>
-
-                            <div className="mr-2 w-fit rounded border border-gray-500 px-2 py-1 font-sans text-xs font-semibold  text-gray-400 no-underline focus:outline-none">
-                              Owner
-                            </div>
-                          </div>
-                        </td>
-                        <td scope="col" className="px-6 py-4"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ) : (
-              ""
-            )} */}
-              {tab == 3 ? <Explorer metadata={selectedToken} /> : ""}
+              {tab == 2 ? <Explorer metadata={selectedToken} /> : ""}
             </div>
           </div>
         </div>

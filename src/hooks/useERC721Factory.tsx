@@ -46,10 +46,11 @@ export const useCreateERC721 = (
 };
 
 
-//Get all ERC721 Tokens
 export const useGetAllERC721 = () => {
   const { address } = useWeb3ModalAccount();
   const contract = getFactoryContract(readOnlyProvider);
+  const { walletProvider } = useWeb3ModalProvider();
+  const readWriteProvider = getProvider(walletProvider);
 
   const [tokens, setTokens] = useState({
     loading: true,
@@ -60,8 +61,6 @@ export const useGetAllERC721 = () => {
     contract
       .getCreatedNFTByAddress(address)
       .then((res) => {
-        console.log(res);
-        
         const converted = res.map((token: any) => ({
           name: token.name,
           symbol: token.symbol,
@@ -88,7 +87,7 @@ export const useGetAllERC721 = () => {
       };
 
       try {
-        const events = await wssProvider
+        const events = await readOnlyProvider
           .getLogs({
             ...filter,
             fromBlock: 5726200,
@@ -100,10 +99,10 @@ export const useGetAllERC721 = () => {
         console.error("Error fetching logs: ", error);
       }
 
-      contract.on("FungibleTokenCreated", getTokens);
+      contract.on("NftCreated", getTokens);
 
       // Cleanup function
-      return () => contract.off("FungibleTokenCreated", getTokens);
+      return () => contract.off("NftCreated", getTokens);
     };
 
     fetchTokens();

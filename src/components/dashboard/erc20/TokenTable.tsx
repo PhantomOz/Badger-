@@ -48,7 +48,7 @@ export function TokenTable({
                 <tr key={index} className="border-b dark:border-gray-70">
                   <th
                     scope="row"
-                    className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-400 "
+                    className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-600 "
                     onClick={() => {
                       router.push(`/dashboard/contracts/${data?.address}`);
                     }}

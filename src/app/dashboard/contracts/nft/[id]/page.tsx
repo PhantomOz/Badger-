@@ -22,6 +22,8 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
 
 const balanceOf = GetBalanceOfNFT(params.id)
 const uri = GetNFTUri(params.id);
+// console.log(params.id);
+
 
   return (
     <>

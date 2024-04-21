@@ -47,7 +47,7 @@ export function NftTable({
                 <tr key={index} className="border-b dark:border-gray-70">
                   <td
                     // scope="row"
-                    className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-400 "
+                    className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-700 "
                     onClick={() => {
                       router.push(`/dashboard/contracts/nft/${data?.address}`);
                     }}

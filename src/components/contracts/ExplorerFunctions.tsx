@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
-import { Copy } from "lucide-react"
+import { Copy } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const ExplorerFunctions = ({
   from,
@@ -23,88 +23,96 @@ export const ExplorerFunctions = ({
   handleTransfer,
   handleTransferFrom,
 }: {
-  from?: boolean
-  to?: boolean
-  spender?: boolean
-  value?: boolean
-  owner?: boolean
-  who?: boolean
-  view?: string
-  viewValue?: string
-  handleAllowance?: (who: string, spender: string) => Promise<number>
-  handleApproval?: (spender: string, value: string) => Promise<boolean>
-  handleBalanceOf?: (address: string) => Promise<number>
-  handleTransfer?: (to: string, value: string, data: []) => Promise<boolean>
-  handleTransferFrom?: (from: string, to: string, value: string, data: []) => Promise<boolean>
+  from?: boolean;
+  to?: boolean;
+  spender?: boolean;
+  value?: boolean;
+  owner?: boolean;
+  who?: boolean;
+  view?: string;
+  viewValue?: string;
+  handleAllowance?: (who: string, spender: string) => Promise<number>;
+  handleApproval?: (spender: string, value: string) => Promise<boolean>;
+  handleBalanceOf?: (address: string) => Promise<number>;
+  handleTransfer?: (to: string, value: string, data: []) => Promise<boolean>;
+  handleTransferFrom?: (
+    from: string,
+    to: string,
+    value: string,
+    data: []
+  ) => Promise<boolean>;
 }) => {
-  const [isResult, setIsResult] = useState(false)
-  const [result, setResult] = useState<any>('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isResult, setIsResult] = useState(false);
+  const [result, setResult] = useState<any>("");
+  const [isLoading, setIsLoading] = useState(false);
   const [inputValues, setInputValues] = useState({
-    from: '',
-    owner: '',
-    to: '',
-    spender: '',
-    value: '',
-    who: '',
-  })
+    from: "",
+    owner: "",
+    to: "",
+    spender: "",
+    value: "",
+    who: "",
+  });
 
   const handleRun = async () => {
-    setIsLoading(true)
-    // handleAllowance && handleAllowance()
-    if (handleAllowance) {
-      const result = await handleAllowance(inputValues.who, inputValues.spender)
-      setResult(result)
-      setIsResult(true)
-      setIsLoading(false)
+    setIsLoading(true);
+   
+    try {
+       if (handleAllowance) {
+         const result = await handleAllowance(inputValues.who, inputValues.spender);
+         setResult(result);
+         setIsResult(true);
+       } else if (handleApproval) {
+         const result = await handleApproval(inputValues.spender, inputValues.value);
+         setResult(result);
+         setIsResult(true);
+       } else if (handleBalanceOf) {
+         const result = await handleBalanceOf(inputValues.who);
+         setResult(result);
+         setIsResult(true);
+       } else if (handleTransfer) {
+         const result = await handleTransfer(inputValues.to, inputValues.value, []);
+         setResult(result);
+         setIsResult(true);
+       } else if (handleTransferFrom) {
+         const result = await handleTransferFrom(inputValues.from, inputValues.to, inputValues.value, []);
+         setResult(result);
+         setIsResult(true);
+       }
+    } catch (error) {
+       // Handle the error here, e.g., log it or show a message to the user
+       console.error('Error occurred:', error);
+    } finally {
+       setIsLoading(false); // Set loading to false regardless of success or error
     }
-    // handleApproval && handleApproval()
-    if (handleApproval) {
-      const result = await handleApproval(inputValues.spender, inputValues.value)
-      setResult(result)
-      setIsResult(true)
-      setIsLoading(false)
-    }
-    // handleBalanceOf && handleBalanceOf()
-    if (handleBalanceOf) {
-      const result = await handleBalanceOf(inputValues.who)
-      setResult(result)
-      setIsResult(true)
-      setIsLoading(false)
-    }
-    // handleTransfer && handleTransfer()
-    if (handleTransfer) {
-      const result = await handleTransfer(inputValues.to, inputValues.value, [])
-      setResult(result)
-      setIsResult(true)
-      setIsLoading(false)
-    }
-    // handleTransferFrom && handleTransferFrom()
-    if (handleTransferFrom) {
-      const result = await handleTransferFrom(
-        inputValues.from,
-        inputValues.to,
-        inputValues.value,
-        [],
-      )
-      setResult(result)
-      setIsResult(true)
-      setIsLoading(false)
-    }
-  }
+   };
 
   const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setInputValues({ ...inputValues, [name]: value })
-    setIsResult(false)
-  }
+    const { name, value } = e.target;
+    setInputValues({ ...inputValues, [name]: value });
+    setIsResult(false);
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      // const textToCopy = document.getElementById('textToCopy').innerText
+      await navigator.clipboard.writeText(String(text));
+      console.log(`${text} copied to clipboard`);
+      // toast.success("Address copied ");
+    } catch (err) {
+      // toast.error("Failed to copy address: " + String(err));
+    }
+  };
 
   return (
     <>
       <div className="mt-5">
         {owner ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="owner" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="owner"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               owner
             </Label>
             <Input
@@ -117,12 +125,15 @@ export const ExplorerFunctions = ({
             />
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {from ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="from" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="from"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               from
             </Label>
             <Input
@@ -135,12 +146,15 @@ export const ExplorerFunctions = ({
             />
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {to ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="to" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="to"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               to
             </Label>
             <Input
@@ -153,12 +167,15 @@ export const ExplorerFunctions = ({
             />
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {spender ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="spender" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="spender"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               spender
             </Label>
             <Input
@@ -171,12 +188,15 @@ export const ExplorerFunctions = ({
             />
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {value ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="value" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="value"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               value
             </Label>
             <Input
@@ -190,12 +210,15 @@ export const ExplorerFunctions = ({
             />
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {who ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="who" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="who"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               who
             </Label>
             <Input
@@ -208,28 +231,39 @@ export const ExplorerFunctions = ({
             />
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {view ? (
           <div className="mb-5 items-center gap-4">
-            <Label htmlFor="description" className="text-right text-lg capitalize text-gray-100">
+            <Label
+              htmlFor="description"
+              className="text-right text-lg capitalize text-gray-100"
+            >
               {view}
             </Label>
-            <div className=" mt-2 flex w-full max-w-sm cursor-pointer items-center justify-between rounded border border-gray-600 p-3 shadow">
+            <div
+              className=" mt-2 flex w-full max-w-sm cursor-pointer items-center justify-between rounded border border-gray-600 p-3 shadow"
+              onClick={()=>{
+                copyToClipboard(viewValue ?? '')
+              }}
+            >
               <span>{viewValue}</span>
-              <Copy />
+              <Copy className="w-5 h-5" />
             </div>
           </div>
         ) : (
-          ''
+          ""
         )}
 
         {!view && (
           <>
             {isResult && (
               <div className="mb-5 items-center gap-4">
-                <Label htmlFor="Result" className="text-right text-lg capitalize text-gray-100">
+                <Label
+                  htmlFor="Result"
+                  className="text-right text-lg capitalize text-gray-100"
+                >
                   Result
                 </Label>
                 <Input
@@ -245,7 +279,7 @@ export const ExplorerFunctions = ({
             <Button
               // type="submit"
               onClick={() => {
-                handleRun()
+                handleRun();
               }}
               disabled={isLoading}
               // isLoading={isLoading}
@@ -256,5 +290,5 @@ export const ExplorerFunctions = ({
         )}
       </div>
     </>
-  )
-}
+  );
+};
