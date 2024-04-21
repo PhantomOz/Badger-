@@ -95,7 +95,7 @@ const uri = GetNFTUri(params.id);
               ""
             )}
 
-            {tab == 3 ? <Explorer metadata={selectedToken}/> : ""}
+            {tab == 2? <Explorer metadata={selectedToken}/> : ""}
           </div>
         </div>
       </div>
