@@ -23,8 +23,6 @@ export const NavBar = (props: { isDashboard?: boolean }) => {
             {/* <w3m-button/> */}
             <ConnectButton />
             {/* <div className="space-x-6 text-gray-100"></div> */}
-       
-          
           </div>
         </div>
       </div>

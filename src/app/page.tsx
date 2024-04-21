@@ -26,7 +26,7 @@ export default function HomePage() {
       <NavBar />
       <div className="blob  relative flex grow flex-col items-center justify-center ">
         {/* Title */}
-        <div className="w-full absolute inset-0 h-screen">
+        <div className="w-full absolute overflow-hidden inset-0 h-screen">
         <SparklesCore
           id="tsparticlesfullpage"
           background="transparent"
@@ -38,7 +38,7 @@ export default function HomePage() {
         />
       </div>
 
-        <HomeAcurastSection />
+        <HomeAcurastSection  />
       </div>
       {/* <Footer /> */}
     </>
