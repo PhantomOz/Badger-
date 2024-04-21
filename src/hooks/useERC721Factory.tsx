@@ -26,7 +26,8 @@ export const useCreateERC721 = (
     if (!isSupportedChain(chainId)) return console.error("Wrong network");
    
     const readWriteProvider = getProvider(walletProvider);
-    const signer = await readWriteProvider.getSigner();
+    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+
 
     const contract = getFactoryContract(signer);
 
@@ -45,20 +46,22 @@ export const useCreateERC721 = (
 };
 
 
-//Get all ERC20 Tokens
+//Get all ERC721 Tokens
 export const useGetAllERC721 = () => {
   const { address } = useWeb3ModalAccount();
   const contract = getFactoryContract(readOnlyProvider);
 
   const [tokens, setTokens] = useState({
     loading: true,
-    data: [],
+    nfts: [],
   });
 
   const getTokens = () => {
     contract
       .getCreatedNFTByAddress(address)
       .then((res) => {
+        console.log(res);
+        
         const converted = res.map((token: any) => ({
           name: token.name,
           symbol: token.symbol,
@@ -68,7 +71,7 @@ export const useGetAllERC721 = () => {
         }));
         setTokens({
           loading: false,
-          data: converted,
+          nfts: converted,
         });
       })
       .catch((err) => {
@@ -81,7 +84,7 @@ export const useGetAllERC721 = () => {
     const fetchTokens = async () => {
       const filter = {
         address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
-        topics: [ethers.id("FungibleTokenCreated(address,address)")],
+        topics: [ethers.id("NftCreated(address,address)")],
       };
 
       try {

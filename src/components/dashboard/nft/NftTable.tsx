@@ -23,7 +23,7 @@ export function NftTable({
           <div className=" mx-auto h-10 w-10 "></div>
         </div>
       ) : (
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+        <table className="w-full mx-auto text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-900 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -35,9 +35,9 @@ export function NftTable({
               <th scope="col" className="px-6 py-3 ">
                 Address
               </th>
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 Total Supply
-              </th>
+              </th> */}
             </tr>
           </thead>
 
@@ -45,15 +45,15 @@ export function NftTable({
             {(fullPage ? tableData : tableData.slice(0, 5))?.map(
               (data, index) => (
                 <tr key={index} className="border-b dark:border-gray-70">
-                  <th
-                    scope="row"
+                  <td
+                    // scope="row"
                     className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-400 "
                     onClick={() => {
-                      router.push(`/dashboard/contracts/${data?.address}`);
+                      router.push(`/dashboard/contracts/nft/${data?.address}`);
                     }}
                   >
                     {data?.name}
-                  </th>
+                  </td>
                   <td className="px-6 py-4">{data?.symbol}</td>
                   <td className="px-6 py-4">
                     {String(data?.address).substring(0, 8)}...
@@ -62,7 +62,7 @@ export function NftTable({
                       String(data?.address).length - 1
                     )}
                   </td>
-                  <td className="px-6 py-4">{data?.supply?.toString()}</td>
+                  {/* <td className="px-6 py-4">{data?.supply?.toString()}</td> */}
                 </tr>
               )
             )}

@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useCreateERC20 } from "@/hooks/useERC20Factory";
 import {
   useWeb3ModalAccount,
   useWeb3ModalProvider,
@@ -20,8 +19,7 @@ import {
 import { getProvider } from "@/constants/providers";
 import { getFactoryContract } from "@/constants/contracts";
 
-const CreateErc20Form = ({onSubmit}: {onSubmit?: () => void}) => {
-  const { chainId, address } = useWeb3ModalAccount();
+const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { walletProvider } = useWeb3ModalProvider();
 
   const readWriteProvider = getProvider(walletProvider);
@@ -42,7 +40,9 @@ const CreateErc20Form = ({onSubmit}: {onSubmit?: () => void}) => {
   };
 
   async function createToken() {
-    const signer = await readWriteProvider.getSigner();
+    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+
+    // const signer = await readWriteProvider.getSigner();
 
     const contract = getFactoryContract(signer);
     try {
@@ -58,7 +58,7 @@ const CreateErc20Form = ({onSubmit}: {onSubmit?: () => void}) => {
       const receipt = await transaction.wait();
 
       console.log("receipt: ", receipt);
-      if(receipt.status === 1 && onSubmit){
+      if (receipt.status === 1 && onSubmit) {
         onSubmit();
       }
     } catch (error) {

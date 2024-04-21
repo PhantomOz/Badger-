@@ -3,25 +3,25 @@
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
 import { Inter, Montserrat } from "next/font/google";
 
-export const SUPPORTED_CHAIN = 11155111;
+export const SUPPORTED_CHAIN = 8082;
 
-export const BASE_SEPOLIA_ID = 84532;
-export const SEPOLIA_ID = 11155111;
-export const OPTIMISM_SEPOLIA_ID = 11155420;
+export const BASE_SHARDEUM_ID = 84532;
+export const SHARDEUM_ID = 8082;
+export const OPTIMISM_SHARDEUM_ID = 11155420;
 const montserrat = Montserrat({ subsets: ["latin"] });
 
-const Sepolia = {
-  chainId: SEPOLIA_ID,
-  name: "Sepolia",
-  currency: "ETH",
-  explorerUrl: "https://sepolia.etherscan.io/",
+const Shardeum = {
+  chainId: SHARDEUM_ID,
+  name: "Shardeum Sphinx 1.X",
+  currency: "SHM",
+  explorerUrl: "https://explorer-sphinx.shardeum.org/",
   rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
 };
 
 const metadata = {
-  name: "PolySwap",
-  description: "My Website description",
-  url: "https://mywebsite.com", // origin must match your domain & subdomain
+  name: "Badger for Shardeum",
+  description: "No code token creation",
+  url: "https://mywebsite.com",
   icons: ["https://avatars.mywebsite.com/"],
 };
 
@@ -32,7 +32,7 @@ const metadata = {
 // 5. Create a Web3Modal instance
 createWeb3Modal({
   ethersConfig: defaultConfig({ metadata }),
-  chains: [Sepolia],
+  chains: [Shardeum],
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   enableAnalytics: false, // Optional - defaults
   themeVariables: {

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useGetAllERC20 } from "./useERC20Factory";
-import { getFungibleContract } from "../constants/contracts";
+import { getFungibleContract, getNonFungibleContract } from "../constants/contracts";
 import { getProvider, readOnlyProvider } from "@/constants/providers";
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/react";
 import { ethers } from "ethers";
+import { useGetAllERC721 } from "./useERC721Factory";
 
 // Get single ERC20 Token
 export const useGetSingleERC20 = (tokenAddress: string) => {
@@ -29,8 +30,7 @@ export const useGetSingleERC20 = (tokenAddress: string) => {
   return selectedToken;
 };
 
-// Hanle ERC20 interaction
-
+// Handle ERC20 interaction
 export const GetBalanceOf = (tokenAddress: string) => {
   const [balance, setBalance] = useState<number | undefined>(undefined);
   const { address } = useWeb3ModalAccount();
@@ -40,7 +40,9 @@ export const GetBalanceOf = (tokenAddress: string) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const signer = await readWriteProvider.getSigner();
+        // const signer = await readWriteProvider.getSigner();
+    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+
         const contract = getFungibleContract(signer, tokenAddress);
         const balance = await contract.balanceOf(address);
         setBalance(balance);
@@ -56,45 +58,77 @@ export const GetBalanceOf = (tokenAddress: string) => {
   return balance;
 };
 
-//get all events
-// const events = await contract.queryFilter("*", fromBlock, toBlock)
-export const useGetTokenEvents = (tokenAddress:string) => {
-  const contract = getFungibleContract(readOnlyProvider);
-  // const { walletProvider } = useWeb3ModalProvider();
-  // // const readWriteProvider = getProvider(walletProvider);
+export const useGetSingleNFT = (tokenAddress: string) => {
+  const { loading, nfts } = useGetAllERC721();
 
-  // // const [tokens, setTokens] = useState();
+  const getNFTByAddress = useCallback(
+    (tokenAddress: string) => {
+      const token = nfts.find((token: any) => token.address === tokenAddress);
+      return token;
+    },
+    [nfts]
+  );
 
-    const fetchTokens = async () => {
-      const filter = {
-        address: tokenAddress,
-        topics: [ethers.id("Transfer(address,address,uint256)"), ethers.id("Approval(address,address,uint256)")],
-      };
+  const [selectedToken, setSelectedToken] = useState<any>(null);
 
-      try {
-        const events = await readOnlyProvider
-          .getLogs({
-            ...filter,
-            fromBlock: 5726200,
-          })
-          .then((events) => {
-            // getTokens();
-            console.log(events);
-            // setTokens(events || "")
-            
-          });
-      } catch (error) {
-        console.error("Error fetching logs: ", error);
-      }
+  useEffect(() => {
+    if (nfts.length > 0) {
+      const token = getNFTByAddress(tokenAddress);
+      setSelectedToken(token);
+    }
+  }, [nfts, getNFTByAddress]);
 
-      // contract.on("FungibleTokenCreated", getTokens);
-
-      // // Cleanup function
-      // return () => contract.off("FungibleTokenCreated", getTokens);
-    };
-
-
-
-  // return tokens;
+  return selectedToken;
 };
 
+export const GetBalanceOfNFT = (tokenAddress: string) => {
+  const [balance, setBalance] = useState<number | undefined>(undefined);
+  const { address } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
+  const readWriteProvider = getProvider(walletProvider);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const signer = await readWriteProvider.getSigner();
+    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+
+        const contract = getNonFungibleContract(signer, tokenAddress);
+        const balance = await contract.balanceOf(address);
+        setBalance(balance);
+      } catch (error) {
+        console.error('Error fetching balance:', error);
+        // Optionally handle the error or set a default balance
+      }
+    };
+
+    fetchData();
+  }, [tokenAddress, address]);
+
+  return balance;
+};
+export const GetNFTUri = (tokenAddress: string) => {
+  const [uri, setUri] = useState<string | undefined>(undefined);
+  const { address } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
+  const readWriteProvider = getProvider(walletProvider);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+
+        const contract = getNonFungibleContract(signer, tokenAddress);
+        const uri = await contract.tokenURI(0);
+        setUri(uri);
+      } catch (error) {
+        console.error('Error fetching balance:', error);
+        // Optionally handle the error or set a default balance
+      }
+    };
+
+    fetchData();
+  }, [tokenAddress, address]);
+
+  return uri;
+};

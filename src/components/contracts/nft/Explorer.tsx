@@ -7,12 +7,12 @@ import toast from "react-hot-toast";
 // import { contractTxWithToast } from '@/utils/contract-tx-with-toast'
 
 import { ExplorerFunctions } from "./ExplorerFunctions";
-import {
-  useWeb3ModalAccount,
-  useWeb3ModalProvider,
-} from "@web3modal/ethers/react";
+import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 import { getProvider } from "@/constants/providers";
-import { getFungibleContract } from "@/constants/contracts";
+import {
+  getFungibleContract,
+  getNonFungibleContract,
+} from "@/constants/contracts";
 
 export const Explorer = ({ metadata }: { metadata: any }) => {
   const [tab, setTab] = useState(0);
@@ -26,48 +26,61 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
 
   const handleBalance = async (address: string) => {
     try {
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
-      const contract = getFungibleContract(signer, metadata?.address);
+      const contract = getNonFungibleContract(signer, metadata?.address);
       const balance = await contract.balanceOf(address);
+      console.log(balance);
+
       return Number(balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
       throw error;
     }
   };
-  const handleAllowance = async (
-    who: string,
-    spender: string
+
+  const handleGetApproved = async (tokenId: string): Promise<string> => {
+    try {
+         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+
+      const contract = getNonFungibleContract(signer, metadata.address);
+      const approval = await contract.getApproved(tokenId);
+      console.log(approval);
+      return approval;
+    } catch (error) {
+        console.error("Error handling approval:", (error as Error).message);
+        throw error;
+    }
+  };
+
+  const handleTokenUri = async (
+   tokenId: string,
   ): Promise<number> => {
     try {
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
-      const contract = getFungibleContract(signer, metadata.address);
-      const allowance = await contract.allowance(who, spender);
-      console.log(allowance);
-      
-      return Number(allowance);
+      const contract = getNonFungibleContract(signer, metadata.address);
+      const tokenURI = await contract.tokenURI(tokenId);
+      console.log(tokenURI);
+
+      return tokenURI;
     } catch (error) {
       console.error("Error fetching allowance:", error);
       throw error;
     }
-
-    // return 1;
   };
 
-  const handleTransfer = async (
+  const handleApprove = async (
     to: string,
-    value: string,
-    data: []
+    tokenId: string
   ): Promise<boolean> => {
     try {
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
-      const contract = getFungibleContract(signer, metadata.address);
-      const transfer = await contract.transfer(to, value);
+      const contract = getNonFungibleContract(signer, metadata.address);
+      const transfer = await contract.approve(to, tokenId);
       const receipt = await transfer.wait();
-      console.log(receipt);
+      console.log(contract);
       if (receipt.status === 1) {
         return true;
       } else {
@@ -82,14 +95,13 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
   const handleTransferFrom = async (
     from: string,
     to: string,
-    value: string,
-    data: []
+    tokenId: string
   ): Promise<boolean> => {
     try {
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
-      const contract = getFungibleContract(signer, metadata.address);
-      const transferFrom = await contract.transferFrom(from, to, value);
+      const contract = getNonFungibleContract(signer, metadata.address);
+      const transferFrom = await contract.transferFrom(from, to, tokenId);
       const receipt = await transferFrom.wait();
 
       console.log(receipt);
@@ -104,25 +116,25 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     }
   };
 
-  const handleApproval = async (
-    spender: string,
-    value: string
-  ): Promise<boolean> => {
+  const handleOwnerOf = async (
+    tokenId: string
+  ): Promise<string> => {
     try {
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
-      const contract = getFungibleContract(signer, metadata.address);
-      const approval = await contract.approve(spender, value);
-      const receipt = await approval.wait();
+      const contract = getNonFungibleContract(signer, metadata.address);
+      const ownerOf = await contract.ownerOf(tokenId);
+      return ownerOf;
+    //   const receipt = await transferFrom.wait();
 
-      console.log(receipt);
-      if (receipt.status === 1) {
-        return true;
-      } else {
-        return false;
-      }
+    //   console.log(receipt);
+    //   if (receipt.status === 1) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
     } catch (error) {
-      console.error("Error  handling approval:", error);
+      console.error("Error  handling transfer-from:", error);
       throw error;
     }
   };
@@ -156,6 +168,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
           </div>
 
           {/* Functions */}
+
+          {/* write Functions */}
           <div
             className={`section px-6 py-4 text-gray-500 ${
               tab === 0 ? "block" : "hidden"
@@ -167,25 +181,38 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             <p
               // className="mb-2 cursor-pointer font-mono font-semibold"
               className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "transfer" ? "text-gray-200" : ""
+                currentFunction === "approve" ? "text-gray-200" : ""
               }`}
-              id="transfer"
+              id="approve"
               onClick={(e) => {
-                handleSetCurrentFunction("transfer");
+                handleSetCurrentFunction("approve");
               }}
             >
-              transfer
+              approve
             </p>
             <p
               className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "approval" ? "text-gray-200" : ""
+                currentFunction === "safeTransferFrom" ? "text-gray-200" : ""
               }`}
               onClick={(e) => {
-                handleSetCurrentFunction("approval");
+                handleSetCurrentFunction("safeTransferFrom");
               }}
             >
-              approval
+              safeTransferFrom
             </p>
+            <p
+              className={`mb-2 cursor-pointer font-mono font-semibold ${
+                currentFunction === "safeTransferFrom(data)"
+                  ? "text-gray-200"
+                  : ""
+              }`}
+              onClick={(e) => {
+                handleSetCurrentFunction("safeTransferFrom(data)");
+              }}
+            >
+              safeTransferFrom
+            </p>
+
             <p
               className={`mb-2 cursor-pointer font-mono font-semibold ${
                 currentFunction === "transferFrom" ? "text-gray-200" : ""
@@ -198,6 +225,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             </p>
           </div>
 
+          {/* Read Functions */}
           <div
             className={`section px-6 py-4 text-gray-500 ${
               tab === 1 ? "block" : "hidden"
@@ -206,16 +234,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             <p className="mb-2 border-b border-gray-800 pb-2 font-semibold text-gray-300">
               Functions
             </p>
-            <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "allowance" ? "text-gray-200" : ""
-              }`}
-              onClick={(e) => {
-                handleSetCurrentFunction("allowance");
-              }}
-            >
-              allowance
-            </p>
+
             <p
               className={`mb-2 cursor-pointer font-mono font-semibold ${
                 currentFunction === "balanceOf" ? "text-gray-200" : ""
@@ -226,25 +245,37 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             >
               balanceOf
             </p>
+
             <p
               className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "totalSupply" ? "text-gray-200" : ""
+                currentFunction === "getApproved" ? "text-gray-200" : ""
               }`}
               onClick={(e) => {
-                handleSetCurrentFunction("totalSupply");
+                handleSetCurrentFunction("getApproved");
               }}
             >
-              totalSupply
+              getApproved
+            </p>
+
+            <p
+              className={`mb-2 cursor-pointer font-mono font-semibold ${
+                currentFunction === "ownerOf" ? "text-gray-200" : ""
+              }`}
+              onClick={(e) => {
+                handleSetCurrentFunction("ownerOf");
+              }}
+            >
+              ownerOf
             </p>
             <p
               className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "decimals" ? "text-gray-200" : ""
+                currentFunction === "tokenURI" ? "text-gray-200" : ""
               }`}
               onClick={(e) => {
-                handleSetCurrentFunction("decimals");
+                handleSetCurrentFunction("tokenURI");
               }}
             >
-              decimals
+              tokenURI
             </p>
             <p
               className={`mb-2 cursor-pointer font-mono font-semibold ${
@@ -279,38 +310,43 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               {currentFunction || "No Method Selected"}
             </p>
             <small></small>
-            {currentFunction === "transfer" ? (
-              <ExplorerFunctions to value handleTransfer={handleTransfer} />
-            ) : currentFunction === "approval" ? (
+            { currentFunction === "approve" ? (
               <ExplorerFunctions
-                spender
-                value
-                handleApproval={handleApproval}
+                to
+                tokenId
+                handleApprove={handleApprove}
               />
             ) : currentFunction === "transferFrom" ? (
               <ExplorerFunctions
                 from
                 to
-                value
+                tokenId
                 handleTransferFrom={handleTransferFrom}
               />
-            ) : currentFunction === "allowance" ? (
-              <ExplorerFunctions
-                owner
-                spender
-                handleAllowance={handleAllowance}
-              />
             ) : currentFunction === "balanceOf" ? (
-              <ExplorerFunctions who handleBalanceOf={handleBalance} />
-            ) : currentFunction === "totalSupply" ? (
+              <ExplorerFunctions owner handleBalanceOf={handleBalance} />
+            ) : currentFunction === "getApproved" ? (
+              <ExplorerFunctions tokenId  handleGetApproved={handleGetApproved}/>
+            ) : currentFunction === "ownerOf" ? (
+              <ExplorerFunctions tokenId 
+              handleOwnerOf={handleOwnerOf}
+               />
+            ) : currentFunction === "tokenURI" ? (
+              <ExplorerFunctions tokenId handleTokenUri={handleTokenUri} />
+            ) : currentFunction === "safeTransferFrom" ? (
               <ExplorerFunctions
-                view={"totalSupply"}
-                viewValue={metadata?.supply?.toString()}
+                from
+                to
+                tokenId
+                handleBalanceOf={handleBalance}
               />
-            ) : currentFunction === "decimals" ? (
+            ) : currentFunction === "safeTransferFrom(data)" ? (
               <ExplorerFunctions
-                view={"decimals"}
-                viewValue={Number(metadata?.decimals).toString()}
+                from
+                to
+                tokenId
+                data
+                handleBalanceOf={handleBalance}
               />
             ) : currentFunction === "name" ? (
               <ExplorerFunctions view={"name"} viewValue={metadata?.name} />

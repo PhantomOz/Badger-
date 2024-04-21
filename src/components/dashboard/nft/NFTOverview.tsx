@@ -5,7 +5,7 @@ import { useGetAllERC721 } from '@/hooks/useERC721Factory';
 
 export function NFTOverview({fullPage}:{fullPage:boolean}){
   // console.log(tableData)
-  const { loading, data } = useGetAllERC721();
+  const { loading, nfts } = useGetAllERC721();
 
   return (
     <div className="mt-20">
@@ -22,7 +22,7 @@ export function NFTOverview({fullPage}:{fullPage:boolean}){
 
         <CreateNFT />
       </div>
-      <NftTable tableData={data} isLoading={false} fullPage={fullPage}/>
+      <NftTable tableData={nfts} isLoading={false} fullPage={fullPage}/>
     </div>
   )
 }

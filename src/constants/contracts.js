@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import Abi from "./abi.json";
 import fungibleAbi from "./fungibleAbi.json";
+import nonFungibleAbi from "./nonFungibleAbi.json"
 
 export const getFactoryContract = (providerOrSigner) =>
     new ethers.Contract(
@@ -13,5 +14,12 @@ export const getFactoryContract = (providerOrSigner) =>
     new ethers.Contract(
         tokenAddress,
         fungibleAbi,
+        providerOrSigner
+    );
+
+    export const getNonFungibleContract = (providerOrSigner, tokenAddress) =>
+    new ethers.Contract(
+        tokenAddress,
+        nonFungibleAbi,
         providerOrSigner
     );

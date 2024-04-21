@@ -27,7 +27,7 @@ export const useCreateERC20 = (
     if (!isSupportedChain(chainId)) return console.error("Wrong network");
    
     const readWriteProvider = getProvider(walletProvider);
-    const signer = await readWriteProvider.getSigner();
+    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
     const contract = getFactoryContract(signer);
 
