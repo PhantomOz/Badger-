@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Project Name: BADGER
 
-## Getting Started
+![Badger Home Page](./banner.png)
 
-First, run the development server:
+## Overview
+
+BADGER is an innovative no-code application built for the Encode Scaling Web3 24Q1 Hackathon. It leverages the power of Shardeum to enable users to create smart contracts with ease.
+
+## Features
+
+- **Token Creation**: Users can create FTs and NFTs by interacting with a user-friendly interface.
+- **EVM Compatibility**: Fully compatible with any EVM-based blockchain.
+- **EIP Standard**: Tokens follows the Ethereum Standard.
+- **Contract Interaction**: Nice Iterface for users to interact With.
+
+## Tools
+
+- [**_NextJs_**](https://nextjs.org/)
+- [**_Foundry_**](https://book.getfoundry.sh/)
+- [**_TypeScript_**](https://www.typescriptlang.org/)
+- [**_Solidity_**](https://soliditylang.org/)
+
+## How It Works
+
+1. **User Authentication**: Users use their wallet to connect to the platform.
+2. **Get Faucet Tokens**: For the sake of the demo you can get the Shadeum token(SHM) from this [faucet](https://chaindrop.org/?chainid=8082&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
+3. **Token Configuration**: Users select the type of token they wish to create and configure its properties.
+4. **Deployment**: The tokens are deployed to the Shardeum blockchain.
+5. **Management**: Users can manage their tokens within the platform.
+
+## Installation
+
+Provide step-by-step instructions on how to get a development environment running.
 
 ```bash
+git clone https://github.com/JeffreyJoel/badger-evm.git
+cd badger
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Future plans
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+As we move on from the hackathon we plan to add more functionalities like:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- The ability for users dynamically select what features their contract should involve e.g if they want their token burnable, ownable, mintable, e.t.c.
+- The ability for users to create `staking` contract, `governance` contract and more.
+- Badger Sdk for developers to create and build, deploy smart contract on polkadot using languages like JavaScript, TypeScript, and C#.
 
-## Learn More
+We believe that this tool will be great for onboarding more users to the shardeum network.
 
-To learn more about Next.js, take a look at the following resources:
+## Smart Contract
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You can find the Badger smart contracts - [HERE](https://github.com/sogobanwo/badger-Shardeum-Contract)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Acknowledgments
 
-## Deploy on Vercel
+- Encode Team.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Hacked By Team Badger
