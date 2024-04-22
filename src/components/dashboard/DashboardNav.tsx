@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Tab {
   id: number;
@@ -13,7 +13,16 @@ interface TabNavigationProps {
   setTab: (id: number) => void;
 }
 
+const [isClient, setIsClient] = useState(false);
+useEffect(() => {
+  setIsClient(true);
+}, []);
+
 const DashboardTabNavigation: React.FC<TabNavigationProps> = ({ tabs, selectedTab, setTab }) => {
+  if (!isClient) {
+    return null;
+  }
+
   return (
     <div className="fixed left-0 z-30 right-0 mx-auto mb-4 w-full border bg-background">
       <div className="container px-3 py-3 lg:px-5 lg:pl-14">

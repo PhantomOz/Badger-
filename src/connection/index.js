@@ -5,9 +5,7 @@ import { Inter, Montserrat } from "next/font/google";
 
 export const SUPPORTED_CHAIN = 8082;
 
-export const BASE_SHARDEUM_ID = 84532;
 export const SHARDEUM_ID = 8082;
-export const OPTIMISM_SHARDEUM_ID = 11155420;
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 const Shardeum = {
@@ -25,11 +23,6 @@ const metadata = {
   icons: ["https://avatars.mywebsite.com/"],
 };
 
-// const ethersConfig = defaultConfig({
-//     metadata
-//   })
-
-// 5. Create a Web3Modal instance
 createWeb3Modal({
   ethersConfig: defaultConfig({ metadata }),
   chains: [Shardeum],

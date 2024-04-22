@@ -1,25 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
-
-// import { useInkathon } from '@scio-labs/use-inkathon'
-// import { toast } from 'react-hot-toast'
-
-// import { Footer } from './components/footer'
-import { HomeAcurastSection } from '@/components/landing/home-page-acurast'
-import { HomeMidSection } from '@/components/landing/home-page-middle-section'
-import { HomeTopSection } from '@/components/landing/home-page-top-section'
+import { HomeSection } from '@/components/landing/home-page'
 import { NavBar } from '@/components/shared/nav-bar'
 import { SparklesCore } from '@/components/ui/sparkles'
-// import { Partners } from './components/partners'
 
 export default function HomePage() {
-  // Display `useInkathon` error messages (optional)
-  // const { error } = useInkathon()
-  // useEffect(() => {
-  //   if (!error) return
-  //   toast.error(error.message)
-  // }, [error])
 
   return (
     <>
@@ -38,7 +23,7 @@ export default function HomePage() {
         />
       </div>
 
-        <HomeAcurastSection  />
+        <HomeSection  />
       </div>
       {/* <Footer /> */}
     </>

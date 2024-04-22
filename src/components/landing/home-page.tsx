@@ -13,7 +13,7 @@ import Link from "next/link";
 
 export const gluten = Gluten({ subsets: ["latin"] });
 
-export const HomeAcurastSection: FC = () => {
+export const HomeSection: FC = () => {
   return (
     <>
       <section className="container mt-0 sm:mt-6">
