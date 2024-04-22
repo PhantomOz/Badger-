@@ -18,7 +18,7 @@ const Shardeum = {
 
 const metadata = {
   name: "Badger for Shardeum",
-  description: "No code token creation",
+  description: "No code token and nft deployment and interaction",
   url: "https://mywebsite.com",
   icons: ["https://avatars.mywebsite.com/"],
 };
