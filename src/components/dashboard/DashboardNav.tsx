@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface Tab {
   id: number;
@@ -13,12 +13,16 @@ interface TabNavigationProps {
   setTab: (id: number) => void;
 }
 
-const [isClient, setIsClient] = useState(false);
-useEffect(() => {
-  setIsClient(true);
-}, []);
+const DashboardTabNavigation: React.FC<TabNavigationProps> = ({
+  tabs,
+  selectedTab,
+  setTab,
+}) => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-const DashboardTabNavigation: React.FC<TabNavigationProps> = ({ tabs, selectedTab, setTab }) => {
   if (!isClient) {
     return null;
   }
@@ -33,7 +37,9 @@ const DashboardTabNavigation: React.FC<TabNavigationProps> = ({ tabs, selectedTa
                 <button
                   key={tab.id}
                   className={`mr-2 rounded border px-4 py-2 font-sans text-sm font-semibold no-underline focus:outline-none ${
-                    selectedTab === tab.id ? "bg-white text-gray-900" : "text-white"
+                    selectedTab === tab.id
+                      ? "bg-white text-gray-900"
+                      : "text-white"
                   }`}
                   onClick={() => setTab(tab.id)}
                 >
