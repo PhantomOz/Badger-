@@ -5,7 +5,7 @@
 
 ## Overview
 
-Welcome to **Badger**, the no-code platform designed to simplify the deployment and interaction with smart contracts on the Shardeum blockchain. Our intuitive interface and powerful backend ensure that you can focus on what truly matters - bringing your blockchain ideas to life.
+Welcome to **Badger**, the no-code platform designed to simplify the deployment and interaction with smart contracts on the EVM compatible blockchains. Our intuitive interface and powerful backend ensure that you can focus on what truly matters - bringing your blockchain ideas to life.
 
 ## Features
 
