@@ -17,7 +17,7 @@ export function NFTOverview({fullPage}:{fullPage:boolean}){
              NFT Contracts
           </h3>
           <small className="text-lg font-light text-gray-200">
-            The list of NFT instances that you have deployed with badger on the Shardeum
+            The list of NFT instances that you have deployed with badger on the Polygon
             Network.
           </small>
         </div>

@@ -41,7 +41,7 @@ export default function ContractDetails({
           <div className="mb-3 flex items-center">
             <h1 className="mr-2 text-2xl font-bold">{name}</h1>
             <button className="mr-2 rounded border px-2 py-1 font-sans text-xs font-semibold text-white no-underline focus:outline-none">
-              Shardeum
+              Polygon
             </button>
           </div>
           <p className="mb-3 text-gray-300">{description}</p>
@@ -62,9 +62,9 @@ export default function ContractDetails({
             </div>
             <div className="mr-2 w-fit cursor-pointer rounded border px-2 py-1 font-sans text-xs  font-semibold text-white no-underline focus:outline-none">
               <span>
-                <a href={`https://explorer-sphinx.shardeum.org/address/${address}`} target="_blank" className="flex items-center">
+                <a href={`https://amoy.polygonscan.com/address/${address}`} target="_blank" className="flex items-center">
                   <ExternalLinkIcon className="w-4 h-6" />
-                  <span className="ml-2">{String(`https://explorer-sphinx.shardeum.org/address/${address}`).substring(8, 18)}...</span>
+                  <span className="ml-2">{String(`https://amoy.polygonscan.com/address/${address}`).substring(8, 18)}...</span>
                 </a>
               </span>
             </div>
