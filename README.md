@@ -24,10 +24,9 @@ Welcome to **Badger**, the no-code platform designed to simplify the deployment 
 ## How It Works
 
 1. **User Authentication**: Users use their wallet to connect to the platform.
-2. **Get Faucet Tokens**: For the sake of the demo you can get the Shadeum token(SHM) from this [faucet](https://chaindrop.org/?chainid=8082&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
-3. **Token Configuration**: Users select the type of token they wish to create and configure its properties.
-4. **Deployment**: The tokens are deployed to the Shardeum blockchain.
-5. **Management**: Users can manage their tokens within the platform.
+2. **Token Configuration**: Users select the type of token they wish to create and configure its properties.
+3. **Deployment**: The tokens are deployed to the Amoy blockchain.
+4. **Management**: Users can manage their tokens within the platform.
 
 ## Installation
 
