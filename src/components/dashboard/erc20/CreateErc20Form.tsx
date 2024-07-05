@@ -20,6 +20,8 @@ import {
 import { getProvider } from "@/constants/providers";
 import { getFactoryContract } from "@/constants/contracts";
 import { generateCode } from "@/utils";
+import RadioContainer from "@/components/ui/radio";
+import RadioItem from "@/components/ui/radioitem";
 
 const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { walletProvider } = useWeb3ModalProvider();
@@ -36,7 +38,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     mintable: false,
     burnable: false,
     pausable: false,
-
+    permit: false,
+    'flash minting': true,
   });
 
   const [contract, setContract] = useState("");
@@ -154,6 +157,14 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
               className="mt-2"
             />
           </div>
+          <hr className="h-5" />
+          <p>Features</p>
+          <RadioContainer className="flex flex-col gap-2.5">
+            <div className="flex items-center">
+              <RadioItem value="Block Number" id='r1' />
+              <Label htmlFor="r1">Block Number</Label>
+            </div>
+          </RadioContainer>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative">
