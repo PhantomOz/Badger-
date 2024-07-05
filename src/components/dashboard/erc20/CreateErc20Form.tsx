@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CodeBlock, dracula } from 'react-code-blocks';
 
 import {
   useWeb3ModalAccount,
@@ -18,6 +19,7 @@ import {
 } from "@web3modal/ethers/react";
 import { getProvider } from "@/constants/providers";
 import { getFactoryContract } from "@/constants/contracts";
+import { generateCode } from "@/utils";
 
 const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { walletProvider } = useWeb3ModalProvider();
@@ -27,12 +29,22 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const [loading, setLoading] = useState(false);
 
   const [inputValues, setInputValues] = useState({
-    name: "",
-    symbol: "",
-    supply: 0,
-    description: "",
+    name: "MyToken",
+    symbol: "MTK",
+    premint: 0,
     decimal: 18,
+    mintable: false,
+    burnable: false,
+    pausable: false,
+
   });
+
+  const [contract, setContract] = useState("");
+
+
+  useEffect(() => {
+    setContract(generateCode(inputValues));
+  }, [inputValues]);
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
@@ -50,8 +62,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       const transaction = await contract.createFungibleToken(
         inputValues.name,
         inputValues.symbol,
-        inputValues.supply,
-        inputValues.description,
+        inputValues.premint,
+        // inputValues.description,
         inputValues.decimal
       );
 
@@ -62,7 +74,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       if (receipt.status === 1 && onSubmit) {
         onSubmit();
       }
-    setLoading(false)
+      setLoading(false)
 
     } catch (error) {
       console.error("error: ", error);
@@ -71,7 +83,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   // console.log(response);
 
   return (
-    <DialogContent className="sm:max-w-[425px] md:max-w-[550px]">
+    <DialogContent className="sm:max-w-[425px] md:max-w-[100%]">
       <DialogHeader>
         <DialogTitle>Create Token</DialogTitle>
         <DialogDescription>
@@ -79,63 +91,78 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           Parameters the contract specifies to be passed in during deployment.
         </DialogDescription>
       </DialogHeader>
-      <div className=" py-4">
-        <div className="mb-5 items-center gap-4">
-          <Label htmlFor="name" className=" text-right">
-            Name
-          </Label>
-          <Input
-            id="name"
-            name="name"
-            onChange={handleInputChange}
-            className="mt-2"
-          />
-        </div>
-        <div className="mb-5 items-center gap-4">
-          <Label htmlFor="symbol" className="text-right">
-            Symbol
-          </Label>
-          <Input
-            id="symbol"
-            name="symbol"
-            onChange={handleInputChange}
-            className="mt-2"
-          />
-        </div>
-        <div className="mb-5 items-center gap-4">
-          <Label htmlFor="symbol" className="text-right">
-            Description
-          </Label>
-          <Input
-            id="description"
-            name="description"
-            onChange={handleInputChange}
-            className="mt-2"
-          />
-        </div>
+      <div className="flex flex-row items-stretch gap-2 overflow-y-auto">
+        <div className=" py-4">
+          <div className="mb-5 items-center gap-4">
+            <Label htmlFor="name" className=" text-right">
+              Name
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              onChange={handleInputChange}
+              className="mt-2"
+              value={inputValues.name}
+            />
+          </div>
+          <div className="mb-5 items-center gap-4">
+            <Label htmlFor="symbol" className="text-right">
+              Symbol
+            </Label>
+            <Input
+              id="symbol"
+              name="symbol"
+              onChange={handleInputChange}
+              className="mt-2"
+              value={inputValues.symbol}
+            />
+          </div>
+          <div className="mb-5 items-center gap-4">
+            <Label htmlFor="symbol" className="text-right">
+              Description
+            </Label>
+            <Input
+              id="description"
+              name="description"
+              onChange={handleInputChange}
+              className="mt-2"
+            />
+          </div>
 
-        <div className="mb-5 items-center gap-4">
-          <Label htmlFor="symbol" className="text-right">
-            Supply
-          </Label>
-          <Input
-            id="supply"
-            name="supply"
-            onChange={handleInputChange}
-            className="mt-2"
-          />
-        </div>
+          <div className="mb-5 items-center gap-4">
+            <Label htmlFor="symbol" className="text-right">
+              Supply
+            </Label>
+            <Input
+              id="supply"
+              name="premint"
+              onChange={handleInputChange}
+              className="mt-2"
+              value={inputValues.premint}
+            />
+          </div>
 
-        <div className="mb-5 items-center gap-4">
-          <Label htmlFor="symbol" className="text-right">
-            Decimal
-          </Label>
-          <Input
-            id="decimal"
-            name="decimal"
-            // value={inputValues.decimal}
-            onChange={handleInputChange}
-            className="mt-2"
+          <div className="mb-5 items-center gap-4">
+            <Label htmlFor="symbol" className="text-right">
+              Decimal
+            </Label>
+            <Input
+              id="decimal"
+              name="decimal"
+              value={inputValues.decimal}
+              onChange={handleInputChange}
+              className="mt-2"
+            />
+          </div>
+        </div>
+        {/* Display Codes Here */}
+        <div className="w-[100%] relative">
+          <CodeBlock
+            text={contract}
+            language={'solidity'}
+            showLineNumbers={false}
+            theme={dracula}
+            customStyle={{ height: '100%', position: 'absolute', left: '0', top: '0', width: '100%' }}
           />
         </div>
       </div>

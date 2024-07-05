@@ -17,7 +17,7 @@ export const useCreateERC20 = (
   symbol: string,
   initialSupply: Number,
   description: string,
-  decimals:Number
+  decimals: Number
 ) => {
   const { chainId, address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
@@ -25,7 +25,7 @@ export const useCreateERC20 = (
 
   return useCallback(async () => {
     if (!isSupportedChain(chainId)) return console.error("Wrong network");
-   
+
     const readWriteProvider = getProvider(walletProvider);
     const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
@@ -33,18 +33,18 @@ export const useCreateERC20 = (
 
     try {
       console.log(name);
-      
-     const transaction = await contract.createFungibleToken(name, symbol, initialSupply, description, decimals);
 
-     console.log("transaction: ", transaction);
-     const receipt = await transaction.wait();
+      const transaction = await contract.createFungibleToken(name, symbol, initialSupply, description, decimals);
 
-     console.log("receipt: ", receipt);
+      console.log("transaction: ", transaction);
+      const receipt = await transaction.wait();
+
+      console.log("receipt: ", receipt);
 
     } catch (error) {
       console.error("error: ", error);
     }
-  }, [ chainId, walletProvider]);
+  }, [chainId, walletProvider]);
 };
 
 
@@ -114,4 +114,6 @@ export const useGetAllERC20 = () => {
 
   return tokens;
 };
+
+
 
