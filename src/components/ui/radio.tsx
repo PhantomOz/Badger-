@@ -2,8 +2,11 @@
 import React from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 
-
-const RadioContainer = ({ className, children, ...props }: { className: string, children: React.ReactNode }) => {
+interface RadioProps extends RadioGroup.RadioGroupProps {
+    className: string,
+    children: React.ReactNode
+}
+const RadioContainer = ({ className, children, ...props }: RadioProps) => {
     return (
         <RadioGroup.Root
             className={className}

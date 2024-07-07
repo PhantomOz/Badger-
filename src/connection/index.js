@@ -6,13 +6,20 @@ export const SCROLL_SEPOLIA_ID = 534351;
 export const SHARDEUM_ID = 8082;
 export const AMOY_ID = 80002;
 
-
 const Shardeum = {
   chainId: SHARDEUM_ID,
   name: "Shardeum Sphinx 1.X",
   currency: "SHM",
   explorerUrl: "https://explorer-sphinx.shardeum.org/",
   rpcUrl: process.env.NEXT_PUBLIC_AMOY_RPC_URL,
+};
+
+const sepolia = {
+  chainId: 11155111,
+  name: "Sepolia",
+  currency: "ETH",
+  explorerUrl: "https://sepolia.etherscan.io",
+  rpcUrl: "https://endpoints.omniatech.io/v1/eth/sepolia/public",
 };
 
 const Scroll = {
@@ -40,7 +47,7 @@ const metadata = {
 
 createWeb3Modal({
   ethersConfig: defaultConfig({ metadata }),
-  chains: [Shardeum, Scroll, Amoy],
+  chains: [sepolia],
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   enableAnalytics: false, // Optional - defaults
   themeVariables: {
@@ -48,6 +55,7 @@ createWeb3Modal({
     "--w3m-border-radius-master": "",
     "--w3m-font-size-master": "16",
   },
+  defaultChain: 11155111,
 });
 
 export function Web3Modal({ children }) {
