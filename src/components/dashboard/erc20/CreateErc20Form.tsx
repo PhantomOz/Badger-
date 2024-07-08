@@ -26,6 +26,7 @@ import CheckBox from "@/components/ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { compile, verifyContract } from "@/context";
 import deploy from "@/context/deploy";
+import InputComp from "@/components/ui/inputcomp";
 
 interface erc20InputValues {
   name: string,
@@ -127,67 +128,12 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       </DialogHeader>
       <div className="flex flex-row items-stretch gap-2 ">
         <div className=" py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
-          <div className="mb-5 items-center gap-4">
-            <Label htmlFor="name" className=" text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              onChange={handleInputChange}
-              className="mt-2"
-              value={inputValues.name}
-            />
-          </div>
-          <div className="mb-5 items-center gap-4">
-            <Label htmlFor="symbol" className="text-right">
-              Symbol
-            </Label>
-            <Input
-              id="symbol"
-              name="symbol"
-              onChange={handleInputChange}
-              className="mt-2"
-              value={inputValues.symbol}
-            />
-          </div>
-          <div className="mb-5 items-center gap-4">
-            <Label htmlFor="symbol" className="text-right">
-              Description
-            </Label>
-            <Input
-              id="description"
-              name="description"
-              onChange={handleInputChange}
-              className="mt-2"
-            />
-          </div>
+          <InputComp label="name" handleOnchange={handleInputChange} value={inputValues.name} />
+          <InputComp label="symbol" handleOnchange={handleInputChange} value={inputValues.symbol} />
+          <InputComp label="description" handleOnchange={handleInputChange} value={inputValues.description} />
+          <InputComp label="supply" handleOnchange={handleInputChange} value={inputValues.premint} />
+          <InputComp label="decimal" handleOnchange={handleInputChange} value={inputValues.decimal} />
 
-          <div className="mb-5 items-center gap-4">
-            <Label htmlFor="symbol" className="text-right">
-              Supply
-            </Label>
-            <Input
-              id="supply"
-              name="premint"
-              onChange={handleInputChange}
-              className="mt-2"
-              value={inputValues.premint}
-            />
-          </div>
-
-          <div className="mb-5 items-center gap-4">
-            <Label htmlFor="symbol" className="text-right">
-              Decimal
-            </Label>
-            <Input
-              id="decimal"
-              name="decimal"
-              value={inputValues.decimal}
-              onChange={handleInputChange}
-              className="mt-2"
-            />
-          </div>
           <div className="flex flex-col gap-2">
 
             <hr className="my-5" />
