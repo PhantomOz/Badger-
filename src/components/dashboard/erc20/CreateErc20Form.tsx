@@ -27,6 +27,7 @@ import { CheckedState } from "@radix-ui/react-checkbox";
 import { compile, verifyContract } from "@/context";
 import deploy from "@/context/deploy";
 import InputComp from "@/components/ui/inputcomp";
+import CheckBoxComp from "@/components/ui/checkboxcomp";
 
 interface erc20InputValues {
   name: string,
@@ -135,39 +136,13 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           <InputComp label="decimal" handleOnchange={handleInputChange} value={inputValues.decimal} />
 
           <div className="flex flex-col gap-2">
-
             <hr className="my-5" />
             <p>Features</p>
-            <div className="flex items-center">
-              <CheckBox id="c1" checked={inputValues.mintable as CheckedState} name="mintable" onCheckedChange={(e) => handleCheckChange("mintable", e)} />
-              <label className="pl-[15px] text-[15px] leading-none text-white" htmlFor="c1">
-                Mintable
-              </label>
-            </div>
-            <div className="flex items-center">
-              <CheckBox id='c2' checked={inputValues.burnable as CheckedState} name="burnable" onCheckedChange={(e) => handleCheckChange("burnable", e)} />
-              <label className="pl-[15px] text-[15px] leading-none text-white" htmlFor="c2">
-                Burnable
-              </label>
-            </div>
-            <div className="flex items-center">
-              <CheckBox id='c3' checked={inputValues.permit as CheckedState} name="permit" onCheckedChange={(e) => handleCheckChange("permit", e)} />
-              <label className="pl-[15px] text-[15px] leading-none text-white" htmlFor="c3">
-                Permit
-              </label>
-            </div>
-            <div className="flex items-center">
-              <CheckBox id='c4' checked={inputValues.pausable as CheckedState} name="pausable" onCheckedChange={(e) => handleCheckChange("pausable", e)} />
-              <label className="pl-[15px] text-[15px] leading-none text-white" htmlFor="c4">
-                Pausable
-              </label>
-            </div>
-            <div className="flex items-center">
-              <CheckBox id='c5' checked={inputValues.flashmint as CheckedState} name="flashmint" onCheckedChange={(e) => handleCheckChange("flashmint", e)} />
-              <label className="pl-[15px] text-[15px] leading-none text-white" htmlFor="c5">
-                Flash Minting
-              </label>
-            </div>
+            <CheckBoxComp label="mintable" handleOnchange={handleCheckChange} value={inputValues.mintable} />
+            <CheckBoxComp label="burnable" handleOnchange={handleCheckChange} value={inputValues.burnable} />
+            <CheckBoxComp label="permit" handleOnchange={handleCheckChange} value={inputValues.permit} />
+            <CheckBoxComp label="pausable" handleOnchange={handleCheckChange} value={inputValues.pausable} />
+            <CheckBoxComp label="flashmint" handleOnchange={handleCheckChange} value={inputValues.flashmint} />
           </div>
 
           <hr className="my-5" />
