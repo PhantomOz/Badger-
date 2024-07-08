@@ -14,8 +14,8 @@ export default function InputComp({ label, handleOnchange, value }: InputComp) {
                 {label}
             </Label>
             <Input
-                id="name"
-                name="name"
+                id={label}
+                name={label}
                 onChange={handleOnchange}
                 className="mt-2"
                 value={value}
