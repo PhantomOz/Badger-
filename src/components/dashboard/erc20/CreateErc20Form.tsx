@@ -24,7 +24,7 @@ import RadioContainer from "@/components/ui/radio";
 import RadioItem from "@/components/ui/radioitem";
 import CheckBox from "@/components/ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { compile } from "@/context";
+import { compile, verifyContract } from "@/context";
 import deploy from "@/context/deploy";
 
 interface erc20InputValues {
@@ -106,7 +106,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       //   onSubmit();
       // }
       const compiledContract = await compile(contract, inputValues.name);
-      await deploy(JSON.parse(compiledContract), signer);
+      const contractAddress = await deploy(JSON.parse(compiledContract), signer);
+      await verifyContract(contractAddress, contract, JSON.parse(compiledContract).contractName, '')
       setLoading(false)
     } catch (error) {
       console.error("error: ", error);

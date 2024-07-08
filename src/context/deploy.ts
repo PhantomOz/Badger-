@@ -11,5 +11,7 @@ export default async function deploy(contractJson: any, signer: any) {
   console.log("------------------Deploying Contract-------------------");
   const contract = await factory.deploy();
   await contract.waitForDeployment();
-  console.log(contract.target);
+  const address = contract.target;
+  console.log(address);
+  return address;
 }
