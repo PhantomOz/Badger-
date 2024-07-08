@@ -28,6 +28,7 @@ import { compile, verifyContract } from "@/context";
 import deploy from "@/context/deploy";
 import InputComp from "@/components/ui/inputcomp";
 import CheckBoxComp from "@/components/ui/checkboxcomp";
+import Section from "@/components/ui/section";
 
 interface erc20InputValues {
   name: string,
@@ -135,59 +136,58 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           <InputComp label="supply" handleOnchange={handleInputChange} value={inputValues.premint} />
           <InputComp label="decimal" handleOnchange={handleInputChange} value={inputValues.decimal} />
 
-          <div className="flex flex-col gap-2">
-            <hr className="my-5" />
-            <p>Features</p>
+          <Section title="features">
             <CheckBoxComp label="mintable" handleOnchange={handleCheckChange} value={inputValues.mintable} />
             <CheckBoxComp label="burnable" handleOnchange={handleCheckChange} value={inputValues.burnable} />
             <CheckBoxComp label="permit" handleOnchange={handleCheckChange} value={inputValues.permit} />
             <CheckBoxComp label="pausable" handleOnchange={handleCheckChange} value={inputValues.pausable} />
             <CheckBoxComp label="flashmint" handleOnchange={handleCheckChange} value={inputValues.flashmint} />
-          </div>
+          </Section>
 
-          <hr className="my-5" />
-          <p>Votes</p>
-          <RadioContainer value={inputValues.votes as string} onValueChange={(e) => handleCheckChange('votes', e)} className="flex flex-col gap-2.5">
-            <div className="flex items-center gap-1">
-              <RadioItem value="Block Number" id='r1' />
-              <Label htmlFor="r1">Block Number</Label>
-            </div>
-            <div className="flex items-center gap-1">
-              <RadioItem value="Time Stamp" id='r2' />
-              <Label htmlFor="r2">Time Stamp</Label>
-            </div>
-          </RadioContainer>
 
-          <hr className="my-5" />
-          <p>Access Control</p>
-          <RadioContainer value={inputValues.access as string} onValueChange={(e) => handleCheckChange('access', e)} className="flex flex-col gap-2.5">
-            <div className="flex items-center gap-1">
-              <RadioItem value="ownable" id='r1' />
-              <Label htmlFor="r1">Ownable</Label>
-            </div>
-            <div className="flex items-center gap-1">
-              <RadioItem value="roles" id='r2' />
-              <Label htmlFor="r2">Roles</Label>
-            </div>
-            <div className="flex items-center gap-1">
-              <RadioItem value="managed" id='r3' />
-              <Label htmlFor="r3">Managed</Label>
-            </div>
-          </RadioContainer>
+          <Section title="votes">
+            <RadioContainer value={inputValues.votes as string} onValueChange={(e) => handleCheckChange('votes', e)} className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-1">
+                <RadioItem value="Block Number" id='r1' />
+                <Label htmlFor="r1">Block Number</Label>
+              </div>
+              <div className="flex items-center gap-1">
+                <RadioItem value="Time Stamp" id='r2' />
+                <Label htmlFor="r2">Time Stamp</Label>
+              </div>
+            </RadioContainer>
+          </Section>
 
-          <hr className="my-5" />
-          <p>Upgradability</p>
-          <RadioContainer value={inputValues.upgradeable as string} onValueChange={(e) => handleCheckChange('upgradeable', e)} className="flex flex-col gap-2.5">
-            <div className="flex items-center gap-1">
-              <RadioItem value="transparent" id='r1' />
-              <Label htmlFor="r1">Transparent</Label>
-            </div>
-            <div className="flex items-center gap-1">
-              <RadioItem value="uups" id='r2' />
-              <Label htmlFor="r2">UUPS</Label>
-            </div>
 
-          </RadioContainer>
+          <Section title="access control">
+            <RadioContainer value={inputValues.access as string} onValueChange={(e) => handleCheckChange('access', e)} className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-1">
+                <RadioItem value="ownable" id='r1' />
+                <Label htmlFor="r1">Ownable</Label>
+              </div>
+              <div className="flex items-center gap-1">
+                <RadioItem value="roles" id='r2' />
+                <Label htmlFor="r2">Roles</Label>
+              </div>
+              <div className="flex items-center gap-1">
+                <RadioItem value="managed" id='r3' />
+                <Label htmlFor="r3">Managed</Label>
+              </div>
+            </RadioContainer>
+          </Section>
+
+          <Section title="upgradability">
+            <RadioContainer value={inputValues.upgradeable as string} onValueChange={(e) => handleCheckChange('upgradeable', e)} className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-1">
+                <RadioItem value="transparent" id='r1' />
+                <Label htmlFor="r1">Transparent</Label>
+              </div>
+              <div className="flex items-center gap-1">
+                <RadioItem value="uups" id='r2' />
+                <Label htmlFor="r2">UUPS</Label>
+              </div>
+            </RadioContainer>
+          </Section>
 
         </div>
         {/* Display Codes Here */}
