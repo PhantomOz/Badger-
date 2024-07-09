@@ -83,7 +83,11 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   };
 
   const handleCheckChange = (name: string, value: boolean | string) => {
-    setInputValues({ ...inputValues, [name]: value });
+    if (name === 'mintable' || name === 'pausable') {
+      setInputValues({ ...inputValues, [name]: value, access: 'ownable' });
+    } else {
+      setInputValues({ ...inputValues, [name]: value });
+    }
   }
 
   async function createToken() {
@@ -134,7 +138,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           <InputComp label="name" handleOnchange={handleInputChange} value={inputValues.name} />
           <InputComp label="symbol" handleOnchange={handleInputChange} value={inputValues.symbol} />
           <InputComp label="description" handleOnchange={handleInputChange} value={inputValues.description} />
-          <InputComp label="supply" handleOnchange={handleInputChange} value={inputValues.premint} />
+          <InputComp label="premint" handleOnchange={handleInputChange} value={inputValues.premint} />
           <InputComp label="decimal" handleOnchange={handleInputChange} value={inputValues.decimal} />
 
           <Section title="features">
@@ -152,7 +156,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
             </RadioContainer>
           </Section>
 
-          <Section title="access control" checkbox={true} label="access" value={inputValues.access} handleOnchange={handleCheckChange}>
+          <Section title="access control" checkbox={true} label="access" value={inputValues.access} handleOnchange={handleCheckChange} disabled={inputValues.mintable as boolean || inputValues.pausable as boolean || inputValues.upgradeable === "uups"}>
             <RadioContainer value={inputValues.access as string} onValueChange={(e) => handleCheckChange('access', e)} className="flex flex-col gap-2.5">
               <RadioComp label="Ownable" value="ownable" />
               <RadioComp label="Roles" value="roles" />

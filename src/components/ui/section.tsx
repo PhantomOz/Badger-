@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import CheckBox from "./checkbox"
 import { CheckedState } from "@radix-ui/react-checkbox"
-import { access } from "fs";
 
 interface SectionInterface {
     title: string,
@@ -40,7 +39,7 @@ export default function Section({ title, checkbox, disabled, value, label, handl
             <hr className="my-5" />
             <div className="flex flex-row gap-1 items-center">
                 <p className="uppercase font-bold text-gray-400 text-xs">{title}</p>
-                {checkbox && <CheckBox disabled={disabled} checked={checked as CheckedState} onCheckedChange={handleStateChange} className="shadow-blackA4 hover:bg-violet3 flex h-[15px] w-[15px] appearance-none items-center justify-center bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]" />}
+                {checkbox && <CheckBox disabled={disabled as boolean} checked={checked as CheckedState} onCheckedChange={handleStateChange} className="shadow-blackA4 hover:bg-violet3 flex h-[15px] w-[15px] appearance-none items-center justify-center bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]" />}
             </div>
             {children}
         </div>
