@@ -83,7 +83,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   };
 
   const handleCheckChange = (name: string, value: boolean | string) => {
-    if (name === 'mintable' || name === 'pausable') {
+    if ((name === 'mintable' || name === 'pausable' || value === 'uups') && inputValues.access === false) {
       setInputValues({ ...inputValues, [name]: value, access: 'ownable' });
     } else {
       setInputValues({ ...inputValues, [name]: value });
