@@ -145,14 +145,14 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
             <CheckBoxComp label="flashmint" handleOnchange={handleCheckChange} value={inputValues.flashmint} />
           </Section>
 
-          <Section title="votes">
+          <Section title="votes" checkbox={true} value={inputValues.votes} label="votes" handleOnchange={handleCheckChange}>
             <RadioContainer value={inputValues.votes as string} onValueChange={(e) => handleCheckChange('votes', e)} className="flex flex-col gap-2.5">
               <RadioComp label="Block Number" value="Block Number" />
               <RadioComp label="Time Stamp" value="Time Stamp" />
             </RadioContainer>
           </Section>
 
-          <Section title="access control">
+          <Section title="access control" checkbox={true} label="access" value={inputValues.access} handleOnchange={handleCheckChange}>
             <RadioContainer value={inputValues.access as string} onValueChange={(e) => handleCheckChange('access', e)} className="flex flex-col gap-2.5">
               <RadioComp label="Ownable" value="ownable" />
               <RadioComp label="Roles" value="roles" />
@@ -160,7 +160,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
             </RadioContainer>
           </Section>
 
-          <Section title="upgradability">
+          <Section title="upgradability" checkbox={true} value={inputValues.upgradeable} label="upgradeable" handleOnchange={handleCheckChange}>
             <RadioContainer value={inputValues.upgradeable as string} onValueChange={(e) => handleCheckChange('upgradeable', e)} className="flex flex-col gap-2.5">
               <RadioComp label="Transparent" value="transparent" />
               <RadioComp label="UUPS" value="uups" />
