@@ -57,12 +57,14 @@ export async function verifyContract(
   contractAddress: string | Addressable,
   contractSourceCode: string,
   contractName: string,
-  constructorArguments?: string
+  constructorArguments?: string[]
 ): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     setTimeout(() => {
       const child = spawn(
-        `cd src/contract_deployer && npx hardhat verify --network sepolia ${contractAddress} --force`,
+        `cd src/contract_deployer && npx hardhat verify --network sepolia ${contractAddress} ${constructorArguments?.join(
+          " "
+        )}`,
         {
           stdio: "inherit",
           shell: true,

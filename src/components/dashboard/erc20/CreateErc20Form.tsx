@@ -25,7 +25,7 @@ import RadioItem from "@/components/ui/radioitem";
 import CheckBox from "@/components/ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { compile, verifyContract } from "@/context";
-import deploy from "@/context/deploy";
+import deploy, { objectValuesToArray } from "@/context/deploy";
 import InputComp from "@/components/ui/inputcomp";
 import CheckBoxComp from "@/components/ui/checkboxcomp";
 import Section from "@/components/ui/section";
@@ -49,7 +49,7 @@ interface erc20InputValues {
 }
 const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { walletProvider } = useWeb3ModalProvider();
-
+  const { address } = useWeb3ModalAccount();
   const readWriteProvider = getProvider(walletProvider);
 
   const [loading, setLoading] = useState(false);
@@ -71,16 +71,16 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   });
   const [contractArguments, setConntractArguments] = useState<any>({
     ownable: {
-      initialOwner: ""
+      initialOwner: address
     },
     roles: {
-      defaultAdmin: "",
-      pauser: "",
-      minter: "",
-      upgrader: "",
+      defaultAdmin: address,
+      pauser: address,
+      minter: address,
+      upgrader: address,
     },
     managed: {
-      initialAuthority: "",
+      initialAuthority: address,
     }
   });
   const [contract, setContract] = useState("");
@@ -109,6 +109,25 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     setConntractArguments({ ...contractArguments, [inputValues.access as string]: { ...contractArguments[inputValues.access as string], [name]: value } })
   }
 
+  const generateContractArgs = (): string[] => {
+    if (inputValues.access === 'ownable') {
+      return [contractArguments[inputValues.access as string].initialOwner]
+    }
+    if (inputValues.access === 'managed') {
+      return [contractArguments[inputValues.access as string].initialAuthority]
+    }
+    if (inputValues.access === 'roles') {
+      const args = [];
+      args.push(contractArguments[inputValues.access as string].defaultAdmin);
+      inputValues.pausable && args.push(contractArguments[inputValues.access as string].pauser);
+      inputValues.mintable && args.push(contractArguments[inputValues.access as string].minter);
+      inputValues.upgradeable === 'uups' && args.push(contractArguments[inputValues.access as string].upgrader);
+      return args;
+    }
+
+    return []
+  }
+
   async function createToken() {
     setLoading(true)
     const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
@@ -132,9 +151,10 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       // if (receipt.status === 1 && onSubmit) {
       //   onSubmit();
       // }
+      const args = generateContractArgs();
       const compiledContract = await compile(contract, inputValues.name);
-      const contractAddress = await deploy(JSON.parse(compiledContract), signer);
-      await verifyContract(contractAddress, contract, JSON.parse(compiledContract).contractName, '')
+      const contractAddress = await deploy(JSON.parse(compiledContract), signer, args);
+      await verifyContract(contractAddress, contract, JSON.parse(compiledContract).contractName, args);
       setLoading(false)
     } catch (error) {
       console.error("error: ", error);
