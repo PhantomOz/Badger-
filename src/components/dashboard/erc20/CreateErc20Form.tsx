@@ -30,6 +30,7 @@ import InputComp from "@/components/ui/inputcomp";
 import CheckBoxComp from "@/components/ui/checkboxcomp";
 import Section from "@/components/ui/section";
 import RadioComp from "@/components/ui/radiocomp";
+import { AddressLike } from "ethers";
 
 interface erc20InputValues {
   name: string,
@@ -68,7 +69,20 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     access: false,
     upgradeable: false
   });
-
+  const [contractArguments, setConntractArguments] = useState<any>({
+    ownable: {
+      initialOwner: ""
+    },
+    roles: {
+      defaultAdmin: "",
+      pauser: "",
+      minter: "",
+      upgrader: "",
+    },
+    managed: {
+      initialAuthority: "",
+    }
+  });
   const [contract, setContract] = useState("");
 
 
@@ -88,6 +102,11 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     } else {
       setInputValues({ ...inputValues, [name]: value });
     }
+  }
+
+  const handelContractArgumentChange = (event: any) => {
+    const { name, value } = event.target;
+    setConntractArguments({ ...contractArguments, [inputValues.access as string]: { ...contractArguments[inputValues.access as string], [name]: value } })
   }
 
   async function createToken() {
@@ -159,8 +178,18 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           <Section title="access control" checkbox={true} label="access" value={inputValues.access} handleOnchange={handleCheckChange} disabled={inputValues.mintable as boolean || inputValues.pausable as boolean || inputValues.upgradeable === "uups"}>
             <RadioContainer value={inputValues.access as string} onValueChange={(e) => handleCheckChange('access', e)} className="flex flex-col gap-2.5">
               <RadioComp label="Ownable" value="ownable" />
+              {inputValues.access === 'ownable' && <InputComp label="initialOwner" handleOnchange={handelContractArgumentChange} value={contractArguments.ownable.initialOwner} />}
               <RadioComp label="Roles" value="roles" />
+              {inputValues.access === 'roles' && (
+                <>
+                  <InputComp label="defaultAdmin" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.defaultAdmin} />
+                  {inputValues.pausable && <InputComp label="pauser" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.pauser} />}
+                  {inputValues.mintable && <InputComp label="minter" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.minter} />}
+                  {inputValues.upgradeable === "uups" && <InputComp label="upgrader" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.upgrader} />}
+                </>
+              )}
               <RadioComp label="Managed" value="managed" />
+              {inputValues.access === 'managed' && <InputComp label="initialAuthority" handleOnchange={handelContractArgumentChange} value={contractArguments.managed.initialAuthority} />}
             </RadioContainer>
           </Section>
 
