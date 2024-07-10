@@ -10,11 +10,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";
 
-contract TestContract6 is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes, ERC20FlashMint {
+contract TestContract7 is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes, ERC20FlashMint {
     constructor(address initialOwner)
-        ERC20("Test Contract 6", "TC6")
+        ERC20("Test Contract 7", "TC7")
         Ownable(initialOwner)
-        ERC20Permit("Test Contract 6")
+        ERC20Permit("Test Contract 7")
     {
         _mint(msg.sender, 10000 * 10 ** decimals());
     }

@@ -19,7 +19,7 @@ import {
 } from "@web3modal/ethers/react";
 import { getProvider } from "@/constants/providers";
 import { getFactoryContract } from "@/constants/contracts";
-import { generateCode } from "@/utils";
+import { generateCode, validateInputs } from "@/utils";
 import RadioContainer from "@/components/ui/radio";
 import RadioItem from "@/components/ui/radioitem";
 import CheckBox from "@/components/ui/checkbox";
@@ -110,13 +110,13 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   }
 
   const generateContractArgs = (): string[] => {
-    if (inputValues.access === 'ownable') {
+    if (inputValues.access === 'ownable' && !inputValues.upgradeable) {
       return [contractArguments[inputValues.access as string].initialOwner]
     }
-    if (inputValues.access === 'managed') {
+    if (inputValues.access === 'managed' && !inputValues.upgradeable) {
       return [contractArguments[inputValues.access as string].initialAuthority]
     }
-    if (inputValues.access === 'roles') {
+    if (inputValues.access === 'roles' && !inputValues.upgradeable) {
       const args = [];
       args.push(contractArguments[inputValues.access as string].defaultAdmin);
       inputValues.pausable && args.push(contractArguments[inputValues.access as string].pauser);
@@ -124,33 +124,13 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       inputValues.upgradeable === 'uups' && args.push(contractArguments[inputValues.access as string].upgrader);
       return args;
     }
-
     return []
   }
 
   async function createToken() {
     setLoading(true)
     const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
-
-    // const signer = await readWriteProvider.getSigner();
-
-    // const contract = getFactoryContract(signer);
     try {
-      // const transaction = await contract.createFungibleToken(
-      //   inputValues.name,
-      //   inputValues.symbol,
-      //   inputValues.premint,
-      //   inputValues.description,
-      //   inputValues.decimal
-      // );
-
-      // console.log("transaction: ", transaction);
-      // const receipt = await transaction.wait();
-
-      // console.log("receipt: ", receipt);
-      // if (receipt.status === 1 && onSubmit) {
-      //   onSubmit();
-      // }
       const args = generateContractArgs();
       const compiledContract = await compile(contract, inputValues.name);
       const contractAddress = await deploy(JSON.parse(compiledContract), signer, args);
@@ -161,7 +141,9 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       setLoading(false)
     }
   }
-  // console.log(response);
+
+  const error = validateInputs(inputValues, contractArguments);
+  console.log(error);
 
   return (
     <DialogContent className="sm:max-w-[425px] md:max-w-[90%]">
@@ -239,7 +221,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           onClick={() => {
             createToken();
           }}
-          disabled={loading}
+          disabled={loading || error.length > 0}
         >
           {loading ? "Loading..." : "Deploy"}
         </Button>
