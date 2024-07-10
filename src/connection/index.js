@@ -5,7 +5,7 @@ import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
 export const SCROLL_SEPOLIA_ID = 534351;
 export const SHARDEUM_ID = 8082;
 export const AMOY_ID = 80002;
-
+export const SUPPORTED_CHAIN = 11155111;
 const Shardeum = {
   chainId: SHARDEUM_ID,
   name: "Shardeum Sphinx 1.X",
