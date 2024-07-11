@@ -30,6 +30,7 @@
     "geist": "^1.2.2",
     "lucide-react": "^0.367.0",
     "next": "14.1.4",
+    "pino-pretty": "^11.2.1",
     "react": "^18",
     "react-awesome-reveal": "^4.2.8",
     "react-code-blocks": "^0.1.6",
