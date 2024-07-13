@@ -8,7 +8,7 @@ import path from "path";
 
 export async function compile(contract: string, name: string) {
   console.log(__dirname);
-  console.log(path.dirname("/"));
+  console.log();
   name = name.replaceAll(" ", "");
   (async function main() {
     try {
