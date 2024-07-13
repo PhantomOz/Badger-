@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "npm install && cd src/contract_deployer && npm install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
