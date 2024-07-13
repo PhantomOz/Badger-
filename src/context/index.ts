@@ -4,8 +4,11 @@ import fsPromises from "fs/promises";
 import { spawn } from "child_process";
 // import axios from "axios";
 import { Addressable } from "ethers";
+import path from "path";
 
 export async function compile(contract: string, name: string) {
+  console.log(__dirname);
+  console.log(path.dirname("/"));
   name = name.replaceAll(" ", "");
   (async function main() {
     try {
