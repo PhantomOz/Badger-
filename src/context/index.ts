@@ -2,7 +2,8 @@
 import axios from "axios";
 import { Addressable, solidityPacked } from "ethers";
 
-export async function compile(contract: string, name: string) {
+export async function compile(contract: string, name: string): Promise<string> {
+  "use server";
   name = name.replaceAll(" ", "");
   try {
     const compiledContract = await axios.post(
@@ -19,7 +20,7 @@ export async function compile(contract: string, name: string) {
     console.log(e);
   }
 
-  return;
+  return "";
 }
 
 export async function verifyContract(
@@ -28,6 +29,7 @@ export async function verifyContract(
   contractName: string,
   constructorArguments?: string[]
 ): Promise<string> {
+  "use server";
   try {
     const verifiedContract = await axios.post(
       "https://badger-backend.onrender.com/v1/api/contract/verify",
