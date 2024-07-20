@@ -1,59 +1,26 @@
 "use server";
-import fs from "fs";
-import fsPromises from "fs/promises";
-import { spawn } from "child_process";
-// import axios from "axios";
-import { Addressable } from "ethers";
-import path from "path";
+import axios from "axios";
+import { Addressable, solidityPacked } from "ethers";
 
-export async function compile(contract: string, name: string) {
-  console.log(__dirname);
-  console.log();
+export async function compile(contract: string, name: string): Promise<string> {
+  "use server";
   name = name.replaceAll(" ", "");
-  (async function main() {
-    try {
-      await fsPromises.writeFile(
-        "src/contract_deployer/contracts/Lock.sol",
-        contract
-      );
-
-      console.log("File written successfully");
-      console.log("The written file has" + " the following contents:");
-
-      console.log(
-        "" + fs.readFileSync("src/contract_deployer/contracts/Lock.sol")
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  })();
-
-  const child = spawn("cd src/contract_deployer && npx hardhat compile", {
-    stdio: "inherit",
-    shell: true,
-  });
-
-  return new Promise<string>((resolve, reject) => {
-    child.on("exit", function (code, signal) {
-      if (code === 0) {
-        try {
-          let compiledContract = fs.readFileSync(
-            `src/contract_deployer/artifacts/contracts/Lock.sol/${name}.json`,
-            "utf8"
-          );
-          resolve(compiledContract);
-        } catch (err) {
-          reject(err);
-        }
-      } else {
-        reject(
-          new Error(
-            `child process exited with code ${code} and signal ${signal}`
-          )
-        );
+  try {
+    const compiledContract = await axios.post(
+      "https://badger-backend.onrender.com/v1/api/contract/compile",
+      {
+        name: name,
+        contract: solidityPacked(["string"], [contract]),
       }
-    });
-  });
+    );
+    const res = await compiledContract.data;
+    console.log(res);
+    return res.data;
+  } catch (e: any) {
+    console.log(e);
+  }
+
+  return "";
 }
 
 export async function verifyContract(
@@ -62,33 +29,22 @@ export async function verifyContract(
   contractName: string,
   constructorArguments?: string[]
 ): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    setTimeout(() => {
-      const child = spawn(
-        `cd src/contract_deployer && npx hardhat verify --network sepolia ${contractAddress} ${constructorArguments?.join(
-          " "
-        )}`,
-        {
-          stdio: "inherit",
-          shell: true,
-        }
-      );
-
-      child.on("exit", function (code, signal) {
-        if (code === 0) {
-          resolve("done");
-        } else {
-          reject(
-            new Error(
-              `child process exited with code ${code} and signal ${signal}`
-            )
-          );
-        }
-      });
-
-      child.on("error", (err) => {
-        reject(err);
-      });
-    }, 60000);
-  });
+  "use server";
+  try {
+    const verifiedContract = await axios.post(
+      "https://badger-backend.onrender.com/v1/api/contract/verify",
+      {
+        contractAddress,
+        contractName,
+        contractSourceCode: solidityPacked(["string"], [contractSourceCode]),
+        constructorArguments,
+      }
+    );
+    const res = await verifiedContract.data;
+    console.log(res);
+    return res;
+  } catch (e: any) {
+    console.log(e);
+  }
+  return "";
 }
