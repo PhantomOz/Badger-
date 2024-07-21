@@ -1,293 +1,83 @@
-"use client";
-
 import { useState } from "react";
-
-import { Copy } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 export const ExplorerFunctions = ({
-  from,
-  to,
-  spender,
-  value,
-  owner,
-  who,
-  view,
-  viewValue,
-  handleAllowance,
-  handleApproval,
-  handleBalanceOf,
-  handleTransfer,
-  handleTransferFrom,
+  functionData,
+  handleFunction,
+  result,
 }: {
-  from?: boolean;
-  to?: boolean;
-  spender?: boolean;
-  value?: boolean;
-  owner?: boolean;
-  who?: boolean;
-  view?: string;
-  viewValue?: string;
-  handleAllowance?: (who: string, spender: string) => Promise<number>;
-  handleApproval?: (spender: string, value: string) => Promise<boolean>;
-  handleBalanceOf?: (address: string) => Promise<number>;
-  handleTransfer?: (to: string, value: string, data: []) => Promise<boolean>;
-  handleTransferFrom?: (
-    from: string,
-    to: string,
-    value: string,
-    data: []
-  ) => Promise<boolean>;
+  functionData: any;
+  handleFunction: (name: string, args: any[]) => Promise<void>;
+  result: any;
 }) => {
-  const [isResult, setIsResult] = useState(false);
-  const [result, setResult] = useState<any>("");
+  const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [inputValues, setInputValues] = useState({
-    from: "",
-    owner: "",
-    to: "",
-    spender: "",
-    value: "",
-    who: "",
-  });
 
   const handleRun = async () => {
     setIsLoading(true);
-   
     try {
-       if (handleAllowance) {
-         const result = await handleAllowance(inputValues.who, inputValues.spender);
-         setResult(result);
-         setIsResult(true);
-       } else if (handleApproval) {
-         const result = await handleApproval(inputValues.spender, inputValues.value);
-         setResult(result);
-         setIsResult(true);
-       } else if (handleBalanceOf) {
-         const result = await handleBalanceOf(inputValues.who);
-         setResult(result);
-         setIsResult(true);
-       } else if (handleTransfer) {
-         const result = await handleTransfer(inputValues.to, inputValues.value, []);
-         setResult(result);
-         setIsResult(true);
-       } else if (handleTransferFrom) {
-         const result = await handleTransferFrom(inputValues.from, inputValues.to, inputValues.value, []);
-         setResult(result);
-         setIsResult(true);
-       }
+      const args = functionData.inputs.map(
+        (input: any) => inputValues[input.name]
+      );
+      await handleFunction(functionData.name, args);
+      setIsLoading(false);
     } catch (error) {
-       // Handle the error here, e.g., log it or show a message to the user
-       console.error('Error occurred:', error);
-    } finally {
-       setIsLoading(false); // Set loading to false regardless of success or error
+      setIsLoading(false);
     }
-   };
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setInputValues({ ...inputValues, [name]: value });
-    setIsResult(false);
   };
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      // const textToCopy = document.getElementById('textToCopy').innerText
-      await navigator.clipboard.writeText(String(text));
-      console.log(`${text} copied to clipboard`);
-      // toast.success("Address copied ");
-    } catch (err) {
-      // toast.error("Failed to copy address: " + String(err));
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputValues({ ...inputValues, [name]: value });
   };
 
   return (
     <>
       <div className="mt-5">
-        {owner ? (
-          <div className="mb-5 items-center gap-4">
+        {functionData.inputs.map((input: any, index: number) => (
+          <div key={index} className="mb-5 items-center gap-4">
             <Label
-              htmlFor="owner"
+              htmlFor={input.name}
               className="text-right text-lg capitalize text-gray-100"
             >
-              owner
+              {input.name} ({input.type})
             </Label>
             <Input
-              name="owner"
-              id="owner"
-              value={inputValues.owner}
+              name={input.name}
+              id={input.name}
+              value={inputValues[input.name] || ""}
               onChange={handleChange}
-              placeholder="address"
+              placeholder={input.type}
+              className="mt-2"
+              type={input.type.startsWith("uint") ? "number" : "text"}
+            />
+          </div>
+        ))}
+
+        {result !== null && (
+          <div className="mb-5 items-center gap-4">
+            <Label
+              htmlFor="Result"
+              className="text-right text-lg capitalize text-gray-100"
+            >
+              Result
+            </Label>
+            <Input
+              name="Result"
+              id="Result"
+              readOnly={true}
+              value={String(result)}
+              placeholder="Result"
               className="mt-2"
             />
           </div>
-        ) : (
-          ""
         )}
 
-        {from ? (
-          <div className="mb-5 items-center gap-4">
-            <Label
-              htmlFor="from"
-              className="text-right text-lg capitalize text-gray-100"
-            >
-              from
-            </Label>
-            <Input
-              name="from"
-              id="from"
-              value={inputValues.from}
-              onChange={handleChange}
-              placeholder="address"
-              className="mt-2"
-            />
-          </div>
-        ) : (
-          ""
-        )}
-
-        {to ? (
-          <div className="mb-5 items-center gap-4">
-            <Label
-              htmlFor="to"
-              className="text-right text-lg capitalize text-gray-100"
-            >
-              to
-            </Label>
-            <Input
-              name="to"
-              id="to"
-              value={inputValues.to}
-              onChange={handleChange}
-              placeholder="address"
-              className="mt-2"
-            />
-          </div>
-        ) : (
-          ""
-        )}
-
-        {spender ? (
-          <div className="mb-5 items-center gap-4">
-            <Label
-              htmlFor="spender"
-              className="text-right text-lg capitalize text-gray-100"
-            >
-              spender
-            </Label>
-            <Input
-              name="spender"
-              id="spender"
-              value={inputValues.spender}
-              onChange={handleChange}
-              placeholder="address"
-              className="mt-2"
-            />
-          </div>
-        ) : (
-          ""
-        )}
-
-        {value ? (
-          <div className="mb-5 items-center gap-4">
-            <Label
-              htmlFor="value"
-              className="text-right text-lg capitalize text-gray-100"
-            >
-              value
-            </Label>
-            <Input
-              name="value"
-              id="value"
-              type="number"
-              value={inputValues.value}
-              onChange={handleChange}
-              placeholder="uint256"
-              className="mt-2"
-            />
-          </div>
-        ) : (
-          ""
-        )}
-
-        {who ? (
-          <div className="mb-5 items-center gap-4">
-            <Label
-              htmlFor="who"
-              className="text-right text-lg capitalize text-gray-100"
-            >
-              who
-            </Label>
-            <Input
-              name="who"
-              id="who"
-              value={inputValues.who}
-              onChange={handleChange}
-              placeholder="address"
-              className="mt-2"
-            />
-          </div>
-        ) : (
-          ""
-        )}
-
-        {view ? (
-          <div className="mb-5 items-center gap-4">
-            <Label
-              htmlFor="description"
-              className="text-right text-lg capitalize text-gray-100"
-            >
-              {view}
-            </Label>
-            <div
-              className=" mt-2 flex w-full max-w-sm cursor-pointer items-center justify-between rounded border border-gray-600 p-3 shadow"
-              onClick={()=>{
-                copyToClipboard(viewValue ?? '')
-              }}
-            >
-              <span>{viewValue}</span>
-              <Copy className="w-5 h-5" />
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-
-        {!view && (
-          <>
-            {isResult && (
-              <div className="mb-5 items-center gap-4">
-                <Label
-                  htmlFor="Result"
-                  className="text-right text-lg capitalize text-gray-100"
-                >
-                  Result
-                </Label>
-                <Input
-                  name="Result"
-                  id="Result"
-                  readOnly={true}
-                  value={result}
-                  placeholder="Result"
-                  className="mt-2"
-                />
-              </div>
-            )}
-            <Button
-              // type="submit"
-              onClick={() => {
-                handleRun();
-              }}
-              disabled={isLoading}
-              // isLoading={isLoading}
-            >
-              Run
-            </Button>
-          </>
-        )}
+        <Button onClick={handleRun} disabled={isLoading}>
+          {isLoading ? "Running..." : "Run"}
+        </Button>
       </div>
     </>
   );
