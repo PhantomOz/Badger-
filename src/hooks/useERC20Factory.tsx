@@ -117,3 +117,19 @@ export const useGetAllERC20 = () => {
 
 
 
+export const useBadgerProtocol = () => {
+  const { address } = useWeb3ModalAccount();
+  const contract = getFactoryContract(readOnlyProvider);
+  const { walletProvider } = useWeb3ModalProvider();
+  const readWriteProvider = getProvider(walletProvider);
+
+  const [tokens, setTokens] = useState({
+    loading: true,
+    data: [],
+  });
+
+  const getUserTokens = () => {
+    contract
+  }
+
+}
