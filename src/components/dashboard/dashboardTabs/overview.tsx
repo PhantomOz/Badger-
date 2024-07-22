@@ -3,16 +3,18 @@ import InfoCard from "../shared/InfoCard";
 import { TokenOverview } from "../erc20/TokenOverview";
 import { NFTOverview } from "../nft/NFTOverview";
 
-import { useGetAllERC20 } from "@/hooks/useERC20Factory";
+import { useBadgerProtocol, useGetAllERC20 } from "@/hooks/useERC20Factory";
 import NoToken from "../NoTokens";
 import { useGetAllERC721 } from "@/hooks/useERC721Factory";
 
 export function OverviewComponent() {
   const [contractCreated, setContractCreated] = useState(false);
-  
+
 
   const { loading, data } = useGetAllERC20();
-  const { loading:loadingnft , nfts } = useGetAllERC721();
+  const { loading: loadingnft, nfts } = useGetAllERC721();
+  const { tokens } = useBadgerProtocol();
+
 
   // console.log(data);
 
@@ -32,7 +34,7 @@ export function OverviewComponent() {
             <InfoCard title="NFTs Deployed" content={nfts.length} />
           </div>
 
-          <TokenOverview fullPage={false}/>
+          <TokenOverview fullPage={false} />
           <NFTOverview fullPage={false} />
           {/* <NFTOverview /> */}
         </div>

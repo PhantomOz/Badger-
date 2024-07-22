@@ -128,8 +128,42 @@ export const useBadgerProtocol = () => {
     data: [],
   });
 
-  const getUserTokens = () => {
-    contract
+  const getUserTokens = async () => {
+    try {
+      const addresses = await contract.getCreatorAddresses(address);
+      console.log(addresses);
+    } catch (error) {
+
+    }
   }
 
+  useEffect(() => {
+    const fetchTokens = async () => {
+      const filter = {
+        address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
+        topics: [ethers.id("NewContractAdded(address,address,uint8)")],
+      };
+
+      try {
+        const events = await readOnlyProvider
+          .getLogs({
+            ...filter,
+            fromBlock: 5726200,
+          })
+          .then((events) => {
+            getUserTokens();
+          });
+      } catch (error) {
+        console.error("Error fetching logs: ", error);
+      }
+
+      contract.on("NewContractAdded", getUserTokens);
+
+      // Cleanup function
+      return () => contract.off("NewContractAdded", getUserTokens);
+    };
+
+    fetchTokens();
+  }, []);
+  return { tokens }
 }
