@@ -31,6 +31,7 @@ import CheckBoxComp from "@/components/ui/checkboxcomp";
 import Section from "@/components/ui/section";
 import RadioComp from "@/components/ui/radiocomp";
 import { AddressLike } from "ethers";
+import { useBadgerProtocol } from "@/hooks/useERC20Factory";
 
 interface erc20InputValues {
   name: string,
@@ -51,6 +52,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { walletProvider } = useWeb3ModalProvider();
   const { address } = useWeb3ModalAccount();
   const readWriteProvider = getProvider(walletProvider);
+  const { addContract } = useBadgerProtocol();
 
   const [loading, setLoading] = useState(false);
 
@@ -134,6 +136,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
       const args = generateContractArgs();
       const compiledContract = await compile(contract, inputValues.name);
       const contractAddress = await deploy(JSON.parse(compiledContract), signer, args);
+      await addContract(contractAddress, inputValues.name, JSON.stringify(JSON.parse(compiledContract).abi), 0, contract);
       await verifyContract(contractAddress, contract, JSON.parse(compiledContract).contractName, args);
       setLoading(false)
     } catch (error) {
