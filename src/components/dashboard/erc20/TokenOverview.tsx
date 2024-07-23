@@ -1,13 +1,14 @@
-import { useGetAllERC20 } from '@/hooks/useERC20Factory';
+import { useBadgerProtocol } from '@/hooks/useERC20Factory';
 import { CreateERC20 } from './CreateErc20';
 import { TokenTable } from './TokenTable';
 import { tableData } from '@/constants/dummyTableData';
 import { useGetAllERC721 } from '@/hooks/useERC721Factory';
 
-export function TokenOverview({fullPage}:{fullPage:boolean}){
+export function TokenOverview({ fullPage }: { fullPage: boolean }) {
   // console.log(tableData)
-  const { loading, data } = useGetAllERC20();
-  const {  nfts } = useGetAllERC721 ();
+  const { tokens } = useBadgerProtocol();
+  const { loading, data } = tokens;
+  const { nfts } = useGetAllERC721();
 
   return (
     <div className="mt-20">
@@ -24,8 +25,8 @@ export function TokenOverview({fullPage}:{fullPage:boolean}){
 
         <CreateERC20 />
       </div>
-      <TokenTable tableData={data} isLoading={loading} fullPage={fullPage}/>
-      
+      <TokenTable tableData={data} isLoading={loading} fullPage={fullPage} />
+
     </div>
   )
 }

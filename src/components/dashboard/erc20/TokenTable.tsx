@@ -20,7 +20,7 @@ export function TokenTable({
       {tableData.length < 1 ? (
         <div className="mt-6 w-full overflow-hidden">
           <p className="text-center text-red-700">You have not created any tokens</p>
-          
+
           <div className=" mx-auto h-10 w-10 "></div>
         </div>
       ) : (
@@ -53,14 +53,14 @@ export function TokenTable({
                       router.push(`/dashboard/contracts/${data?.address}`);
                     }}
                   >
-                    {data?.name}
+                    {data?._name}
                   </th>
                   <td className="px-6 py-4">{data?.symbol}</td>
                   <td className="px-6 py-4">
-                    {String(data?.address).substring(0, 8)}...
-                    {String(data?.address).substring(
-                      String(data?.address).length - 9,
-                      String(data?.address).length - 1
+                    {String(data?._contract).substring(0, 8)}...
+                    {String(data?._contract).substring(
+                      String(data?._contract).length - 9,
+                      String(data?._contract).length - 1
                     )}
                   </td>
                   <td className="px-6 py-4">{data?.supply?.toString()}</td>

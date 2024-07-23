@@ -49,71 +49,71 @@ export const useCreateERC20 = (
 
 
 //Get all ERC20 Tokens
-export const useGetAllERC20 = () => {
-  const { address } = useWeb3ModalAccount();
-  const contract = getFactoryContract(readOnlyProvider);
-  const { walletProvider } = useWeb3ModalProvider();
-  const readWriteProvider = getProvider(walletProvider);
+// export const useGetAllERC20 = () => {
+//   const { address } = useWeb3ModalAccount();
+//   const contract = getFactoryContract(readOnlyProvider);
+//   const { walletProvider } = useWeb3ModalProvider();
+//   const readWriteProvider = getProvider(walletProvider);
 
-  const [tokens, setTokens] = useState({
-    loading: true,
-    data: [],
-  });
+//   const [tokens, setTokens] = useState({
+//     loading: true,
+//     data: [],
+//   });
 
-  const getTokens = () => {
-    contract
-      .getCreatedFungibleTokenByAddress(address)
-      .then((res) => {
-        const converted = res.map((token: any) => ({
-          name: token.name,
-          symbol: token.symbol,
-          supply: token.totalSupply,
-          description: token.description,
-          address: token.contractAdd,
-          decimals: token.decimals
-        }));
-        setTokens({
-          loading: false,
-          data: converted,
-        });
-      })
-      .catch((err) => {
-        console.error("error fetching proposals: ", err);
-        setTokens((prev) => ({ ...prev, loading: false }));
-      });
-  };
+//   const getTokens = () => {
+//     contract
+//       .getCreatedFungibleTokenByAddress(address)
+//       .then((res) => {
+//         const converted = res.map((token: any) => ({
+//           name: token.name,
+//           symbol: token.symbol,
+//           supply: token.totalSupply,
+//           description: token.description,
+//           address: token.contractAdd,
+//           decimals: token.decimals
+//         }));
+//         setTokens({
+//           loading: false,
+//           data: converted,
+//         });
+//       })
+//       .catch((err) => {
+//         console.error("error fetching proposals: ", err);
+//         setTokens((prev) => ({ ...prev, loading: false }));
+//       });
+//   };
 
-  // useEffect(() => {
-  //   const fetchTokens = async () => {
-  //     const filter = {
-  //       address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
-  //       topics: [ethers.id("FungibleTokenCreated(address,address)")],
-  //     };
+// useEffect(() => {
+//   const fetchTokens = async () => {
+//     const filter = {
+//       address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
+//       topics: [ethers.id("FungibleTokenCreated(address,address)")],
+//     };
 
-  //     try {
-  //       const events = await readOnlyProvider
-  //         .getLogs({
-  //           ...filter,
-  //           fromBlock: 5726200,
-  //         })
-  //         .then((events) => {
-  //           getTokens();
-  //         });
-  //     } catch (error) {
-  //       console.error("Error fetching logs: ", error);
-  //     }
+//     try {
+//       const events = await readOnlyProvider
+//         .getLogs({
+//           ...filter,
+//           fromBlock: 5726200,
+//         })
+//         .then((events) => {
+//           getTokens();
+//         });
+//     } catch (error) {
+//       console.error("Error fetching logs: ", error);
+//     }
 
-  //     contract.on("FungibleTokenCreated", getTokens);
+//     contract.on("FungibleTokenCreated", getTokens);
 
-  //     // Cleanup function
-  //     return () => contract.off("FungibleTokenCreated", getTokens);
-  //   };
+//     // Cleanup function
+//     return () => contract.off("FungibleTokenCreated", getTokens);
+//   };
 
-  //   fetchTokens();
-  // }, []);
+//   fetchTokens();
+// }, []);
 
-  return tokens;
-};
+// return tokens;
+// };
 
 
 
