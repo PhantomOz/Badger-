@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import ContractDetails from "@/components/contracts/ContractInfo";
 
@@ -8,14 +8,15 @@ import { NavBar } from "@/components/shared/nav-bar";
 import ContractOverviewNav from "@/components/contracts/ContractOverviewNav";
 import { ContractOverview } from "@/components/contracts/ContractOverview";
 import { Explorer } from "@/components/contracts/Explorer";
-import { useGetSingleERC20 } from "@/hooks/useGetSingleTokens";
+import { getTokenMetadata, useGetSingleERC20 } from "@/hooks/useGetSingleTokens";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
 import { getLogs } from "@/hooks/useGetERC20Events";
 import EventTable from "@/components/contracts/ERC20Event";
 
 const SingleContract = ({ params }: { params: { id: string } }) => {
-  const { isConnected } = useWeb3ModalAccount();
+  const { isConnected, address } = useWeb3ModalAccount();
+  const [tokenMeta, setTokenMeta] = useState<any>();
 
   const [tab, setTab] = useState(0);
 
@@ -24,6 +25,13 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
   const logs = getLogs(params.id);
   // console.log(logs);
 
+  useMemo(() => {
+    async function getMeta() {
+      const { symbol, supply, decimals, userBalance } = await getTokenMetadata(selectedToken?._abi, selectedToken?._contract, address);
+      setTokenMeta({ symbol, supply, decimals, userBalance });
+    }
+    getMeta();
+  }, [selectedToken?._abi, selectedToken?._contract])
   return (
     <>
       <NavBar isDashboard={true} />
@@ -31,21 +39,21 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
         <div className="relative mt-24">
           <ContractOverviewNav tab={tab} setTab={setTab} />
           <ContractDetails
-            name={selectedToken?.name}
+            name={selectedToken?._name}
             description={selectedToken?.description}
-            address={selectedToken?.address}
+            address={selectedToken?._contract}
           />
 
           <div className="p-4 sm:container sm:mx-auto">
             <div>
               {tab == 0 ? (
                 <ContractOverview
-                  supply={selectedToken?.supply?.toString()}
-                  symbol={selectedToken?.symbol}
-                  decimal={Number(selectedToken?.decimals)}
-                  userBalance={Number(selectedToken?.userBalance)}
-                  name={selectedToken?.name}
-                  address={selectedToken?.address}
+                  supply={Number(tokenMeta?.supply)?.toString()}
+                  symbol={tokenMeta?.symbol}
+                  decimal={Number(tokenMeta?.decimals)}
+                  userBalance={Number(tokenMeta?.userBalance)}
+                  name={selectedToken?._name}
+                  address={selectedToken?._contract}
                   logs={logs}
 
                 />
@@ -53,7 +61,7 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
                 ""
               )}
               {tab == 1 ? (
-              <EventTable logs={logs} address={params.id}/>
+                <EventTable logs={logs} address={params.id} />
               ) : (
                 ""
               )}

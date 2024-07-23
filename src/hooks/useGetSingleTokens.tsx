@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { useGetAllERC20 } from "./useERC20Factory";
+import { useBadgerProtocol } from "./useERC20Factory";
 import { getFungibleContract, getNonFungibleContract } from "../constants/contracts";
 import { getProvider, readOnlyProvider } from "@/constants/providers";
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/react";
-import { ethers, toUtf8String } from "ethers";
+import { Addressable, ethers, toUtf8String } from "ethers";
 import { useGetAllERC721 } from "./useERC721Factory";
 
 // Get single ERC20 Token
 export const useGetSingleERC20 = (tokenAddress: string) => {
-  const { loading, data } = useGetAllERC20();
+  const { tokens } = useBadgerProtocol();
+  const { loading, data } = tokens;
 
   const getTokenByAddress = useCallback(
     (tokenAddress: string) => {
-      const token = data.find((token: any) => token.address === tokenAddress);
+      const token = data.find((token: any) => token._contract === tokenAddress);
       return token;
     },
     [data]
@@ -133,10 +134,12 @@ export const GetNFTUri = (tokenAddress: string) => {
   return uri;
 };
 
-export async function getTokenMetadata(_abi: string, _address: string) {
+export async function getTokenMetadata(_abi: string, _address: string, _user?: string) {
   _abi = JSON.parse(toUtf8String(_abi));
   const contract = new ethers.Contract(_address, _abi, readOnlyProvider);
   const symbol = await contract.symbol();
   const supply = await contract.totalSupply();
-  return { symbol, supply }
+  const userBalance = await contract.balanceOf(_user);
+  const decimals = await contract.decimals();
+  return { symbol, supply, decimals, userBalance }
 }
