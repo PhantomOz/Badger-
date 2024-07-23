@@ -3,7 +3,7 @@ import { useGetAllERC20 } from "./useERC20Factory";
 import { getFungibleContract, getNonFungibleContract } from "../constants/contracts";
 import { getProvider, readOnlyProvider } from "@/constants/providers";
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/react";
-import { ethers } from "ethers";
+import { ethers, toUtf8String } from "ethers";
 import { useGetAllERC721 } from "./useERC721Factory";
 
 // Get single ERC20 Token
@@ -36,12 +36,12 @@ export const GetBalanceOf = (tokenAddress: string) => {
   const { address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   const readWriteProvider = getProvider(walletProvider);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const signer = await readWriteProvider.getSigner();
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+        const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
         const contract = getFungibleContract(signer, tokenAddress);
         const balance = await contract.balanceOf(address);
@@ -86,12 +86,12 @@ export const GetBalanceOfNFT = (tokenAddress: string) => {
   const { address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   const readWriteProvider = getProvider(walletProvider);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const signer = await readWriteProvider.getSigner();
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+        const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
         const contract = getNonFungibleContract(signer, tokenAddress);
         const balance = await contract.balanceOf(address);
@@ -112,7 +112,7 @@ export const GetNFTUri = (tokenAddress: string) => {
   const { address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   const readWriteProvider = getProvider(walletProvider);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -132,3 +132,11 @@ export const GetNFTUri = (tokenAddress: string) => {
 
   return uri;
 };
+
+export async function getTokenMetadata(_abi: string, _address: string) {
+  _abi = JSON.parse(toUtf8String(_abi));
+  const contract = new ethers.Contract(_address, _abi, readOnlyProvider);
+  const symbol = await contract.symbol();
+  const supply = await contract.totalSupply();
+  return { symbol, supply }
+}
