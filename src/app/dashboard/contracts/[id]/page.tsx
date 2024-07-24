@@ -13,6 +13,7 @@ import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
 import { getLogs } from "@/hooks/useGetERC20Events";
 import EventTable from "@/components/contracts/ERC20Event";
+import { toUtf8String } from "ethers";
 
 const SingleContract = ({ params }: { params: { id: string } }) => {
   const { isConnected, address } = useWeb3ModalAccount();
@@ -65,7 +66,7 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
               ) : (
                 ""
               )}
-              {tab == 2 ? <Explorer metadata={selectedToken} /> : ""}
+              {tab == 2 ? <Explorer metadata={selectedToken} abi={JSON.parse(toUtf8String(selectedToken?._abi))} /> : ""}
             </div>
           </div>
         </div>
