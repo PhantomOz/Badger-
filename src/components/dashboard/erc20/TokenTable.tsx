@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { TokenTableRow } from "./TokenTableRow";
 
 // import { Spinner } from "@/components/ui/spinner";
 
@@ -14,13 +15,12 @@ export function TokenTable({
   isLoading: boolean;
   fullPage: boolean;
 }) {
-  const router = useRouter();
   return (
     <div className="relative overflow-x-auto rounded">
       {tableData.length < 1 ? (
         <div className="mt-6 w-full overflow-hidden">
           <p className="text-center text-red-700">You have not created any tokens</p>
-          
+
           <div className=" mx-auto h-10 w-10 "></div>
         </div>
       ) : (
@@ -44,28 +44,7 @@ export function TokenTable({
 
           <tbody>
             {(fullPage ? tableData : tableData.slice(0, 5))?.map(
-              (data, index) => (
-                <tr key={index} className="border-b dark:border-gray-70">
-                  <th
-                    scope="row"
-                    className="cursor-pointer whitespace-nowrap px-6 py-4 font-medium text-purple-600 "
-                    onClick={() => {
-                      router.push(`/dashboard/contracts/${data?.address}`);
-                    }}
-                  >
-                    {data?.name}
-                  </th>
-                  <td className="px-6 py-4">{data?.symbol}</td>
-                  <td className="px-6 py-4">
-                    {String(data?.address).substring(0, 8)}...
-                    {String(data?.address).substring(
-                      String(data?.address).length - 9,
-                      String(data?.address).length - 1
-                    )}
-                  </td>
-                  <td className="px-6 py-4">{data?.supply?.toString()}</td>
-                </tr>
-              )
+              (data, index) => (<TokenTableRow key={index} data={data} />)
             )}
           </tbody>
         </table>

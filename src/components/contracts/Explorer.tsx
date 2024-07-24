@@ -12,7 +12,7 @@ export const Explorer = ({ metadata, abi }: { metadata: any; abi: any[] }) => {
   const [readFunctions, setReadFunctions] = useState([]);
   const [writeFunctions, setWriteFunctions] = useState([]);
   const [result, setResult] = useState<any>(null);
-  
+
   const { walletProvider } = useWeb3ModalProvider();
   const readWriteProvider = getProvider(walletProvider);
 
@@ -37,9 +37,9 @@ export const Explorer = ({ metadata, abi }: { metadata: any; abi: any[] }) => {
   const handleFunction = async (functionName: string, args: any[]) => {
     try {
       const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
-      const contract = new ethers.Contract(metadata.address, abi, signer || readWriteProvider);
+      const contract = new ethers.Contract(metadata._contract, abi, signer || readWriteProvider);
       const result = await contract[functionName](...args);
-      
+
       if (typeof result.wait === 'function') {
         const receipt = await result.wait();
         setResult(receipt.status === 1 ? "True" : "False");
@@ -55,7 +55,7 @@ export const Explorer = ({ metadata, abi }: { metadata: any; abi: any[] }) => {
     }
   };
 
-  const selectedFunction = [...readFunctions, ...writeFunctions].find((f:any) => f.name === currentFunction);
+  const selectedFunction = [...readFunctions, ...writeFunctions].find((f: any) => f.name === currentFunction);
 
   return (
     <>
@@ -64,17 +64,15 @@ export const Explorer = ({ metadata, abi }: { metadata: any; abi: any[] }) => {
         <div className="w-1/3 rounded border border-gray-600">
           <div className="flex w-full border-b border-gray-400 text-gray-200">
             <span
-              className={`w-1/2 cursor-pointer px-4 py-2 text-center font-bold ${
-                tab === 0 ? "border-b-2 border-gray-300" : "border-0"
-              }`}
+              className={`w-1/2 cursor-pointer px-4 py-2 text-center font-bold ${tab === 0 ? "border-b-2 border-gray-300" : "border-0"
+                }`}
               onClick={() => setTab(0)}
             >
               Write
             </span>
             <span
-              className={`w-1/2 cursor-pointer px-4 py-2 text-center font-bold ${
-                tab === 1 ? "border-b-2 border-gray-300" : "border-0"
-              }`}
+              className={`w-1/2 cursor-pointer px-4 py-2 text-center font-bold ${tab === 1 ? "border-b-2 border-gray-300" : "border-0"
+                }`}
               onClick={() => setTab(1)}
             >
               Read
@@ -86,12 +84,11 @@ export const Explorer = ({ metadata, abi }: { metadata: any; abi: any[] }) => {
             <p className="mb-2 border-b border-gray-800 pb-2 font-semibold text-gray-300">
               Write Functions
             </p>
-            {writeFunctions.map((func:any) => (
+            {writeFunctions.map((func: any) => (
               <p
                 key={func.name}
-                className={`mb-2 cursor-pointer font-mono font-semibold ${
-                  currentFunction === func.name ? "text-gray-200" : ""
-                }`}
+                className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === func.name ? "text-gray-200" : ""
+                  }`}
                 onClick={() => handleSetCurrentFunction(func.name)}
               >
                 {func.name}
@@ -104,12 +101,11 @@ export const Explorer = ({ metadata, abi }: { metadata: any; abi: any[] }) => {
             <p className="mb-2 border-b border-gray-800 pb-2 font-semibold text-gray-300">
               Read Functions
             </p>
-            {readFunctions.map((func:any) => (
+            {readFunctions.map((func: any) => (
               <p
                 key={func.name}
-                className={`mb-2 cursor-pointer font-mono font-semibold ${
-                  currentFunction === func.name ? "text-gray-200" : ""
-                }`}
+                className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === func.name ? "text-gray-200" : ""
+                  }`}
                 onClick={() => handleSetCurrentFunction(func.name)}
               >
                 {func.name}
