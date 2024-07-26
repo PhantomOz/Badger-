@@ -10,7 +10,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import InputComp from "@/components/ui/inputcomp";
 import { Label } from "@/components/ui/label";
+import RadioContainer from "@/components/ui/radio";
+import RadioComp from "@/components/ui/radiocomp";
+import Section from "@/components/ui/section";
 import { getFactoryContract } from "@/constants/contracts";
 import { getProvider } from "@/constants/providers";
 import { useWeb3ModalProvider } from "@web3modal/ethers/react";
@@ -100,75 +104,27 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
     <DialogContent className="sm:max-w-[425px] md:max-w-[550px] lg:max-w-[90%]">
 
       <DialogHeader>
-        <DialogTitle>Create NFT</DialogTitle>
+        <DialogTitle>Create Governance Contract</DialogTitle>
         <DialogDescription>
           Parameters the contract specifies to be passed in during deployment.
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-row gap-6">
         <div className=" py-4 lg:w-6/12">
-          <div className="mb-5 items-center gap-4">
-            <Label htmlFor="name" className=" text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              onChange={handleInputChange}
-              className="mt-2"
-            />
-          </div>
-          <div className=" items-center gap-4">
-            <Label htmlFor="symbol" className="text-right">
-              Symbol
-            </Label>
-            <Input id="symbol" name="symbol" onChange={handleInputChange} className="mt-2" />
-          </div>
-          <div className="mb-5 mt-5 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Input id="description" name="description" onChange={handleInputChange} className="mt-2" />
-          </div>
-
-          <div className="flex w-full items-center justify-center">
-            <label
-              className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border"
-            >
-              {imageBlobUrl ? <div className="h-64 rounded-lg"><img src={imageBlobUrl} alt="Selected" className="h-full rounded-lg w-full" />{uploading && <p className="text-white">Image is uploading...</p>}</div> : <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                <svg
-                  className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  SVG, PNG, JPG or GIF (MAX. 800x400px)
-                </p>
-              </div>}
-
-              <input
-                className="hidden"
-                type="file"
-                id="file"
-                ref={inputFile}
-                onChange={handleChange}
-              />
-            </label>
-          </div>
+          <Section title="settings">
+            <InputComp label="Name" handleOnchange={handleInputChange} value={"My Governor"} />
+            <div className="flex gap-5">
+              <InputComp label="Voting Delay" handleOnchange={handleInputChange} value={"1 day"} />
+              <InputComp label="Voting Period" handleOnchange={handleInputChange} value={"1 week"} />
+            </div>
+            <InputComp label="Proposal Threshold" handleOnchange={handleInputChange} value={"0"} />
+            <InputComp label="Quorum %O #O" handleOnchange={handleInputChange} value={"4"} />
+            <InputComp label="Token Decimal" handleOnchange={handleInputChange} value={"18"} />
+            <RadioContainer value={"storage"} onValueChange={(e) => { }} className="flex flex-col gap-2.5">
+              <RadioComp label="Updatable Settings" value="updatable" />
+              <RadioComp label="Storage" value="storage" />
+            </RadioContainer>
+          </Section>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">

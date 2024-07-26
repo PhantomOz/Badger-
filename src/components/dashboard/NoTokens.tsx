@@ -2,6 +2,7 @@ import React from "react";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import CreateErc20Form from "./erc20/CreateErc20Form";
 import { CreateNftForm } from "./nft/CreateNFTForm";
+import { CreateDAOForm } from "./dao/CreateDAOForm";
 
 const NoToken = () => {
   return (
@@ -75,7 +76,7 @@ const NoToken = () => {
                 </p>
               </div>
             </DialogTrigger>
-            <CreateNftForm />
+            <CreateDAOForm />
           </Dialog>
         </div>
       </div>
