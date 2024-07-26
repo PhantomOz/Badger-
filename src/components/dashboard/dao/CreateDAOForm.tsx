@@ -2,76 +2,46 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import InputComp from "@/components/ui/inputcomp";
-import { Label } from "@/components/ui/label";
 import RadioContainer from "@/components/ui/radio";
 import RadioComp from "@/components/ui/radiocomp";
 import Section from "@/components/ui/section";
 import { getFactoryContract } from "@/constants/contracts";
 import { getProvider } from "@/constants/providers";
+import { generateDaoCode } from "@/utils";
 import { useWeb3ModalProvider } from "@web3modal/ethers/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CodeBlock, dracula } from "react-code-blocks";
 
 export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
-  const [file, setFile] = useState("");
-  const [cid, setCid] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const inputFile = useRef<HTMLInputElement>(null);
   const { walletProvider } = useWeb3ModalProvider();
   const [loading, setLoading] = useState(false);
-  const [imageBlobUrl, setImageBlobUrl] = useState('');
-
   const readWriteProvider = getProvider(walletProvider);
+  const [contract, setContract] = useState<string>();
 
   const [inputValues, setInputValues] = useState({
-    name: "",
+    name: "My Governor",
     symbol: "",
     description: "",
   });
 
-  const uploadFile = async (fileToUpload: File) => {
-    try {
-      setUploading(true);
-      const data = new FormData();
-      data.set("file", fileToUpload);
-      const res = await fetch("/api/files", {
-        method: "POST",
-        body: data,
-      });
-      const resData = await res.json();
-      setCid(resData.IpfsHash);
-      console.log(resData.IpfsHash);
+  useEffect(() => {
+    setContract(generateDaoCode(inputValues));
+  }, [inputValues]);
 
-      setUploading(false);
-    } catch (e) {
-      console.log(e);
-      setUploading(false);
-      alert("Trouble uploading file");
-    }
-  };
-
-  const handleChange = (e: any) => {
-    setFile(e.target.files[0]);
-    uploadFile(e.target.files[0]);
-    const blobUrl = URL.createObjectURL(e.target.files[0]);
-    setImageBlobUrl(blobUrl);
-  };
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
   };
 
-  async function createNFT() {
+  async function createDao() {
     setLoading(true)
     const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
@@ -82,7 +52,6 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
       const transaction = await contract.createNFT(
         inputValues.name,
         inputValues.symbol,
-        cid,
         inputValues.description
       );
 
@@ -110,7 +79,7 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-row gap-6">
-        <div className=" py-4 lg:w-6/12">
+        <div className=" py-4 lg:w-6/12 max-h-[500px] overflow-y-auto h-fit">
           <Section title="settings">
             <InputComp label="Name" handleOnchange={handleInputChange} value={"My Governor"} />
             <div className="flex gap-5">
@@ -156,7 +125,7 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">
           <CodeBlock
-            text={'contract'}
+            text={contract}
             language={'solidity'}
             showLineNumbers={false}
             theme={dracula}
@@ -165,8 +134,8 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
         </div>
       </div>
       <DialogFooter>
-        <Button type="submit" disabled={loading || uploading} onClick={() => {
-          createNFT()
+        <Button type="submit" disabled={loading} onClick={() => {
+          createDao()
         }}>{loading ? "Loading..." : "Deploy"}
         </Button>
       </DialogFooter>
