@@ -149,6 +149,9 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
               <RadioComp label="UUPS" value="uups" />
             </RadioContainer>
           </Section>
+          <Section title="info">
+            <InputComp label="Security Contact" handleOnchange={handleInputChange} value={""} />
+          </Section>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">
