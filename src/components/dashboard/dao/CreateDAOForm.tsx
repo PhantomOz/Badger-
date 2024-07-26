@@ -137,6 +137,12 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
               <RadioComp label="Time Stamp" value="Time Stamp" />
             </RadioContainer>
           </Section>
+          <Section title="timelock">
+            <RadioContainer value={"Block Number"} onValueChange={(e) => { }} className="flex flex-col gap-2.5">
+              <RadioComp label="TimelockController" value="Block Number" />
+              <RadioComp label="Compound" value="Time Stamp" />
+            </RadioContainer>
+          </Section>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">
