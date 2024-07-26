@@ -19,7 +19,7 @@ import {
 } from "@web3modal/ethers/react";
 import { getProvider } from "@/constants/providers";
 import { getFactoryContract } from "@/constants/contracts";
-import { generateCode, validateInputs } from "@/utils";
+import { generateErc20Code, validateInputs } from "@/utils";
 import RadioContainer from "@/components/ui/radio";
 import RadioItem from "@/components/ui/radioitem";
 import CheckBox from "@/components/ui/checkbox";
@@ -89,7 +89,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
 
 
   useEffect(() => {
-    setContract(generateCode(inputValues));
+    setContract(generateErc20Code(inputValues));
   }, [inputValues]);
 
   const handleInputChange = (event: any) => {
