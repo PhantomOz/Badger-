@@ -31,7 +31,7 @@ import CheckBoxComp from "@/components/ui/checkboxcomp";
 import Section from "@/components/ui/section";
 import RadioComp from "@/components/ui/radiocomp";
 import { AddressLike } from "ethers";
-import { useBadgerProtocol } from "@/hooks/useERC20Factory";
+import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
 
 interface erc20InputValues {
   name: string,

@@ -2,7 +2,7 @@ import { NftTable } from './NftTable';
 import { tableData } from '@/constants/dummyTableData';
 import { CreateNFT } from './CreateNFT';
 import { useGetAllERC721 } from '@/hooks/useERC721Factory';
-import { useERC721 } from '@/hooks/useERC20Factory';
+import { useERC721 } from '@/hooks/useBadgerProtocol';
 
 export function NFTOverview({ fullPage, tokens }: { fullPage: boolean, tokens: any[] }) {
   // console.log(tableData)

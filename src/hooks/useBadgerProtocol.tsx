@@ -30,6 +30,24 @@ export const useERC721 = (
   return { loading: false, nfts: erc721Tokens };
 };
 
+export const useERC1155 = (
+  tokens: any[]
+) => {
+
+  const erc1155Tokens = tokens?.filter(token => token._type === 2);
+
+  return { loading: false, nfts: erc1155Tokens };
+};
+
+export const useDao = (
+  tokens: any[]
+) => {
+
+  const daoContracts = tokens?.filter(token => token._type === 3);
+
+  return { loading: false, nfts: daoContracts };
+};
+
 
 
 export const useBadgerProtocol = () => {

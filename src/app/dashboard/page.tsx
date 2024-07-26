@@ -8,7 +8,7 @@ import { TokenOverview } from "@/components/dashboard/erc20/TokenOverview";
 import { NFTOverview } from "@/components/dashboard/nft/NFTOverview";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
-import { useBadgerProtocol } from "@/hooks/useERC20Factory";
+import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
 
 const Dashboard = () => {
   const [tab, setTab] = useState(0);

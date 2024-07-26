@@ -3,7 +3,7 @@ import InfoCard from "../shared/InfoCard";
 import { TokenOverview } from "../erc20/TokenOverview";
 import { NFTOverview } from "../nft/NFTOverview";
 
-import { useBadgerProtocol } from "@/hooks/useERC20Factory";
+import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
 import NoToken from "../NoTokens";
 import { useGetAllERC721 } from "@/hooks/useERC721Factory";
 

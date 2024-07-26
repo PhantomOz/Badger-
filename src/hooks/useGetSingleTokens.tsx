@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useBadgerProtocol } from "./useERC20Factory";
+import { useBadgerProtocol } from "./useBadgerProtocol";
 import { getFungibleContract, getNonFungibleContract } from "../constants/contracts";
 import { getProvider, readOnlyProvider } from "@/constants/providers";
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/react";

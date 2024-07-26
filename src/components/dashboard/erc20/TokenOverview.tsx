@@ -1,4 +1,4 @@
-import { useBadgerProtocol, useERC20, useERC721 } from '@/hooks/useERC20Factory';
+import { useBadgerProtocol, useERC20, useERC721 } from '@/hooks/useBadgerProtocol';
 import { CreateERC20 } from './CreateErc20';
 import { TokenTable } from './TokenTable';
 import { tableData } from '@/constants/dummyTableData';

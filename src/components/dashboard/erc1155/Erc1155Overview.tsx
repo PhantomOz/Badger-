@@ -1,6 +1,6 @@
 import { Erc1155Table } from './Erc1155Table';
 import { CreateErc1155 } from './CreateErc1155';
-import { useERC721 } from '@/hooks/useERC20Factory';
+import { useERC721 } from '@/hooks/useBadgerProtocol';
 
 export function Erc1155Overview({ fullPage, tokens }: { fullPage: boolean, tokens: any[] }) {
   // console.log(tableData)
