@@ -125,6 +125,12 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
               <RadioComp label="Storage" value="storage" />
             </RadioContainer>
           </Section>
+          <Section title="votes">
+            <RadioContainer value={"erc20"} onValueChange={(e) => { }} className="flex flex-col gap-2.5">
+              <RadioComp label="ERC20Votes" value="erc20" />
+              <RadioComp label="ERC721Votes" value="erc721" />
+            </RadioContainer>
+          </Section>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">
