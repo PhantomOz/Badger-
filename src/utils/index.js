@@ -1,11 +1,14 @@
 import { ethers } from "ethers";
 import { SUPPORTED_CHAIN } from "../connection";
-import { erc20 } from "@openzeppelin/wizard";
+import { erc1155, erc20, erc721, governor } from "@openzeppelin/wizard";
 
 export const isSupportedChain = (chainId) =>
   Number(chainId) === SUPPORTED_CHAIN;
 
-export const generateCode = (props) => erc20.print(props);
+export const generateErc20Code = (props) => erc20.print(props);
+export const generateErc721Code = (props) => erc721.print(props);
+export const generateErc1155Code = (props) => erc1155.print(props);
+export const generateDaoCode = (props) => governor.print(props);
 
 export const validateInputs = (inputValues, contractArguments) => {
   const errors = [];
