@@ -70,7 +70,7 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
   }
 
   return (
-    <DialogContent className="sm:max-w-[425px] md:max-w-[550px] lg:max-w-[90%]">
+    <DialogContent className="sm:max-w-[425px] md:max-w-[550px] lg:max-w-[90%] ">
 
       <DialogHeader>
         <DialogTitle>Create Governance Contract</DialogTitle>
@@ -79,7 +79,7 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-row gap-6">
-        <div className=" py-4 lg:w-6/12 max-h-[500px] overflow-y-auto h-fit">
+        <div className=" py-4 px-4 lg:w-6/12 max-h-[500px] overflow-y-auto h-fit scrollbar-thin">
           <Section title="settings">
             <InputComp label="Name" handleOnchange={handleInputChange} value={"My Governor"} />
             <div className="flex gap-5">
@@ -123,7 +123,7 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
           </Section>
         </div>
         {/* Display Codes Here */}
-        <div className="w-[100%] relative max-h-[500px]">
+        <div className="w-[100%] relative max-h-[500px] scrollbar-thin">
           <CodeBlock
             text={contract}
             language={'solidity'}

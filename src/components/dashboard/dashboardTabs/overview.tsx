@@ -33,8 +33,8 @@ export function OverviewComponent({ tokens }: { tokens: any }) {
             <InfoCard title="NFTs Deployed" content={nfts.length} />
           </div>
 
-          <TokenOverview fullPage={false} tokens={tokens} />
-          <NFTOverview fullPage={false} tokens={tokens} />
+          <TokenOverview fullPage={false} tokens={tokens.data} />
+          <NFTOverview fullPage={false} tokens={tokens.data} />
           {/* <NFTOverview /> */}
         </div>
       )}

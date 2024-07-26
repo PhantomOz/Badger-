@@ -7,7 +7,6 @@ import { useGetAllERC721 } from '@/hooks/useERC721Factory';
 export function TokenOverview({ fullPage, tokens }: { fullPage: boolean, tokens: any[] }) {
   // console.log(tableData)
   const { loading, data } = useERC20(tokens);
-  const { nfts } = useERC721(tokens);
 
   return (
     <div className="mt-20">

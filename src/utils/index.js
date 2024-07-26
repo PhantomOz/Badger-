@@ -8,7 +8,7 @@ export const isSupportedChain = (chainId) =>
 export const generateErc20Code = (props) => erc20.print(props);
 export const generateErc721Code = (props) => erc721.print(props);
 export const generateErc1155Code = (props) => erc1155.print(props);
-export const generateDaoCode = (props) => governor.print(props);
+export const generateDaoCode = (props) => governor.print(governor.defaults);
 
 export const validateInputs = (inputValues, contractArguments) => {
   const errors = [];
