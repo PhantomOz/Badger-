@@ -131,6 +131,12 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
               <RadioComp label="ERC721Votes" value="erc721" />
             </RadioContainer>
           </Section>
+          <Section title="Token Clock Mode">
+            <RadioContainer value={"Block Number"} onValueChange={(e) => { }} className="flex flex-col gap-2.5">
+              <RadioComp label="Block Number" value="Block Number" />
+              <RadioComp label="Time Stamp" value="Time Stamp" />
+            </RadioContainer>
+          </Section>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">
