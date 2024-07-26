@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ContractDetails from "@/components/contracts/ContractInfo";
 
@@ -11,7 +11,7 @@ import { Explorer } from "@/components/contracts/Explorer";
 import { getTokenMetadata, useGetSingleERC20 } from "@/hooks/useGetSingleTokens";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
-import { getLogs } from "@/hooks/useGetERC20Events";
+import { getAllEvents, getLogs } from "@/hooks/useGetERC20Events";
 import EventTable from "@/components/contracts/ERC20Event";
 import { toUtf8String } from "ethers";
 
@@ -26,10 +26,11 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
   const logs = getLogs(params.id);
   // console.log(logs);
 
-  useMemo(() => {
+  useEffect(() => {
     async function getMeta() {
       const { symbol, supply, decimals, userBalance } = await getTokenMetadata(selectedToken?._abi, selectedToken?._contract, address);
       setTokenMeta({ symbol, supply, decimals, userBalance });
+      await getAllEvents(selectedToken?._contractAddress, selectedToken?._abi);
     }
     getMeta();
   }, [selectedToken?._abi, selectedToken?._contract])

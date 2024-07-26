@@ -7,11 +7,10 @@ import { useBadgerProtocol } from "@/hooks/useERC20Factory";
 import NoToken from "../NoTokens";
 import { useGetAllERC721 } from "@/hooks/useERC721Factory";
 
-export function OverviewComponent() {
+export function OverviewComponent({ tokens }: { tokens: any }) {
   const [contractCreated, setContractCreated] = useState(false);
 
 
-  const { tokens } = useBadgerProtocol();
   const { loading, data } = tokens;
   const { loading: loadingnft, nfts } = useGetAllERC721();
 
@@ -34,8 +33,8 @@ export function OverviewComponent() {
             <InfoCard title="NFTs Deployed" content={nfts.length} />
           </div>
 
-          <TokenOverview fullPage={false} />
-          <NFTOverview fullPage={false} />
+          <TokenOverview fullPage={false} tokens={tokens} />
+          <NFTOverview fullPage={false} tokens={tokens} />
           {/* <NFTOverview /> */}
         </div>
       )}

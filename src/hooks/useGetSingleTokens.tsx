@@ -135,11 +135,14 @@ export const GetNFTUri = (tokenAddress: string) => {
 };
 
 export async function getTokenMetadata(_abi: string, _address: string, _user?: string) {
-  _abi = JSON.parse(toUtf8String(_abi));
+  if (_abi) {
+
+    _abi = JSON.parse(toUtf8String(_abi));
+  }
   const contract = new ethers.Contract(_address, _abi, readOnlyProvider);
   const symbol = await contract.symbol();
   const supply = await contract.totalSupply();
-  const userBalance = await contract.balanceOf(_user);
+  const userBalance = _user && await contract.balanceOf(_user);
   const decimals = await contract.decimals();
   return { symbol, supply, decimals, userBalance }
 }

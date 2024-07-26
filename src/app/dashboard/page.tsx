@@ -8,10 +8,12 @@ import { TokenOverview } from "@/components/dashboard/erc20/TokenOverview";
 import { NFTOverview } from "@/components/dashboard/nft/NFTOverview";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
+import { useBadgerProtocol } from "@/hooks/useERC20Factory";
 
 const Dashboard = () => {
   const [tab, setTab] = useState(0);
   const { isConnected } = useWeb3ModalAccount();
+  const { tokens } = useBadgerProtocol();
 
   return (
     <>
@@ -30,9 +32,9 @@ const Dashboard = () => {
 
           <div className="p-4 sm:container sm:mx-auto">
             <div>
-              {tab == 0 ? <OverviewComponent /> : ""}
-              {tab == 1 ? <TokenOverview fullPage={true} /> : ""}
-              {tab == 2 ? <NFTOverview fullPage={true} /> : ""}
+              {tab == 0 ? <OverviewComponent tokens={tokens} /> : ""}
+              {tab == 1 ? <TokenOverview fullPage={true} tokens={tokens.data} /> : ""}
+              {tab == 2 ? <NFTOverview fullPage={true} tokens={tokens.data} /> : ""}
             </div>
           </div>
         </div>

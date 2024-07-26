@@ -1,14 +1,13 @@
-import { useBadgerProtocol } from '@/hooks/useERC20Factory';
+import { useBadgerProtocol, useERC20, useERC721 } from '@/hooks/useERC20Factory';
 import { CreateERC20 } from './CreateErc20';
 import { TokenTable } from './TokenTable';
 import { tableData } from '@/constants/dummyTableData';
 import { useGetAllERC721 } from '@/hooks/useERC721Factory';
 
-export function TokenOverview({ fullPage }: { fullPage: boolean }) {
+export function TokenOverview({ fullPage, tokens }: { fullPage: boolean, tokens: any[] }) {
   // console.log(tableData)
-  const { tokens } = useBadgerProtocol();
-  const { loading, data } = tokens;
-  const { nfts } = useGetAllERC721();
+  const { loading, data } = useERC20(tokens);
+  const { nfts } = useERC721(tokens);
 
   return (
     <div className="mt-20">

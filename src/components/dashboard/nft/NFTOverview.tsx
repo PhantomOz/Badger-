@@ -2,19 +2,20 @@ import { NftTable } from './NftTable';
 import { tableData } from '@/constants/dummyTableData';
 import { CreateNFT } from './CreateNFT';
 import { useGetAllERC721 } from '@/hooks/useERC721Factory';
+import { useERC721 } from '@/hooks/useERC20Factory';
 
-export function NFTOverview({fullPage}:{fullPage:boolean}){
+export function NFTOverview({ fullPage, tokens }: { fullPage: boolean, tokens: any[] }) {
   // console.log(tableData)
-  const { loading, nfts } = useGetAllERC721();
+  const { loading, nfts } = useERC721(tokens);
   // console.log(nfts);
-  
+
 
   return (
     <div className="mt-20">
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-             NFT Contracts
+            NFT Contracts
           </h3>
           <small className="text-lg font-light text-gray-200">
             The list of NFT instances that you have deployed with badger on the Polygon
@@ -24,7 +25,7 @@ export function NFTOverview({fullPage}:{fullPage:boolean}){
 
         <CreateNFT />
       </div>
-      <NftTable tableData={nfts} isLoading={false} fullPage={fullPage}/>
+      <NftTable tableData={nfts} isLoading={false} fullPage={fullPage} />
     </div>
   )
 }
