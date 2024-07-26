@@ -19,7 +19,7 @@ const sepolia = {
   name: "Sepolia",
   currency: "ETH",
   explorerUrl: "https://sepolia.etherscan.io",
-  rpcUrl: "https://endpoints.omniatech.io/v1/eth/sepolia/public",
+  rpcUrl: "https://1rpc.io/sepolia",
 };
 
 const Scroll = {

@@ -15,7 +15,7 @@ const NoToken = () => {
       </p>
 
       <div>
-        <div className="mt-16 flex justify-center">
+        <div className="mt-16 flex justify-center flex-wrap gap-5">
           <Dialog>
             <DialogTrigger asChild>
               <div className="mr-8 block w-full max-w-xs cursor-pointer rounded-lg border p-5 shadow">
@@ -45,7 +45,37 @@ const NoToken = () => {
                 </p>
               </div>
             </DialogTrigger>
-            <CreateNftForm/>
+            <CreateNftForm />
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="mr-8 block w-full max-w-xs cursor-pointer rounded-lg border p-5 shadow">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {/* {title} */}
+                  Create NFT
+                </h5>
+                <p className="text-lg font-normal text-gray-100">
+                  {/* {content} */}
+                  Create a token compliant with ERC-721 standard
+                </p>
+              </div>
+            </DialogTrigger>
+            <CreateNftForm />
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="mr-8 block w-full max-w-xs cursor-pointer rounded-lg border p-5 shadow">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {/* {title} */}
+                  Create DAO
+                </h5>
+                <p className="text-lg font-normal text-gray-100">
+                  {/* {content} */}
+                  Create a governance contract for your decentralized autonomous organization.
+                </p>
+              </div>
+            </DialogTrigger>
+            <CreateNftForm />
           </Dialog>
         </div>
       </div>

@@ -85,20 +85,8 @@ export const useBadgerProtocol = () => {
 
   useEffect(() => {
     const fetchTokens = async () => {
-      // const filter = {
-      //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
-      //   topics: [ethers.id("NewContractAdded(address,address,uint8)")],
-      // };
-
       try {
-        // const events = await readOnlyProvider
-        //   .getLogs({
-        //     ...filter,
-        //     fromBlock: 5726200,
-        //   })
-        //   .then((events) => {
         await getUserTokens();
-        // });
       } catch (error) {
         console.error("Error fetching logs: ", error);
       }
@@ -110,6 +98,6 @@ export const useBadgerProtocol = () => {
     };
 
     fetchTokens();
-  }, []);
+  }, [address, walletProvider]);
   return { addContract, tokens }
 }

@@ -25,6 +25,8 @@ const Dashboard = () => {
               { id: 0, label: "Overview" },
               { id: 1, label: "Token" },
               { id: 2, label: "NFT" },
+              { id: 3, label: "1155" },
+              { id: 4, label: "DAO" },
             ]}
             selectedTab={tab}
             setTab={setTab}
