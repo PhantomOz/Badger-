@@ -143,6 +143,12 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
               <RadioComp label="Compound" value="Time Stamp" />
             </RadioContainer>
           </Section>
+          <Section title="upgradeability">
+            <RadioContainer value={"uups"} onValueChange={(e) => { }} className="flex flex-col gap-2.5">
+              <RadioComp label="Transparent" value="transparent" />
+              <RadioComp label="UUPS" value="uups" />
+            </RadioContainer>
+          </Section>
         </div>
         {/* Display Codes Here */}
         <div className="w-[100%] relative max-h-[500px]">
