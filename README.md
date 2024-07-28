@@ -1,6 +1,6 @@
 # Project Name: BADGER
 
-![image](https://github.com/JeffreyJoel/badger-evm/assets/72028836/328c9fb2-0189-4634-bf9a-8045ec792950)
+![image](./banner.png)
 
 
 ## Overview
