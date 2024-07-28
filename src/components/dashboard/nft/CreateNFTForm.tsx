@@ -281,7 +281,7 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
             />
 
             <div className="flex w-full items-center justify-center mt-4">
-              <label className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border">
+              <label className="dark:hover:bg-gray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border">
                 {imageBlobUrl ? (
                   <div className="h-64 rounded-lg">
                     <img
@@ -492,11 +492,12 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
           )}
         </div>
         {uploading || loading ? (
-          <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-50">
             <Loader2 className="h-8 w-8 animate-spin text-white" />
             {uploading && <p className="text-white">Image is uploading...</p>}
             {compiling && <p className="text-white">Compiling...</p>}
             {verifying && <p className="text-white">Verifying...</p>}
+          {adding && <p className="text-white">Adding...</p>}
             {deploying && <p className="text-white">Deploying...</p>}
           </div>
         ) : (

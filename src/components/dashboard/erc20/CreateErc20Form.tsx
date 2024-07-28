@@ -34,6 +34,7 @@ import { AddressLike } from "ethers";
 import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
 import { Switch } from "@/components/ui/switch";
 import { StatusComponent } from "../shared/StatusModal";
+import { Loader2 } from "lucide-react";
 
 interface erc20InputValues {
   name: string;
@@ -63,6 +64,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const [compiling, setCompiling] = useState(false);
   const [deploying, setDeploying] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [adding, setAdding] = useState(false)
 
   const [inputValues, setInputValues] = useState<erc20InputValues>({
     name: "MyToken",
@@ -154,41 +156,46 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     const signer = readWriteProvider
       ? await readWriteProvider.getSigner()
       : null;
-    try {
-      const args = generateContractArgs();
-      const { compiling, result } = await compile(contract, inputValues.name);
-
-      setCompiling(compiling);
-
-      console.log(compiling);
-
-      const { deploying, contractAddress } = await deploy(
-        JSON.parse(result),
-        signer,
-        args
-      );
-      setDeploying(deploying);
-      await addContract(
-        contractAddress,
-        inputValues.name,
-        JSON.stringify(JSON.parse(result).abi),
-        0,
-        contract
-      );
-      const { verifying, res } = await verifyContract(
-        contractAddress,
-        contract,
-        JSON.parse(result).contractName,
-        args
-      );
-      setVerifying(verifying);
-      setLoading(false);
-      setOpenStatusModal(false)
-    } catch (error) {
-      console.error("error: ", error);
-      setLoading(false);
-      setOpenStatusModal(false)
-    }
+      try {
+        const args = generateContractArgs();
+        setCompiling(true);
+        const { compiling, result } = await compile(contract, inputValues.name);
+        setCompiling(false);
+  
+        setDeploying(true);
+  
+        const { deploying, contractAddress } = await deploy(
+          JSON.parse(result),
+          signer,
+          args
+        );
+  
+        setDeploying(false);
+        setAdding(true);
+  
+        await addContract(
+          contractAddress,
+          inputValues.name,
+          JSON.stringify(JSON.parse(result).abi),
+          0,
+          contract
+        );
+        setAdding(false);
+        setVerifying(true);
+        const { verifying } = await verifyContract(
+          contractAddress,
+          contract,
+          JSON.parse(result).contractName,
+          args
+        );
+        setVerifying(false);
+        setLoading(false);
+        setOpenStatusModal(false);
+      } catch (error) {
+        console.error("error: ", error);
+        setLoading(false);
+        setOpenStatusModal(false);
+      }
   }
 
   const error = validateInputs(inputValues, contractArguments);
@@ -401,7 +408,17 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
             />
           </div>
         </div>
-
+        {loading ? (
+          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-50">
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
+            {compiling && <p className="text-white">Compiling...</p>}
+            {verifying && <p className="text-white">Verifying...</p>}
+          {adding && <p className="text-white">Adding...</p>}
+            {deploying && <p className="text-white">Deploying...</p>}
+          </div>
+        ) : (
+          ""
+        )}
         <DialogFooter className="w-full flex flex-row sm:justify-between items-center">
           <div className="flex flex-row items-center">
             <Switch

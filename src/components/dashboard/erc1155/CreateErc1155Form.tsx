@@ -27,6 +27,7 @@ import { Switch } from "@/components/ui/switch";
 import { StatusComponent } from "../shared/StatusModal";
 import RadioContainer from "@/components/ui/radio";
 import RadioComp from "@/components/ui/radiocomp";
+import { Loader2 } from "lucide-react";
 
 interface Erc1155InputValues {
   name: string;
@@ -42,7 +43,11 @@ interface Erc1155InputValues {
   upgradeable: boolean | string;
 }
 
-export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void }) {
+export default function CreateErc1155Form({
+  onSubmit,
+}: {
+  onSubmit?: () => void;
+}) {
   const [file, setFile] = useState<File | null>(null);
   const [cid, setCid] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -59,7 +64,7 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
   const [compiling, setCompiling] = useState(false);
   const [deploying, setDeploying] = useState(false);
   const [verifying, setVerifying] = useState(false);
-
+  const [adding, setAdding] = useState(false);
   const readWriteProvider = getProvider(walletProvider);
 
   const [inputValues, setInputValues] = useState<Erc1155InputValues>({
@@ -94,36 +99,6 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
     setContract(generateErc1155Code(inputValues));
   }, [inputValues]);
 
-  const uploadFile = async (fileToUpload: File) => {
-    try {
-      setUploading(true);
-      const data = new FormData();
-      data.set("file", fileToUpload);
-      const res = await fetch("/api/files", {
-        method: "POST",
-        body: data,
-      });
-      const resData = await res.json();
-      setCid(resData.IpfsHash);
-      console.log(resData.IpfsHash);
-      setUploading(false);
-    } catch (e) {
-      console.log(e);
-      setUploading(false);
-      alert("Trouble uploading file");
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      setFile(selectedFile);
-      uploadFile(selectedFile);
-      const blobUrl = URL.createObjectURL(selectedFile);
-      setImageBlobUrl(blobUrl);
-    }
-  };
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
@@ -140,7 +115,9 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
     }
   };
 
-  const handleContractArgumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContractArgumentChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = event.target;
     setContractArguments({
       ...contractArguments,
@@ -172,6 +149,53 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
     return [];
   };
 
+  async function uploadToIpfs(file: File, metadata: object) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("metadata", JSON.stringify(metadata));
+
+    const response = await fetch("/api/files", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+
+    return response.json();
+  }
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const result = await uploadToIpfs(file, {
+        name: inputValues.name,
+        description: inputValues.description,
+      });
+
+      setInputValues({
+        ...inputValues,
+        baseUri: `ipfs://${result.metadataHash}`,
+      });
+
+      setUploading(false);
+    } catch (error) {
+      console.error("Error uploading to IPFS:", error);
+      setUploading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      // setFile(selectedFile);
+      handleUpload(selectedFile);
+      const blobUrl = URL.createObjectURL(selectedFile);
+      setImageBlobUrl(blobUrl);
+    }
+  };
+
   async function createERC1155() {
     setLoading(true);
     setOpenStatusModal(true);
@@ -188,16 +212,21 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
 
     try {
       const args = generateContractArgs();
+      setCompiling(true);
       const { compiling, result } = await compile(contract, inputValues.name);
+      setCompiling(false);
 
-      setCompiling(compiling);
+      setDeploying(true);
 
       const { deploying, contractAddress } = await deploy(
         JSON.parse(result),
         signer,
         args
       );
-      setDeploying(deploying);
+
+      setDeploying(false);
+      setAdding(true);
+
       await addContract(
         contractAddress,
         inputValues.name,
@@ -205,16 +234,17 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
         0,
         contract
       );
+      setAdding(false);
+      setVerifying(true);
       const { verifying } = await verifyContract(
         contractAddress,
         contract,
         JSON.parse(result).contractName,
         args
       );
-      setVerifying(verifying);
+      setVerifying(false);
       setLoading(false);
       setOpenStatusModal(false);
-      if (onSubmit) onSubmit();
     } catch (error) {
       console.error("error: ", error);
       setLoading(false);
@@ -225,18 +255,22 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
   const error = validateInputs(inputValues, contractArguments);
 
   return (
-    <DialogContent className={`${
-      developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
-    }`}>
+    <DialogContent
+      className={`${
+        developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
+      }`}
+    >
       <DialogHeader>
         <DialogTitle>Create ERC1155 Token</DialogTitle>
         <DialogDescription>
           Set the parameters for your ERC1155 token collection.
         </DialogDescription>
       </DialogHeader>
-      <div className={`${
-        developerMode ? "flex flex-row items-stretch gap-2" : ""
-      }`}>
+      <div
+        className={`${
+          developerMode ? "flex flex-row items-stretch gap-2" : ""
+        }`}
+      >
         <div className="py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
           <InputComp
             label="name"
@@ -263,8 +297,14 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
             <label className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border">
               {imageBlobUrl ? (
                 <div className="h-64 rounded-lg">
-                  <img src={imageBlobUrl} alt="Selected" className="h-full rounded-lg w-full" />
-                  {uploading && <p className="text-white">Image is uploading...</p>}
+                  <img
+                    src={imageBlobUrl}
+                    alt="Selected"
+                    className="h-full rounded-lg w-full"
+                  />
+                  {uploading && (
+                    <p className="text-white">Image is uploading...</p>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center pb-6 pt-5">
@@ -284,7 +324,8 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
                     />
                   </svg>
                   <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span className="font-semibold">Click to upload</span> or drag and drop
+                    <span className="font-semibold">Click to upload</span> or
+                    drag and drop
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     SVG, PNG, JPG or GIF (MAX. 800x400px)
@@ -330,100 +371,99 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
           </Section>
 
           <Section title="Advanced Options">
-              <CheckBoxComp
-                label="Show Advanced Options"
-                handleOnchange={() => {
-                  setShowAdvanced(!showAdvanced);
-                }}
-                value={showAdvanced}
-              />
-              <div className={`${showAdvanced ? "block" : "hidden"}`}>
-                <Section
-                  title="access control"
-                  checkbox={true}
-                  label="access"
-                  value={inputValues.access}
-                  handleOnchange={handleCheckChange}
-                  disabled={
-                    (inputValues.mintable as boolean) ||
-                    (inputValues.pausable as boolean) ||
-                    inputValues.upgradeable === "uups"
-                  }
+            <CheckBoxComp
+              label="Show Advanced Options"
+              handleOnchange={() => {
+                setShowAdvanced(!showAdvanced);
+              }}
+              value={showAdvanced}
+            />
+            <div className={`${showAdvanced ? "block" : "hidden"}`}>
+              <Section
+                title="access control"
+                checkbox={true}
+                label="access"
+                value={inputValues.access}
+                handleOnchange={handleCheckChange}
+                disabled={
+                  (inputValues.mintable as boolean) ||
+                  (inputValues.pausable as boolean) ||
+                  inputValues.upgradeable === "uups"
+                }
+              >
+                <RadioContainer
+                  value={inputValues.access as string}
+                  onValueChange={(e) => handleCheckChange("access", e)}
+                  className="flex flex-col gap-2.5"
                 >
-                  <RadioContainer
-                    value={inputValues.access as string}
-                    onValueChange={(e) => handleCheckChange("access", e)}
-                    className="flex flex-col gap-2.5"
-                  >
-                    <RadioComp label="Ownable" value="ownable" />
-                    {inputValues.access === "ownable" && (
+                  <RadioComp label="Ownable" value="ownable" />
+                  {inputValues.access === "ownable" && (
+                    <InputComp
+                      label="initialOwner"
+                      handleOnchange={handleContractArgumentChange}
+                      value={contractArguments.ownable.initialOwner}
+                    />
+                  )}
+                  <RadioComp label="Roles" value="roles" />
+                  {inputValues.access === "roles" && (
+                    <>
                       <InputComp
-                        label="initialOwner"
+                        label="defaultAdmin"
                         handleOnchange={handleContractArgumentChange}
-                        value={contractArguments.ownable.initialOwner}
+                        value={contractArguments.roles.defaultAdmin}
                       />
-                    )}
-                    <RadioComp label="Roles" value="roles" />
-                    {inputValues.access === "roles" && (
-                      <>
+                      {inputValues.pausable && (
                         <InputComp
-                          label="defaultAdmin"
+                          label="pauser"
                           handleOnchange={handleContractArgumentChange}
-                          value={contractArguments.roles.defaultAdmin}
+                          value={contractArguments.roles.pauser}
                         />
-                        {inputValues.pausable && (
-                          <InputComp
-                            label="pauser"
-                            handleOnchange={handleContractArgumentChange}
-                            value={contractArguments.roles.pauser}
-                          />
-                        )}
-                        {inputValues.mintable && (
-                          <InputComp
-                            label="minter"
-                            handleOnchange={handleContractArgumentChange}
-                            value={contractArguments.roles.minter}
-                          />
-                        )}
-                        {inputValues.upgradeable === "uups" && (
-                          <InputComp
-                            label="upgrader"
-                            handleOnchange={handleContractArgumentChange}
-                            value={contractArguments.roles.upgrader}
-                          />
-                        )}
-                      </>
-                    )}
-                    <RadioComp label="Managed" value="managed" />
-                    {inputValues.access === "managed" && (
-                      <InputComp
-                        label="initialAuthority"
-                        handleOnchange={handleContractArgumentChange}
-                        value={contractArguments.managed.initialAuthority}
-                      />
-                    )}
-                  </RadioContainer>
-                </Section>
+                      )}
+                      {inputValues.mintable && (
+                        <InputComp
+                          label="minter"
+                          handleOnchange={handleContractArgumentChange}
+                          value={contractArguments.roles.minter}
+                        />
+                      )}
+                      {inputValues.upgradeable === "uups" && (
+                        <InputComp
+                          label="upgrader"
+                          handleOnchange={handleContractArgumentChange}
+                          value={contractArguments.roles.upgrader}
+                        />
+                      )}
+                    </>
+                  )}
+                  <RadioComp label="Managed" value="managed" />
+                  {inputValues.access === "managed" && (
+                    <InputComp
+                      label="initialAuthority"
+                      handleOnchange={handleContractArgumentChange}
+                      value={contractArguments.managed.initialAuthority}
+                    />
+                  )}
+                </RadioContainer>
+              </Section>
 
-                <Section
-                  title="upgradability"
-                  checkbox={true}
-                  value={inputValues.upgradeable}
-                  label="upgradeable"
-                  handleOnchange={handleCheckChange}
+              <Section
+                title="upgradability"
+                checkbox={true}
+                value={inputValues.upgradeable}
+                label="upgradeable"
+                handleOnchange={handleCheckChange}
+              >
+                <RadioContainer
+                  value={inputValues.upgradeable as string}
+                  onValueChange={(e) => handleCheckChange("upgradeable", e)}
+                  className="flex flex-col gap-2.5"
                 >
-                  <RadioContainer
-                    value={inputValues.upgradeable as string}
-                    onValueChange={(e) => handleCheckChange("upgradeable", e)}
-                    className="flex flex-col gap-2.5"
-                  >
-                    <RadioComp label="Transparent" value="transparent" />
-                    <RadioComp label="UUPS" value="uups" />
-                  </RadioContainer>
-                </Section>
-              </div>
-            </Section>
-
+                  <RadioComp label="Transparent" value="transparent" />
+                  <RadioComp label="UUPS" value="uups" />
+                </RadioContainer>
+              </Section>
+            </div>
+          </Section>
         </div>
         {developerMode && (
           <div className="w-[75%] relative max-h-[500px]">
@@ -443,6 +483,18 @@ export default function CreateErc1155Form({ onSubmit }: { onSubmit?: () => void 
           </div>
         )}
       </div>
+      {uploading || loading ? (
+        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-50">
+          <Loader2 className="h-8 w-8 animate-spin text-white" />
+          {uploading && <p className="text-white">Image is uploading...</p>}
+          {compiling && <p className="text-white">Compiling...</p>}
+          {verifying && <p className="text-white">Verifying...</p>}
+          {adding && <p className="text-white">Adding...</p>}
+          {deploying && <p className="text-white">Deploying...</p>}
+        </div>
+      ) : (
+        ""
+      )}
       <DialogFooter className="w-full flex flex-row sm:justify-between items-center">
         <div className="flex flex-row items-center">
           <Switch
