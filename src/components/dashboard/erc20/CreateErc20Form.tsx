@@ -192,7 +192,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-row items-stretch gap-2 ">
-        <div className=" p-4 lg:w-4/12 mx-5 max-h-[500px] overflow-y-auto h-fit scrollbar-thin">
+        <div className={developerMode ? " p-4 lg:w-4/12 mx-5 max-h-[500px] overflow-y-auto h-fit scrollbar-thin" : "p-4 lg:w-[100%] max-h-[500px] overflow-y-auto h-fit scrollbar-thin"}>
           <InputComp label="name" handleOnchange={handleInputChange} value={inputValues.name} />
           <InputComp label="symbol" handleOnchange={handleInputChange} value={inputValues.symbol} />
           {/* <InputComp label="description" handleOnchange={handleInputChange} value={inputValues.description} /> */}
