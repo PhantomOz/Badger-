@@ -16,7 +16,7 @@ export function Erc1155Overview({ fullPage, tokens }: { fullPage: boolean, token
             NFT Contracts
           </h3>
           <small className="text-lg font-light text-gray-200">
-            The list of NFT instances that you have deployed with badger on the Polygon
+            The list of NFT instances that you have deployed with badger on the CoreDao
             Network.
           </small>
         </div>

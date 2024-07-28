@@ -16,7 +16,7 @@ export const useERC20 = (
   tokens: any[]
 ) => {
 
-  const erc20Tokens = tokens?.filter(token => token._type === 0);
+  const erc20Tokens = tokens?.filter(token => Number(token._type) === 0);
 
   return { loading: false, data: erc20Tokens };
 };
@@ -25,7 +25,7 @@ export const useERC721 = (
   tokens: any[]
 ) => {
 
-  const erc721Tokens = tokens?.filter(token => token._type === 1);
+  const erc721Tokens = tokens?.filter(token => Number(token._type) === 1);
 
   return { loading: false, nfts: erc721Tokens };
 };
@@ -34,7 +34,7 @@ export const useERC1155 = (
   tokens: any[]
 ) => {
 
-  const erc1155Tokens = tokens?.filter(token => token._type === 2);
+  const erc1155Tokens = tokens?.filter(token => Number(token._type) === 2);
 
   return { loading: false, nfts: erc1155Tokens };
 };
@@ -43,9 +43,9 @@ export const useDao = (
   tokens: any[]
 ) => {
 
-  const daoContracts = tokens?.filter(token => token._type === 3);
+  const daoContracts = tokens?.filter(token => Number(token._type) === 3);
 
-  return { loading: false, nfts: daoContracts };
+  return { loading: false, dao: daoContracts };
 };
 
 

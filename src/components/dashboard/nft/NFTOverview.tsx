@@ -18,7 +18,7 @@ export function NFTOverview({ fullPage, tokens }: { fullPage: boolean, tokens: a
             NFT Contracts
           </h3>
           <small className="text-lg font-light text-gray-200">
-            The list of NFT instances that you have deployed with badger on the Polygon
+            The list of NFT instances that you have deployed with badger on the CoreDao
             Network.
           </small>
         </div>

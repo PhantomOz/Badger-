@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 
 // read only provider pointing to sepolia. It allows read only access to the sepolia blockchain
 export const readOnlyProvider = new ethers.JsonRpcProvider(
-  "https://1rpc.io/sepolia	"
+  "https://rpc.test.btcs.network"
 );
 
 // export const optimismReadOnlyProvider = new ethers.JsonRpcProvider(
