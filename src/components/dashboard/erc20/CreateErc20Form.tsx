@@ -156,46 +156,46 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     const signer = readWriteProvider
       ? await readWriteProvider.getSigner()
       : null;
-      try {
-        const args = generateContractArgs();
-        setCompiling(true);
-        const { compiling, result } = await compile(contract, inputValues.name);
-        setCompiling(false);
-  
-        setDeploying(true);
-  
-        const { deploying, contractAddress } = await deploy(
-          JSON.parse(result),
-          signer,
-          args
-        );
-  
-        setDeploying(false);
-        setAdding(true);
-  
-        await addContract(
-          contractAddress,
-          inputValues.name,
-          JSON.stringify(JSON.parse(result).abi),
-          0,
-          contract
-        );
-        setAdding(false);
-        setVerifying(true);
-        const { verifying } = await verifyContract(
-          contractAddress,
-          contract,
-          JSON.parse(result).contractName,
-          args
-        );
-        setVerifying(false);
-        setLoading(false);
-        setOpenStatusModal(false);
-      } catch (error) {
-        console.error("error: ", error);
-        setLoading(false);
-        setOpenStatusModal(false);
-      }
+    try {
+      const args = generateContractArgs();
+      setCompiling(true);
+      const { compiling, result } = await compile(contract, inputValues.name);
+      setCompiling(false);
+
+      setDeploying(true);
+
+      const { deploying, contractAddress } = await deploy(
+        JSON.parse(result),
+        signer,
+        args
+      );
+
+      setDeploying(false);
+      setAdding(true);
+
+      await addContract(
+        contractAddress,
+        inputValues.name,
+        JSON.stringify(JSON.parse(result).abi),
+        0,
+        contract
+      );
+      setAdding(false);
+      setVerifying(true);
+      const { verifying } = await verifyContract(
+        contractAddress,
+        contract,
+        JSON.parse(result).contractName,
+        args
+      );
+      setVerifying(false);
+      setLoading(false);
+      setOpenStatusModal(false);
+    } catch (error) {
+      console.error("error: ", error);
+      setLoading(false);
+      setOpenStatusModal(false);
+    }
   }
 
   const error = validateInputs(inputValues, contractArguments);
@@ -204,9 +204,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   return (
     <>
       <DialogContent
-        className={`${
-          developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
-        }`}
+        className={`${developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
+          }`}
       >
         <DialogHeader>
           <DialogTitle>Create Token</DialogTitle>
@@ -216,11 +215,10 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           </DialogDescription>
         </DialogHeader>
         <div
-          className={`${
-            developerMode ? "flex flex-row items-stretch gap-2" : ""
-          }`}
+          className={`${developerMode ? "flex flex-row items-stretch gap-2" : ""
+            }`}
         >
-          <div className=" py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
+          <div className=" p-4 flex-[0.6] mx-5 max-h-[500px] overflow-y-auto h-fit scrollbar-thin">
             <InputComp
               label="name"
               handleOnchange={handleInputChange}
@@ -231,21 +229,21 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
               handleOnchange={handleInputChange}
               value={inputValues.symbol}
             />
-            <InputComp
+            {/* <InputComp
               label="description"
               handleOnchange={handleInputChange}
               value={inputValues.description}
-            />
+            /> */}
             <InputComp
               label="premint"
               handleOnchange={handleInputChange}
               value={inputValues.premint}
             />
-            <InputComp
+            {/* <InputComp
               label="decimal"
               handleOnchange={handleInputChange}
               value={inputValues.decimal}
-            />
+            /> */}
 
             <Section title="features">
               <CheckBoxComp
@@ -389,9 +387,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           </div>
           {/* Display Codes Here */}
           <div
-            className={`${
-              developerMode ? "w-[75%]  relative max-h-[500px]" : "hidden"
-            }`}
+            className={`${developerMode ? "flex-1  relative max-h-[500px] scrollbar-thin" : "hidden"
+              }`}
           >
             <CodeBlock
               text={contract}
@@ -413,7 +410,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
             <Loader2 className="h-8 w-8 animate-spin text-white" />
             {compiling && <p className="text-white">Compiling...</p>}
             {verifying && <p className="text-white">Verifying...</p>}
-          {adding && <p className="text-white">Adding...</p>}
+            {adding && <p className="text-white">Adding...</p>}
             {deploying && <p className="text-white">Deploying...</p>}
           </div>
         ) : (

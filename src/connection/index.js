@@ -8,7 +8,7 @@ const coreDao = {
   chainId: 1115,
   name: "Core Blockchain Testnet",
   currency: "tCORE",
-  explorerUrl: "https://rpc.test.btcs.network",
+  explorerUrl: "https://scan.test.btcs.network",
   rpcUrl: `https://rpc.test.btcs.network`,
 };
 
