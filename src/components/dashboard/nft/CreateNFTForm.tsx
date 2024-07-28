@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -25,6 +25,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { StatusComponent } from "../shared/StatusModal";
 import RadioContainer from "@/components/ui/radio";
+import { Loader2 } from "lucide-react";
 
 interface Erc721InputValues {
   name: string;
@@ -47,14 +48,17 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { address } = useWeb3ModalAccount();
   const readWriteProvider = getProvider(walletProvider);
   const { addContract } = useBadgerProtocol();
-
+  const inputFile = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [developerMode, setDeveloperMode] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [openStatusModal, setOpenStatusModal] = useState(false);
   const [compiling, setCompiling] = useState(false);
   const [deploying, setDeploying] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [imageBlobUrl, setImageBlobUrl] = useState("");
 
   const [inputValues, setInputValues] = useState<Erc721InputValues>({
     name: "MyNFT",
@@ -140,7 +144,42 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     }
     return [];
   };
+  async function uploadToIpfs(file: File, metadata: object) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("metadata", JSON.stringify(metadata));
 
+    const response = await fetch("/api/files", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+
+    return response.json();
+  }
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const result = await uploadToIpfs(file, {
+        name: inputValues.name,
+        description: inputValues.description,
+      });
+
+      setInputValues({
+        ...inputValues,
+        baseUri: `ipfs://${result.metadataHash}`,
+      });
+
+      setUploading(false);
+    } catch (error) {
+      console.error("Error uploading to IPFS:", error);
+      setUploading(false);
+    }
+  };
   async function createNFT() {
     setLoading(true);
     setOpenStatusModal(true);
@@ -149,16 +188,21 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       : null;
     try {
       const args = generateContractArgs();
+      setCompiling(true);
       const { compiling, result } = await compile(contract, inputValues.name);
+      setCompiling(false);
 
-      setCompiling(compiling);
+      setDeploying(true);
 
       const { deploying, contractAddress } = await deploy(
         JSON.parse(result),
         signer,
         args
       );
-      setDeploying(deploying);
+
+      setDeploying(false);
+      setAdding(true);
+
       await addContract(
         contractAddress,
         inputValues.name,
@@ -166,13 +210,15 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
         0,
         contract
       );
+      setAdding(false);
+      setVerifying(true);
       const { verifying } = await verifyContract(
         contractAddress,
         contract,
         JSON.parse(result).contractName,
         args
       );
-      setVerifying(verifying);
+      setVerifying(false);
       setLoading(false);
       setOpenStatusModal(false);
     } catch (error) {
@@ -181,6 +227,16 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       setOpenStatusModal(false);
     }
   }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      // setFile(selectedFile);
+      handleUpload(selectedFile);
+      const blobUrl = URL.createObjectURL(selectedFile);
+      setImageBlobUrl(blobUrl);
+    }
+  };
 
   const error = validateInputs(inputValues, contractArguments);
 
@@ -224,6 +280,54 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
               value={inputValues.baseUri}
             />
 
+            <div className="flex w-full items-center justify-center mt-4">
+              <label className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border">
+                {imageBlobUrl ? (
+                  <div className="h-64 rounded-lg">
+                    <img
+                      src={imageBlobUrl}
+                      alt="Selected"
+                      className="h-full rounded-lg w-full"
+                    />
+                    {uploading && (
+                      <p className="text-white">Image is uploading...</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                    <svg
+                      className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 16"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                      />
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      SVG, PNG, JPG or GIF (MAX. 800x400px)
+                    </p>
+                  </div>
+                )}
+                <input
+                  className="hidden"
+                  type="file"
+                  id="file"
+                  ref={inputFile}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
             <Section title="features">
               <CheckBoxComp
                 label="mintable"
@@ -387,7 +491,17 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
             </div>
           )}
         </div>
-
+        {uploading || loading ? (
+          <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center z-50">
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
+            {uploading && <p className="text-white">Image is uploading...</p>}
+            {compiling && <p className="text-white">Compiling...</p>}
+            {verifying && <p className="text-white">Verifying...</p>}
+            {deploying && <p className="text-white">Deploying...</p>}
+          </div>
+        ) : (
+          ""
+        )}
         <DialogFooter className="w-full flex flex-row sm:justify-between items-center">
           <div className="flex flex-row items-center">
             <Switch

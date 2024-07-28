@@ -2,7 +2,7 @@
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-import {CreateNftForm} from "./CreateNFTForm";
+import CreateNftForm from "./CreateNFTForm";
 import { useState } from "react";
 
 export function CreateNFT() {
