@@ -2,7 +2,7 @@
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-import { CreateErc1155Form } from "./CreateErc1155Form";
+import CreateErc1155Form  from "./CreateErc1155Form";
 import { useState } from "react";
 
 export function CreateErc1155() {

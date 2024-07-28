@@ -17,9 +17,11 @@ export default async function deploy(
 
   // If your contract requires constructor args, you can specify them here
   console.log("------------------Deploying Contract-------------------");
+  let deploying = true;
   const contract = await factory.deploy(...args);
   await contract.waitForDeployment();
-  const address = contract.target;
-  console.log(address);
-  return address;
+  const contractAddress = contract.target;
+  console.log(contractAddress);
+  deploying = false;
+  return {deploying, contractAddress};
 }
