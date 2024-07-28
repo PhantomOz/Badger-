@@ -61,7 +61,7 @@ const NoToken = () => {
                 </h5>
                 <p className="text-lg font-normal text-gray-100">
                   {/* {content} */}
-                  Create a token compliant with ERC-721 standard
+                  Create a token compliant with ERC-1155 standard
                 </p>
               </div>
             </DialogTrigger>
