@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CodeBlock, dracula } from 'react-code-blocks';
+import { CodeBlock, dracula } from "react-code-blocks";
 
 import {
   useWeb3ModalAccount,
@@ -32,6 +32,7 @@ import Section from "@/components/ui/section";
 import RadioComp from "@/components/ui/radiocomp";
 import { AddressLike } from "ethers";
 import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
+import { Switch } from "@/components/ui/switch";
 
 interface erc20InputValues {
   name: string,
@@ -55,6 +56,8 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { addContract } = useBadgerProtocol();
 
   const [loading, setLoading] = useState(false);
+  const [developerMode, setDeveloperMode] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const [inputValues, setInputValues] = useState<erc20InputValues>({
     name: "MyToken",
@@ -69,11 +72,11 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     flashmint: false,
     votes: false,
     access: false,
-    upgradeable: false
+    upgradeable: false,
   });
   const [contractArguments, setConntractArguments] = useState<any>({
     ownable: {
-      initialOwner: address
+      initialOwner: address,
     },
     roles: {
       defaultAdmin: address,
@@ -83,10 +86,9 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     },
     managed: {
       initialAuthority: address,
-    }
+    },
   });
   const [contract, setContract] = useState("");
-
 
   useEffect(() => {
     setContract(generateErc20Code(inputValues));
@@ -99,49 +101,78 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   };
 
   const handleCheckChange = (name: string, value: boolean | string) => {
-    if ((name === 'mintable' || name === 'pausable' || value === 'uups') && inputValues.access === false) {
-      setInputValues({ ...inputValues, [name]: value, access: 'ownable' });
+    if (
+      (name === "mintable" || name === "pausable" || value === "uups") &&
+      inputValues.access === false
+    ) {
+      setInputValues({ ...inputValues, [name]: value, access: "ownable" });
     } else {
       setInputValues({ ...inputValues, [name]: value });
     }
-  }
+  };
 
   const handelContractArgumentChange = (event: any) => {
     const { name, value } = event.target;
-    setConntractArguments({ ...contractArguments, [inputValues.access as string]: { ...contractArguments[inputValues.access as string], [name]: value } })
-  }
+    setConntractArguments({
+      ...contractArguments,
+      [inputValues.access as string]: {
+        ...contractArguments[inputValues.access as string],
+        [name]: value,
+      },
+    });
+  };
 
   const generateContractArgs = (): string[] => {
-    if (inputValues.access === 'ownable' && !inputValues.upgradeable) {
-      return [contractArguments[inputValues.access as string].initialOwner]
+    if (inputValues.access === "ownable" && !inputValues.upgradeable) {
+      return [contractArguments[inputValues.access as string].initialOwner];
     }
-    if (inputValues.access === 'managed' && !inputValues.upgradeable) {
-      return [contractArguments[inputValues.access as string].initialAuthority]
+    if (inputValues.access === "managed" && !inputValues.upgradeable) {
+      return [contractArguments[inputValues.access as string].initialAuthority];
     }
-    if (inputValues.access === 'roles' && !inputValues.upgradeable) {
+    if (inputValues.access === "roles" && !inputValues.upgradeable) {
       const args = [];
       args.push(contractArguments[inputValues.access as string].defaultAdmin);
-      inputValues.pausable && args.push(contractArguments[inputValues.access as string].pauser);
-      inputValues.mintable && args.push(contractArguments[inputValues.access as string].minter);
-      inputValues.upgradeable === 'uups' && args.push(contractArguments[inputValues.access as string].upgrader);
+      inputValues.pausable &&
+        args.push(contractArguments[inputValues.access as string].pauser);
+      inputValues.mintable &&
+        args.push(contractArguments[inputValues.access as string].minter);
+      inputValues.upgradeable === "uups" &&
+        args.push(contractArguments[inputValues.access as string].upgrader);
       return args;
     }
-    return []
-  }
+    return [];
+  };
 
   async function createToken() {
-    setLoading(true)
-    const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+    setLoading(true);
+    const signer = readWriteProvider
+      ? await readWriteProvider.getSigner()
+      : null;
     try {
       const args = generateContractArgs();
       const compiledContract = await compile(contract, inputValues.name);
-      const contractAddress = await deploy(JSON.parse(compiledContract), signer, args);
-      await addContract(contractAddress, inputValues.name, JSON.stringify(JSON.parse(compiledContract).abi), 0, contract);
-      await verifyContract(contractAddress, contract, JSON.parse(compiledContract).contractName, args);
-      setLoading(false)
+      const contractAddress = await deploy(
+        JSON.parse(compiledContract),
+        signer,
+        args
+      );
+      await addContract(
+        contractAddress,
+        inputValues.name,
+        JSON.stringify(JSON.parse(compiledContract).abi),
+        0,
+        contract
+      );
+      await verifyContract(
+        contractAddress,
+        contract,
+        JSON.parse(compiledContract).contractName,
+        args
+      );
+      setLoading(false);
     } catch (error) {
       console.error("error: ", error);
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -149,7 +180,10 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
   console.log(error);
 
   return (
-    <DialogContent className="sm:max-w-[425px] md:max-w-[90%]">
+    <DialogContent
+      className={`${developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
+        }`}
+    >
       <DialogHeader>
         <DialogTitle>Create Token</DialogTitle>
         <DialogDescription>
@@ -166,59 +200,180 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           {/* <InputComp label="tokendecimal" handleOnchange={handleInputChange} value={inputValues.tokendecimal} /> */}
 
           <Section title="features">
-            <CheckBoxComp label="mintable" handleOnchange={handleCheckChange} value={inputValues.mintable} />
-            <CheckBoxComp label="burnable" handleOnchange={handleCheckChange} value={inputValues.burnable} />
-            <CheckBoxComp label="permit" handleOnchange={handleCheckChange} value={inputValues.permit} />
-            <CheckBoxComp label="pausable" handleOnchange={handleCheckChange} value={inputValues.pausable} />
-            <CheckBoxComp label="flashmint" handleOnchange={handleCheckChange} value={inputValues.flashmint} />
+            <CheckBoxComp
+              label="mintable"
+              handleOnchange={handleCheckChange}
+              value={inputValues.mintable}
+            />
+            <CheckBoxComp
+              label="burnable"
+              handleOnchange={handleCheckChange}
+              value={inputValues.burnable}
+            />
+            <CheckBoxComp
+              label="permit"
+              handleOnchange={handleCheckChange}
+              value={inputValues.permit}
+            />
+            <CheckBoxComp
+              label="pausable"
+              handleOnchange={handleCheckChange}
+              value={inputValues.pausable}
+            />
+            <CheckBoxComp
+              label="flashmint"
+              handleOnchange={handleCheckChange}
+              value={inputValues.flashmint}
+            />
           </Section>
 
-          <Section title="votes" checkbox={true} value={inputValues.votes} label="votes" handleOnchange={handleCheckChange}>
-            <RadioContainer value={inputValues.votes as string} onValueChange={(e) => handleCheckChange('votes', e)} className="flex flex-col gap-2.5">
-              <RadioComp label="Block Number" value="Block Number" />
-              <RadioComp label="Time Stamp" value="Time Stamp" />
-            </RadioContainer>
-          </Section>
+          <Section title="Advanced Options">
+            <CheckBoxComp
+              label="Show Advanced Options"
+              handleOnchange={() => {
+                setShowAdvanced(!showAdvanced)
+              }}
 
-          <Section title="access control" checkbox={true} label="access" value={inputValues.access} handleOnchange={handleCheckChange} disabled={inputValues.mintable as boolean || inputValues.pausable as boolean || inputValues.upgradeable === "uups"}>
-            <RadioContainer value={inputValues.access as string} onValueChange={(e) => handleCheckChange('access', e)} className="flex flex-col gap-2.5">
-              <RadioComp label="Ownable" value="ownable" />
-              {inputValues.access === 'ownable' && <InputComp label="initialOwner" handleOnchange={handelContractArgumentChange} value={contractArguments.ownable.initialOwner} />}
-              <RadioComp label="Roles" value="roles" />
-              {inputValues.access === 'roles' && (
-                <>
-                  <InputComp label="defaultAdmin" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.defaultAdmin} />
-                  {inputValues.pausable && <InputComp label="pauser" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.pauser} />}
-                  {inputValues.mintable && <InputComp label="minter" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.minter} />}
-                  {inputValues.upgradeable === "uups" && <InputComp label="upgrader" handleOnchange={handelContractArgumentChange} value={contractArguments.roles.upgrader} />}
-                </>
-              )}
-              <RadioComp label="Managed" value="managed" />
-              {inputValues.access === 'managed' && <InputComp label="initialAuthority" handleOnchange={handelContractArgumentChange} value={contractArguments.managed.initialAuthority} />}
-            </RadioContainer>
-          </Section>
+              value={showAdvanced}
+            />
+            <div className={`${showAdvanced ? "block" : "hidden"}`}>
+              <Section
+                title="votes"
+                checkbox={true}
+                value={inputValues.votes}
+                label="votes"
+                handleOnchange={handleCheckChange}
+              >
+                <RadioContainer
+                  value={inputValues.votes as string}
+                  onValueChange={(e) => handleCheckChange("votes", e)}
+                  className="flex flex-col gap-2.5"
+                >
+                  <RadioComp label="Block Number" value="Block Number" />
+                  <RadioComp label="Time Stamp" value="Time Stamp" />
+                </RadioContainer>
+              </Section>
 
-          <Section title="upgradability" checkbox={true} value={inputValues.upgradeable} label="upgradeable" handleOnchange={handleCheckChange}>
-            <RadioContainer value={inputValues.upgradeable as string} onValueChange={(e) => handleCheckChange('upgradeable', e)} className="flex flex-col gap-2.5">
-              <RadioComp label="Transparent" value="transparent" />
-              <RadioComp label="UUPS" value="uups" />
-            </RadioContainer>
-          </Section>
+              <Section
+                title="access control"
+                checkbox={true}
+                label="access"
+                value={inputValues.access}
+                handleOnchange={handleCheckChange}
+                disabled={
+                  (inputValues.mintable as boolean) ||
+                  (inputValues.pausable as boolean) ||
+                  inputValues.upgradeable === "uups"
+                }
+              >
+                <RadioContainer
+                  value={inputValues.access as string}
+                  onValueChange={(e) => handleCheckChange("access", e)}
+                  className="flex flex-col gap-2.5"
+                >
+                  <RadioComp label="Ownable" value="ownable" />
+                  {inputValues.access === "ownable" && (
+                    <InputComp
+                      label="initialOwner"
+                      handleOnchange={handelContractArgumentChange}
+                      value={contractArguments.ownable.initialOwner}
+                    />
+                  )}
+                  <RadioComp label="Roles" value="roles" />
+                  {inputValues.access === "roles" && (
+                    <>
+                      <InputComp
+                        label="defaultAdmin"
+                        handleOnchange={handelContractArgumentChange}
+                        value={contractArguments.roles.defaultAdmin}
+                      />
+                      {inputValues.pausable && (
+                        <InputComp
+                          label="pauser"
+                          handleOnchange={handelContractArgumentChange}
+                          value={contractArguments.roles.pauser}
+                        />
+                      )}
+                      {inputValues.mintable && (
+                        <InputComp
+                          label="minter"
+                          handleOnchange={handelContractArgumentChange}
+                          value={contractArguments.roles.minter}
+                        />
+                      )}
+                      {inputValues.upgradeable === "uups" && (
+                        <InputComp
+                          label="upgrader"
+                          handleOnchange={handelContractArgumentChange}
+                          value={contractArguments.roles.upgrader}
+                        />
+                      )}
+                    </>
+                  )}
+                  <RadioComp label="Managed" value="managed" />
+                  {inputValues.access === "managed" && (
+                    <InputComp
+                      label="initialAuthority"
+                      handleOnchange={handelContractArgumentChange}
+                      value={contractArguments.managed.initialAuthority}
+                    />
+                  )}
+                </RadioContainer>
+              </Section>
 
+              <Section
+                title="upgradability"
+                checkbox={true}
+                value={inputValues.upgradeable}
+                label="upgradeable"
+                handleOnchange={handleCheckChange}
+              >
+                <RadioContainer
+                  value={inputValues.upgradeable as string}
+                  onValueChange={(e) => handleCheckChange("upgradeable", e)}
+                  className="flex flex-col gap-2.5"
+                >
+                  <RadioComp label="Transparent" value="transparent" />
+                  <RadioComp label="UUPS" value="uups" />
+                </RadioContainer>
+              </Section>
+
+            </div>
+          </Section>
         </div>
         {/* Display Codes Here */}
-        <div className="w-[100%] relative max-h-[500px] scrollbar-thin">
+        <div
+          className={`${developerMode ? "w-[75%]  relative max-h-[500px] scrollbar-thin" : "hidden"
+            }`}
+        >
           <CodeBlock
             text={contract}
-            language={'solidity'}
+            language={"solidity"}
             showLineNumbers={false}
             theme={dracula}
-            customStyle={{ height: '100%', position: 'absolute', left: '0', top: '0', width: '100%' }}
+            customStyle={{
+              height: "100%",
+              position: "absolute",
+              left: "0",
+              top: "0",
+              width: "100%",
+            }}
           />
         </div>
       </div>
 
-      <DialogFooter>
+      <DialogFooter className="w-full flex flex-row sm:justify-between items-center">
+        <div className="flex flex-row items-center">
+          <Switch
+            id="developer-mode"
+            checked={developerMode}
+            onCheckedChange={setDeveloperMode}
+            className="mr-3"
+          />
+          <Label htmlFor="developer-mode" className="text-xs">
+            Developer Mode
+          </Label>
+        </div>
         <Button
           type="submit"
           onClick={() => {
