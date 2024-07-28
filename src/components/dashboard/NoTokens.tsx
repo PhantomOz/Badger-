@@ -3,7 +3,8 @@
 import React from "react";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import CreateErc20Form from "./erc20/CreateErc20Form";
-import { CreateNftForm } from "./nft/CreateNFTForm";
+import CreateNftForm from "./nft/CreateNFTForm";
+import CreateErc1155Form from "./erc1155/CreateErc1155Form"
 import { CreateDAOForm } from "./dao/CreateDAOForm";
 
 const NoToken = () => {
@@ -56,7 +57,7 @@ const NoToken = () => {
               <div className="mr-8 block w-full max-w-xs cursor-pointer rounded-lg border p-5 shadow">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                   {/* {title} */}
-                  Create NFT
+                  Create ERC 1155 NFT
                 </h5>
                 <p className="text-lg font-normal text-gray-100">
                   {/* {content} */}
@@ -64,7 +65,7 @@ const NoToken = () => {
                 </p>
               </div>
             </DialogTrigger>
-            <CreateNftForm />
+            <CreateErc1155Form />
           </Dialog>
           <Dialog>
             <DialogTrigger asChild>

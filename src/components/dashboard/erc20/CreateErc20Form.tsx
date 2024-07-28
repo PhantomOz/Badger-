@@ -425,13 +425,13 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
           </Button>
         </DialogFooter>
       </DialogContent>
-      {openStatusModal && (
+      {/* {openStatusModal && (
         <StatusComponent
         compiling={compiling}
         deploying={deploying}
         verifying={verifying}
         />
-      )}
+      )} */}
     </>
   );
 };
