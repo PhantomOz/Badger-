@@ -3,16 +3,18 @@ import InfoCard from "../shared/InfoCard";
 import { TokenOverview } from "../erc20/TokenOverview";
 import { NFTOverview } from "../nft/NFTOverview";
 
-import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
+import { useBadgerProtocol, useERC721 } from "@/hooks/useBadgerProtocol";
 import NoToken from "../NoTokens";
 import { useGetAllERC721 } from "@/hooks/useERC721Factory";
+import { Erc1155Overview } from "../erc1155/Erc1155Overview";
+import { DaoOverview } from "../dao/DaoOverview";
 
 export function OverviewComponent({ tokens }: { tokens: any }) {
   const [contractCreated, setContractCreated] = useState(false);
 
 
-  const { loading, data } = tokens;
-  const { loading: loadingnft, nfts } = useGetAllERC721();
+  const { data } = tokens;
+  const { nfts } = useERC721(data);
 
 
   // console.log(data);
@@ -35,6 +37,8 @@ export function OverviewComponent({ tokens }: { tokens: any }) {
 
           <TokenOverview fullPage={false} tokens={tokens.data} />
           <NFTOverview fullPage={false} tokens={tokens.data} />
+          <Erc1155Overview fullPage={false} tokens={tokens.data} />
+          <DaoOverview fullPage={false} tokens={tokens.data} />
           {/* <NFTOverview /> */}
         </div>
       )}

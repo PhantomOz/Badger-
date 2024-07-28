@@ -9,6 +9,8 @@ import { NFTOverview } from "@/components/dashboard/nft/NFTOverview";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
 import { useBadgerProtocol } from "@/hooks/useBadgerProtocol";
+import { Erc1155Overview } from "@/components/dashboard/erc1155/Erc1155Overview";
+import { DaoOverview } from "@/components/dashboard/dao/DaoOverview";
 
 const Dashboard = () => {
   const [tab, setTab] = useState(0);
@@ -37,6 +39,8 @@ const Dashboard = () => {
               {tab == 0 ? <OverviewComponent tokens={tokens} /> : ""}
               {tab == 1 ? <TokenOverview fullPage={true} tokens={tokens.data} /> : ""}
               {tab == 2 ? <NFTOverview fullPage={true} tokens={tokens.data} /> : ""}
+              {tab == 3 ? <Erc1155Overview fullPage={true} tokens={tokens.data} /> : ""}
+              {tab == 4 ? <DaoOverview fullPage={true} tokens={tokens.data} /> : ""}
             </div>
           </div>
         </div>
