@@ -9,9 +9,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import InputComp from "@/components/ui/inputcomp";
+import { Label } from "@/components/ui/label";
 import RadioContainer from "@/components/ui/radio";
 import RadioComp from "@/components/ui/radiocomp";
 import Section from "@/components/ui/section";
+import { Switch } from "@/components/ui/switch";
 import { getFactoryContract } from "@/constants/contracts";
 import { getProvider } from "@/constants/providers";
 import { generateDaoCode } from "@/utils";
@@ -24,6 +26,8 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
   const [loading, setLoading] = useState(false);
   const readWriteProvider = getProvider(walletProvider);
   const [contract, setContract] = useState<string>();
+  const [developerMode, setDeveloperMode] = useState(false);
+
 
   const [inputValues, setInputValues] = useState({
     name: "My Governor",
@@ -70,7 +74,8 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
   }
 
   return (
-    <DialogContent className="sm:max-w-[425px] md:max-w-[550px] lg:max-w-[90%] ">
+    <DialogContent className={`${developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
+      }`}>
 
       <DialogHeader>
         <DialogTitle>Create Governance Contract</DialogTitle>
@@ -79,7 +84,7 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-row gap-6">
-        <div className=" py-4 px-4 lg:w-6/12 max-h-[500px] overflow-y-auto h-fit scrollbar-thin">
+        <div className={developerMode ? " p-4 lg:w-6/12 max-h-[500px] overflow-y-auto h-fit scrollbar-thin" : " p-4 lg:w-[100%] max-h-[500px] overflow-y-auto h-fit scrollbar-thin"}>
           <Section title="settings">
             <InputComp label="Name" handleOnchange={handleInputChange} value={"My Governor"} />
             <div className="flex gap-5">
@@ -123,7 +128,8 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
           </Section>
         </div>
         {/* Display Codes Here */}
-        <div className="w-[100%] relative max-h-[500px] scrollbar-thin">
+        <div className={developerMode ? "w-[100%]  relative max-h-[500px] scrollbar-thin" : "hidden"
+        }>
           <CodeBlock
             text={contract}
             language={'solidity'}
@@ -133,7 +139,18 @@ export function CreateDAOForm({ onSubmit }: { onSubmit?: () => void }) {
           />
         </div>
       </div>
-      <DialogFooter>
+      <DialogFooter className="w-full flex flex-row sm:justify-between items-center">
+        <div className="flex flex-row items-center">
+          <Switch
+            id="developer-mode"
+            checked={developerMode}
+            onCheckedChange={setDeveloperMode}
+            className="mr-3"
+          />
+          <Label htmlFor="developer-mode" className="text-xs">
+            Developer Mode
+          </Label>
+        </div>
         <Button type="submit" disabled={loading} onClick={() => {
           createDao()
         }}>{loading ? "Loading..." : "Deploy"}
