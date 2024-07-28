@@ -158,7 +158,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-row items-stretch gap-2 ">
-        <div className=" py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
+        <div className=" p-4 lg:w-4/12 mx-5 max-h-[500px] overflow-y-auto h-fit scrollbar-thin">
           <InputComp label="name" handleOnchange={handleInputChange} value={inputValues.name} />
           <InputComp label="symbol" handleOnchange={handleInputChange} value={inputValues.symbol} />
           {/* <InputComp label="description" handleOnchange={handleInputChange} value={inputValues.description} /> */}
@@ -207,7 +207,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
 
         </div>
         {/* Display Codes Here */}
-        <div className="w-[100%] relative max-h-[500px]">
+        <div className="w-[100%] relative max-h-[500px] scrollbar-thin">
           <CodeBlock
             text={contract}
             language={'solidity'}
