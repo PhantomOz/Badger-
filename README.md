@@ -9,7 +9,7 @@ Welcome to **Badger**, the no-code platform designed to simplify the deployment 
 
 ## Features
 
-- **Token Creation**: Users can create FTs and NFTs by interacting with a user-friendly interface.
+- **Creation**: Users can create FTs and NFTs by interacting with a user-friendly interface.
 - **EVM Compatibility**: Fully compatible with any EVM-based blockchain.
 - **EIP Standard**: Tokens follows the Ethereum Standard.
 - **Interactivity**: Interact with deployed contracts with ease, thanks to our built-in tools.
@@ -24,8 +24,8 @@ Welcome to **Badger**, the no-code platform designed to simplify the deployment 
 ## How It Works
 
 1. **User Authentication**: Users use their wallet to connect to the platform.
-2. **Token Configuration**: Users select the type of token they wish to create and configure its properties.
-3. **Deployment**: The tokens are deployed to the Amoy blockchain.
+2. **Contract Configuration**: Users select the type of contract they wish to create and configure its properties.
+3. **Deployment**: The contracts are deployed to the Core Blockchain.
 4. **Management**: Users can manage their tokens within the platform.
 
 ## Installation
@@ -33,7 +33,7 @@ Welcome to **Badger**, the no-code platform designed to simplify the deployment 
 Provide step-by-step instructions on how to get a development environment running.
 
 ```bash
-git clone https://github.com/JeffreyJoel/badger-evm.git
+git clone https://github.com/PhantomOz/Badger-
 cd badger
 npm install
 npm run dev
@@ -43,18 +43,23 @@ npm run dev
 
 As we move on from the hackathon we plan to add more functionalities like:
 
-- The ability for users dynamically select what features their contract should involve e.g if they want their token burnable, ownable, mintable, e.t.c.
-- The ability for users to create `staking` contract, `governance` contract and more.
-- Badger Sdk for developers to create and build, deploy smart contract on polkadot using languages like JavaScript, TypeScript, and C#.
+- The ability for users to add liquidity in the FT's they have created.
+- The ability for users to create `staking` contract, `Exchange` contract and more.
+- Badger Sdk for developers to create and build, deploy smart contract on Core Blockchain using languages like JavaScript, TypeScript, and C#.
 
-We believe that this tool will be great for onboarding more users to the shardeum network.
+We believe that this tool will be great for onboarding more users to the Core Blockchain.
 
 ## Smart Contract
 
-You can find the Badger smart contracts - [HERE](https://github.com/sogobanwo/badger-Shardeum-Contract)
+You can find the Badger smart contracts - [HERE](https://github.com/PhantomOz/badger-contract)
+
+## Backend
+
+You can find the Badger Backend - [HERE](https://github.com/PhantomOz/badger-backend)
 
 ## Acknowledgments
 
-- Encode Team.
+- CoreDao.
+- Dorahack.io.
 
 Hacked By Team Badger
