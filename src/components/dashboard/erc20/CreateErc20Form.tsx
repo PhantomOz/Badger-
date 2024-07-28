@@ -37,7 +37,7 @@ interface erc20InputValues {
   name: string,
   symbol: string,
   premint: number,
-  decimal: number,
+  tokendecimal: number,
   description: string,
   mintable: boolean | string | CheckedState,
   burnable: boolean | string | CheckedState,
@@ -60,7 +60,7 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
     name: "MyToken",
     symbol: "MTK",
     premint: 0,
-    decimal: 18,
+    tokendecimal: 18,
     description: '',
     mintable: false,
     burnable: false,
@@ -161,9 +161,9 @@ const CreateErc20Form = ({ onSubmit }: { onSubmit?: () => void }) => {
         <div className=" py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
           <InputComp label="name" handleOnchange={handleInputChange} value={inputValues.name} />
           <InputComp label="symbol" handleOnchange={handleInputChange} value={inputValues.symbol} />
-          <InputComp label="description" handleOnchange={handleInputChange} value={inputValues.description} />
+          {/* <InputComp label="description" handleOnchange={handleInputChange} value={inputValues.description} /> */}
           <InputComp label="premint" handleOnchange={handleInputChange} value={inputValues.premint} />
-          <InputComp label="decimal" handleOnchange={handleInputChange} value={inputValues.decimal} />
+          {/* <InputComp label="tokendecimal" handleOnchange={handleInputChange} value={inputValues.tokendecimal} /> */}
 
           <Section title="features">
             <CheckBoxComp label="mintable" handleOnchange={handleCheckChange} value={inputValues.mintable} />
