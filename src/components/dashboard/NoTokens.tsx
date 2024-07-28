@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import CreateErc20Form from "./erc20/CreateErc20Form";
@@ -6,6 +8,7 @@ import { CreateDAOForm } from "./dao/CreateDAOForm";
 
 const NoToken = () => {
   return (
+  
     <div className=" mt-8">
       <h2 className="text-center text-2xl font-bold lg:text-3xl">
         You have not created any projects
@@ -30,7 +33,7 @@ const NoToken = () => {
                 </p>
               </div>
             </DialogTrigger>
-            <CreateErc20Form />
+            <CreateErc20Form/>
           </Dialog>
 
           <Dialog>
@@ -80,7 +83,10 @@ const NoToken = () => {
           </Dialog>
         </div>
       </div>
+  
     </div>
+
+        
   );
 };
 
