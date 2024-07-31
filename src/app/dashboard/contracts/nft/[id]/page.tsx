@@ -22,49 +22,49 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
 
   const selectedToken = useGetSingleNFT(params.id);
 
-const balanceOf = GetBalanceOfNFT(params.id)
-const uri = GetNFTUri(params.id);
-// console.log(params.id);
-const logs = getLogs(params.id);
+  const balanceOf = GetBalanceOfNFT(params.id)
+  const uri = GetNFTUri(params.id);
+  // console.log(params.id);
+  const logs = getLogs(params.id);
 
 
   return (
     <>
       <NavBar isDashboard={true} />
       {isConnected ? (
-      <div className="relative mt-24">
-        <ContractOverviewNav tab={tab} setTab={setTab} />
-        <ContractDetails
-          name={selectedToken?.name}
-          description={selectedToken?.description}
-          address={selectedToken?.address}
-          uriHash={uri}
-        />
+        <div className="relative mt-24">
+          <ContractOverviewNav tab={tab} setTab={setTab} />
+          <ContractDetails
+            name={selectedToken?._name}
+            description={selectedToken?.description}
+            address={selectedToken?._contract}
+            uriHash={uri}
+          />
 
-        <div className="p-4 sm:container sm:mx-auto">
-          <div>
-            {tab == 0 ? (
-              <NFTContractOverview
-                supply={selectedToken?.supply?.toString()}
-                symbol={selectedToken?.symbol}
-                userBalance={Number(balanceOf)}
-                name={selectedToken?.name}
-                address={selectedToken?.address}
-                logs={logs}
-              />
-            ) : (
-              ""
-            )}
-            {tab == 1 ? (
-              <EventTable logs={logs} address={params.id}/>
-            ) : (
-              ""
-            )}
+          <div className="p-4 sm:container sm:mx-auto">
+            <div>
+              {tab == 0 ? (
+                <NFTContractOverview
+                  supply={selectedToken?._supply?.toString()}
+                  symbol={selectedToken?.symbol}
+                  userBalance={Number(balanceOf)}
+                  name={selectedToken?._name}
+                  address={selectedToken?._contract}
+                  logs={logs}
+                />
+              ) : (
+                ""
+              )}
+              {tab == 1 ? (
+                <EventTable logs={logs} address={params.id} />
+              ) : (
+                ""
+              )}
 
-            {tab == 2? <Explorer metadata={selectedToken}/> : ""}
+              {tab == 2 ? <Explorer metadata={selectedToken} /> : ""}
+            </div>
           </div>
         </div>
-      </div>
       ) : (
         <EmptyPage />
       )}

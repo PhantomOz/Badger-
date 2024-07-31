@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useBadgerProtocol } from "./useBadgerProtocol";
+import { useBadgerProtocol, useERC721 } from "./useBadgerProtocol";
 import { getFungibleContract, getNonFungibleContract } from "../constants/contracts";
 import { getProvider, readOnlyProvider } from "@/constants/providers";
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/react";
@@ -60,11 +60,12 @@ export const GetBalanceOf = (tokenAddress: string) => {
 };
 
 export const useGetSingleNFT = (tokenAddress: string) => {
-  const { loading, nfts } = useGetAllERC721();
+  const { tokens } = useBadgerProtocol();
+  const { nfts } = useERC721(tokens.data);
 
   const getNFTByAddress = useCallback(
     (tokenAddress: string) => {
-      const token = nfts.find((token: any) => token.address === tokenAddress);
+      const token = nfts.find((token: any) => token._contract === tokenAddress);
       return token;
     },
     [nfts]
