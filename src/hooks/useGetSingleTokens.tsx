@@ -123,6 +123,7 @@ export const GetNFTUri = (tokenAddress: string) => {
         const contract = getNonFungibleContract(signer, tokenAddress);
         const uri = await contract.tokenURI(0);
         setUri(uri);
+        console.log(uri);
       } catch (error) {
         console.error('Error fetching balance:', error);
         // Optionally handle the error or set a default balance

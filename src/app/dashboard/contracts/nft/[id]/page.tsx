@@ -10,11 +10,12 @@ import { ContractOverview } from "@/components/contracts/ContractOverview";
 import { GetBalanceOfNFT, GetNFTUri, useGetSingleNFT } from "@/hooks/useGetSingleTokens";
 import { NFTContractOverview } from "@/components/contracts/NFTContractOverview";
 import { ExplorerFunctions } from "@/components/contracts/nft/ExplorerFunctions";
-import { Explorer } from "@/components/contracts/nft/Explorer";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import EmptyPage from "@/components/shared/EmptyPage";
 import EventTable from "@/components/contracts/ERC721Event";
 import { getLogs } from "@/hooks/useGetERC721Events";
+import { Explorer } from "@/components/contracts/Explorer";
+import { toUtf8String } from "ethers";
 
 const SingleContract = ({ params }: { params: { id: string } }) => {
   const [tab, setTab] = useState(0);
@@ -61,7 +62,7 @@ const SingleContract = ({ params }: { params: { id: string } }) => {
                 ""
               )}
 
-              {tab == 2 ? <Explorer metadata={selectedToken} /> : ""}
+              {tab == 2 ? <Explorer metadata={selectedToken} abi={JSON.parse(toUtf8String(selectedToken?._abi))} /> : ""}
             </div>
           </div>
         </div>

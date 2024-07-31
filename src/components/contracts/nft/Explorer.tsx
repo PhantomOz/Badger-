@@ -14,7 +14,7 @@ import {
   getNonFungibleContract,
 } from "@/constants/contracts";
 
-export const Explorer = ({ metadata }: { metadata: any }) => {
+export const Explorer = ({ metadata, abi }: { metadata: any, abi: any[] }) => {
   const [tab, setTab] = useState(0);
   const [currentFunction, setCurrentFunction] = useState("");
   const handleSetCurrentFunction = (id: string) => {
@@ -26,7 +26,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
 
   const handleBalance = async (address: string) => {
     try {
-         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+      const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
       const contract = getNonFungibleContract(signer, metadata?.address);
       const balance = await contract.balanceOf(address);
@@ -41,23 +41,23 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
 
   const handleGetApproved = async (tokenId: string): Promise<string> => {
     try {
-         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+      const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
       const contract = getNonFungibleContract(signer, metadata.address);
       const approval = await contract.getApproved(tokenId);
       console.log(approval);
       return approval;
     } catch (error) {
-        console.error("Error handling approval:", (error as Error).message);
-        throw error;
+      console.error("Error handling approval:", (error as Error).message);
+      throw error;
     }
   };
 
   const handleTokenUri = async (
-   tokenId: string,
+    tokenId: string,
   ): Promise<number> => {
     try {
-         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+      const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
       const contract = getNonFungibleContract(signer, metadata.address);
       const tokenURI = await contract.tokenURI(tokenId);
@@ -75,7 +75,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     tokenId: string
   ): Promise<boolean> => {
     try {
-         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+      const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
       const contract = getNonFungibleContract(signer, metadata.address);
       const transfer = await contract.approve(to, tokenId);
@@ -98,7 +98,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     tokenId: string
   ): Promise<boolean> => {
     try {
-         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+      const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
       const contract = getNonFungibleContract(signer, metadata.address);
       const transferFrom = await contract.transferFrom(from, to, tokenId);
@@ -120,19 +120,19 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
     tokenId: string
   ): Promise<string> => {
     try {
-         const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
+      const signer = readWriteProvider ? await readWriteProvider.getSigner() : null;
 
       const contract = getNonFungibleContract(signer, metadata.address);
       const ownerOf = await contract.ownerOf(tokenId);
       return ownerOf;
-    //   const receipt = await transferFrom.wait();
+      //   const receipt = await transferFrom.wait();
 
-    //   console.log(receipt);
-    //   if (receipt.status === 1) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
+      //   console.log(receipt);
+      //   if (receipt.status === 1) {
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
     } catch (error) {
       console.error("Error  handling transfer-from:", error);
       throw error;
@@ -146,9 +146,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
         <div className="w-1/3 rounded border border-gray-600 ">
           <div className="flex w-full border-b border-gray-400  text-gray-200">
             <span
-              className={`w-1/2 cursor-pointer px-4 py-2 text-center  font-bold ${
-                tab === 0 ? "border-b-2 border-gray-300" : "border-0"
-              }`}
+              className={`w-1/2 cursor-pointer px-4 py-2 text-center  font-bold ${tab === 0 ? "border-b-2 border-gray-300" : "border-0"
+                }`}
               onClick={() => {
                 setTab(0);
               }}
@@ -156,9 +155,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               Write
             </span>
             <span
-              className={`w-1/2 cursor-pointer px-4 py-2 text-center font-bold ${
-                tab === 1 ? "border-b-2 border-gray-300" : "border-0"
-              }`}
+              className={`w-1/2 cursor-pointer px-4 py-2 text-center font-bold ${tab === 1 ? "border-b-2 border-gray-300" : "border-0"
+                }`}
               onClick={() => {
                 setTab(1);
               }}
@@ -171,18 +169,16 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
 
           {/* write Functions */}
           <div
-            className={`section px-6 py-4 text-gray-500 ${
-              tab === 0 ? "block" : "hidden"
-            }`}
+            className={`section px-6 py-4 text-gray-500 ${tab === 0 ? "block" : "hidden"
+              }`}
           >
             <p className="mb-2 border-b border-gray-800 pb-2 font-semibold text-gray-300">
               Functions
             </p>
             <p
               // className="mb-2 cursor-pointer font-mono font-semibold"
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "approve" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "approve" ? "text-gray-200" : ""
+                }`}
               id="approve"
               onClick={(e) => {
                 handleSetCurrentFunction("approve");
@@ -191,9 +187,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               approve
             </p>
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "safeTransferFrom" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "safeTransferFrom" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("safeTransferFrom");
               }}
@@ -201,11 +196,10 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               safeTransferFrom
             </p>
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "safeTransferFrom(data)"
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "safeTransferFrom(data)"
                   ? "text-gray-200"
                   : ""
-              }`}
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("safeTransferFrom(data)");
               }}
@@ -214,9 +208,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             </p>
 
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "transferFrom" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "transferFrom" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("transferFrom");
               }}
@@ -227,18 +220,16 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
 
           {/* Read Functions */}
           <div
-            className={`section px-6 py-4 text-gray-500 ${
-              tab === 1 ? "block" : "hidden"
-            }`}
+            className={`section px-6 py-4 text-gray-500 ${tab === 1 ? "block" : "hidden"
+              }`}
           >
             <p className="mb-2 border-b border-gray-800 pb-2 font-semibold text-gray-300">
               Functions
             </p>
 
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "balanceOf" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "balanceOf" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("balanceOf");
               }}
@@ -247,9 +238,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             </p>
 
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "getApproved" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "getApproved" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("getApproved");
               }}
@@ -258,9 +248,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             </p>
 
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "ownerOf" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "ownerOf" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("ownerOf");
               }}
@@ -268,9 +257,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               ownerOf
             </p>
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "tokenURI" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "tokenURI" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("tokenURI");
               }}
@@ -278,9 +266,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               tokenURI
             </p>
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "name" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "name" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("name");
               }}
@@ -288,9 +275,8 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               name
             </p>
             <p
-              className={`mb-2 cursor-pointer font-mono font-semibold ${
-                currentFunction === "symbol" ? "text-gray-200" : ""
-              }`}
+              className={`mb-2 cursor-pointer font-mono font-semibold ${currentFunction === "symbol" ? "text-gray-200" : ""
+                }`}
               onClick={(e) => {
                 handleSetCurrentFunction("symbol");
               }}
@@ -310,7 +296,7 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
               {currentFunction || "No Method Selected"}
             </p>
             <small></small>
-            { currentFunction === "approve" ? (
+            {currentFunction === "approve" ? (
               <ExplorerFunctions
                 to
                 tokenId
@@ -326,11 +312,11 @@ export const Explorer = ({ metadata }: { metadata: any }) => {
             ) : currentFunction === "balanceOf" ? (
               <ExplorerFunctions owner handleBalanceOf={handleBalance} />
             ) : currentFunction === "getApproved" ? (
-              <ExplorerFunctions tokenId  handleGetApproved={handleGetApproved}/>
+              <ExplorerFunctions tokenId handleGetApproved={handleGetApproved} />
             ) : currentFunction === "ownerOf" ? (
-              <ExplorerFunctions tokenId 
-              handleOwnerOf={handleOwnerOf}
-               />
+              <ExplorerFunctions tokenId
+                handleOwnerOf={handleOwnerOf}
+              />
             ) : currentFunction === "tokenURI" ? (
               <ExplorerFunctions tokenId handleTokenUri={handleTokenUri} />
             ) : currentFunction === "safeTransferFrom" ? (
