@@ -72,7 +72,7 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     enumerable: false,
     uriStorage: false,
     votes: false,
-    access: false,
+    access: 'ownable',
     upgradeable: false,
   });
 
@@ -207,7 +207,7 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
         contractAddress,
         inputValues.name,
         JSON.stringify(JSON.parse(result).abi),
-        0,
+        1,
         contract
       );
       setAdding(false);
@@ -243,9 +243,8 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   return (
     <>
       <DialogContent
-        className={`${
-          developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
-        }`}
+        className={`${developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
+          }`}
       >
         <DialogHeader>
           <DialogTitle>Create NFT Collection</DialogTitle>
@@ -254,11 +253,10 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
           </DialogDescription>
         </DialogHeader>
         <div
-          className={`${
-            developerMode ? "flex flex-row items-stretch gap-2" : ""
-          }`}
+          className={`${developerMode ? "flex flex-row items-stretch gap-2" : ""
+            }`}
         >
-          <div className="py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
+          <div className="p-4 flex-[0.5] mx-5 max-h-[500px] overflow-y-auto h-fit scrollbar-thin">
             <InputComp
               label="name"
               handleOnchange={handleInputChange}
@@ -474,7 +472,7 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
             </Section>
           </div>
           {developerMode && (
-            <div className="w-[75%] relative max-h-[500px]">
+            <div className="flex-1 relative max-h-[500px] scrollbar-thin">
               <CodeBlock
                 text={contract}
                 language={"solidity"}
@@ -497,7 +495,7 @@ const CreateNftForm = ({ onSubmit }: { onSubmit?: () => void }) => {
             {uploading && <p className="text-white">Image is uploading...</p>}
             {compiling && <p className="text-white">Compiling...</p>}
             {verifying && <p className="text-white">Verifying...</p>}
-          {adding && <p className="text-white">Adding...</p>}
+            {adding && <p className="text-white">Adding...</p>}
             {deploying && <p className="text-white">Deploying...</p>}
           </div>
         ) : (

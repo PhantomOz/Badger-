@@ -231,7 +231,7 @@ export default function CreateErc1155Form({
         contractAddress,
         inputValues.name,
         JSON.stringify(JSON.parse(result).abi),
-        0,
+        2,
         contract
       );
       setAdding(false);
@@ -256,9 +256,8 @@ export default function CreateErc1155Form({
 
   return (
     <DialogContent
-      className={`${
-        developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
-      }`}
+      className={`${developerMode ? "sm:max-w-[425px] md:max-w-[90%]" : "full"
+        }`}
     >
       <DialogHeader>
         <DialogTitle>Create ERC1155 Token</DialogTitle>
@@ -267,9 +266,8 @@ export default function CreateErc1155Form({
         </DialogDescription>
       </DialogHeader>
       <div
-        className={`${
-          developerMode ? "flex flex-row items-stretch gap-2" : ""
-        }`}
+        className={`${developerMode ? "flex flex-row items-stretch gap-2" : ""
+          }`}
       >
         <div className="py-4 mx-5 max-h-[500px] overflow-y-auto h-fit">
           <InputComp
