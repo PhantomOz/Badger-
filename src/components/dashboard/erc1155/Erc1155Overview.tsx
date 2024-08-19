@@ -13,7 +13,7 @@ export function Erc1155Overview({ fullPage, tokens }: { fullPage: boolean, token
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            NFT Contracts
+            NFT Contracts ERC1155
           </h3>
           <small className="text-lg font-light text-gray-200">
             The list of NFT instances that you have deployed with badger on the CoreDao

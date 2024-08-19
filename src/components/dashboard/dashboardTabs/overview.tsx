@@ -38,7 +38,7 @@ export function OverviewComponent({ tokens }: { tokens: any }) {
           <TokenOverview fullPage={false} tokens={tokens.data} />
           <NFTOverview fullPage={false} tokens={tokens.data} />
           <Erc1155Overview fullPage={false} tokens={tokens.data} />
-          <DaoOverview fullPage={false} tokens={tokens.data} />
+          {/* <DaoOverview fullPage={false} tokens={tokens.data} /> */}
           {/* <NFTOverview /> */}
         </div>
       )}

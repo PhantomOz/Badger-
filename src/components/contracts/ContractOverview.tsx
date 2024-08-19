@@ -47,7 +47,7 @@ export function ContractOverview({
           </h5>
 
           <p className="text-xl font-normal text-gray-100 overflow-hidden">
-            {Number(supply)} {symbol}
+            {Number(supply) / Math.pow(10, decimal)} {symbol}
           </p>
         </div>
         <div className="mr-8 block w-full max-w-sm cursor-pointer rounded-lg border border-gray-600 p-5 shadow">

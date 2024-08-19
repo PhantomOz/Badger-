@@ -15,7 +15,7 @@ const EventTable: React.FC<EventTableProps> = ({ logs, address }) => (
   <div className="mt-2">
     <div className="flex justify-between items-center">
       <h2 className="mb-4 text-2xl font-bold">Successful events</h2>
-      <Link href={`https://explorer-sphinx.shardeum.org/address/${address}`} target="_blank" className="text-purple-600 hover:underline ">View all events</Link>
+      <Link href={`https://scan.test.btcs.network/address/${address}`} target="_blank" className="text-purple-600 hover:underline ">View all events</Link>
     </div>
     <div className="relative overflow-x-auto rounded">
       <table className="w-full text-left text-sm_ text-gray-500 dark:text-gray-400 rtl:text-right">

@@ -9,7 +9,7 @@ import { CreateDAOForm } from "./dao/CreateDAOForm";
 
 const NoToken = () => {
   return (
-  
+
     <div className=" mt-8">
       <h2 className="text-center text-2xl font-bold lg:text-3xl">
         You have not created any projects
@@ -34,7 +34,7 @@ const NoToken = () => {
                 </p>
               </div>
             </DialogTrigger>
-            <CreateErc20Form/>
+            <CreateErc20Form />
           </Dialog>
 
           <Dialog>
@@ -67,27 +67,13 @@ const NoToken = () => {
             </DialogTrigger>
             <CreateErc1155Form />
           </Dialog>
-          <Dialog>
-            <DialogTrigger asChild>
-              <div className="mr-8 block w-full max-w-xs cursor-pointer rounded-lg border p-5 shadow">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {/* {title} */}
-                  Create DAO
-                </h5>
-                <p className="text-lg font-normal text-gray-100">
-                  {/* {content} */}
-                  Create a governance contract for your decentralized autonomous organization.
-                </p>
-              </div>
-            </DialogTrigger>
-            <CreateDAOForm />
-          </Dialog>
+          {/*  */}
         </div>
       </div>
-  
+
     </div>
 
-        
+
   );
 };
 

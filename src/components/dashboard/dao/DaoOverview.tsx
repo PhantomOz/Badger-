@@ -12,7 +12,7 @@ export function DaoOverview({ fullPage, tokens }: { fullPage: boolean, tokens: a
 
   return (
     <div className="mt-20">
-      <div className="mb-5 flex items-center justify-between">
+      {/* <div className="mb-5 flex items-center justify-between">
         <div>
           <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             Governance Contracts
@@ -25,7 +25,9 @@ export function DaoOverview({ fullPage, tokens }: { fullPage: boolean, tokens: a
 
         <CreateDAO />
       </div>
-      <DaoTable tableData={nfts} isLoading={false} fullPage={fullPage} />
+      <DaoTable tableData={nfts} isLoading={false} fullPage={fullPage} /> */}
+      <h3 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center'>New Dashboard design for DAO coming soon</h3>
+      <p className='text-gray-900 text-center text-xl'>We are currently developing a suitable design for creators to maintain and interact with their DAO</p>
     </div>
   )
 }
